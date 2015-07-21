@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ColorBase"
+    tools:context="com.ngapainya.ngapainya.activity.volunteer.PostTextActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"></include>
+
+    <EditText
+        android:padding="10dp"
+        android:height="100dp"
+        android:hint="What's in your mind..."
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="#fff"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/editText"
+        android:layout_below="@+id/toolbar"
+        android:layout_centerHorizontal="true" />
+
+    <LinearLayout
+        android:id="@+id/bottomBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+
+        <include
+            android:animateLayoutChanges="true"
+            android:visibility="gone"
+            android:id="@+id/create_post_bar"
+            layout="@layout/create_post_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"></include>
+
+        <include
+            android:id="@+id/actionbar"
+            layout="@layout/actionbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            ></include>
+    </LinearLayout>
+</RelativeLayout>

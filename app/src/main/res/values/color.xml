@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ColorBase">#fff8f8f8</color>
+    <color name="ColorPrimary">#71D3AF</color>
+    <color name="ColorPrimaryDark">#ff5fbe9a</color>
+    <color name="ActionbarColor">#303E55</color>
+    <color name="Grey">#666</color>
+    <color name="Red">#F35D5E</color>
+    <color name="ColorOwner">#F5A623</color>
+    <!--<color name="ColorMenuFrame">#32323A</color>
+    <color name="ColorSelected">#56ffffff</color>
+    <color name="ColorPending">#ff969a99</color>
+    <color name="ColorBooking">#ffff6e80</color>-->
+</resources>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <RadioGroup
+        android:id="@+id/actionRadioBtn"
+        android:background="@color/ActionbarColor"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <RadioButton
+            android:id="@+id/homeBtn"
+            style="@style/navbar_button"
+            android:drawableTop="@drawable/navbar_home_selector_owner"
+            />
+        <RadioButton
+            android:id="@+id/expBtn"
+            style="@style/navbar_button"
+            android:drawableTop="@drawable/navbar_explore_selector_owner"
+            android:layout_marginLeft="5dp"
+            />
+        <ToggleButton
+            android:layout_height="fill_parent"
+            android:onClick="createPost"
+            android:background="@color/ColorOwner"
+            android:id="@+id/createStatusBtn"
+            style="@style/navbar_button"
+            android:drawableTop="@drawable/ic_icon_create_post_owner"
+            android:layout_marginLeft="5dp"
+            />
+        <RadioButton
+            android:id="@+id/notifBtn"
+            style="@style/navbar_button"
+            android:drawableTop="@drawable/navbar_notif_selector_owner"
+            android:layout_marginLeft="5dp"
+            />
+        <RadioButton
+            android:id="@+id/profBtn"
+            style="@style/navbar_button"
+            android:drawableTop="@drawable/navbar_profile_selector_owner"
+            android:layout_marginLeft="5dp"
+            />
+    </RadioGroup>
+</RelativeLayout>

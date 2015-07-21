@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <RadioGroup
+        android:id="@+id/createPostRadioBtn"
+        android:background="@color/ColorOwner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <RadioButton
+            android:id="@+id/statusBtn"
+            style="@style/navbar_button"
+            android:drawableTop="@drawable/ic_icon_normal_post_owner_post_text"
+            />
+        <RadioButton
+            android:id="@+id/locationBtn"
+            style="@style/navbar_button"
+            android:drawableTop="@drawable/ic_icon_normal_post_owner_post_location"
+            android:layout_marginLeft="5dp"
+            />
+        <RadioButton
+            android:id="@+id/picBtn"
+            style="@style/navbar_button"
+            android:drawableTop="@drawable/ic_icon_normal_post_owner_post_photo"
+            android:layout_marginLeft="5dp"
+            />
+        <RadioButton
+            android:id="@+id/linkBtn"
+            style="@style/navbar_button"
+            android:drawableTop="@drawable/ic_icon_normal_post_owner_post_link"
+            android:layout_marginLeft="5dp"
+            />
+    </RadioGroup>
+</RelativeLayout>
