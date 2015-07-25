@@ -113,12 +113,12 @@
             android:paddingTop="10dp">
 
             <Button
-                android:id="@+id/switchMode"
+                android:id="@+id/editProfileBtn"
                 android:onClick="onClick"
                 android:layout_width="fill_parent"
                 android:layout_height="25dp"
                 android:background="@drawable/my_button_red"
-                android:text="Switch Mode"
+                android:text="Edit Profile"
                 android:textAllCaps="false"
                 android:textColor="#fff"
                 android:textSize="@dimen/profile_text_size" />

@@ -3,6 +3,7 @@ package com.ngapainya.ngapainya.activity.volunteer;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -20,8 +21,8 @@ import android.widget.ToggleButton;
 import com.ngapainya.ngapainya.R;
 import com.ngapainya.ngapainya.fragment.ExploreFragment;
 import com.ngapainya.ngapainya.fragment.HomeFragment;
-import com.ngapainya.ngapainya.fragment.NotificationFragment;
 import com.ngapainya.ngapainya.fragment.MyProfileFragment;
+import com.ngapainya.ngapainya.fragment.NotificationFragment;
 
 
 public class ContainerActivity extends ActionBarActivity {
@@ -40,6 +41,28 @@ public class ContainerActivity extends ActionBarActivity {
 
     public void onClick(View v){
         myProfileFragment.onClick(v);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==0 && resultCode==1){
+            new Handler().post(new Runnable() {
+                public void run() {
+                    homeFragment = new HomeFragment();
+                    changeFragment(homeFragment, new ColorDrawable(getResources().getColor(R.color.ColorPrimary)));
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1){
+            finish();
+        }
+        else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -110,8 +133,10 @@ public class ContainerActivity extends ActionBarActivity {
                 switch (pos)
                 {
                     case 0 :
+                        /*Intent intent = new Intent(ContainerActivity.this, PostTextActivity.class);
+                        startActivity(intent);*/
                         Intent intent = new Intent(ContainerActivity.this, PostTextActivity.class);
-                        startActivity(intent);
+                        startActivityForResult(intent,0);
                         r1.setChecked(false);
                         break;
                     case 1 :
@@ -193,11 +218,24 @@ public class ContainerActivity extends ActionBarActivity {
         Fragment newFrag = fragment;
         ColorDrawable newColor = colorDrawable;
 
-        manager = getSupportFragmentManager();
+        //old code
+        /*manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
         transaction.replace(R.id.content_fragment, newFrag);
         transaction.addToBackStack(null);
-        transaction.commit();
+        transaction.commit();*/
+
+        //newest code
+        String backStateName = fragment.getClass().getName();
+        FragmentManager manager = getSupportFragmentManager();
+        boolean fragmentPopped = manager.popBackStackImmediate (backStateName, 0);
+        if (!fragmentPopped){ //fragment not in back stack, create it.
+            FragmentTransaction ft = manager.beginTransaction();
+            ft.replace(R.id.content_fragment, fragment);
+            ft.addToBackStack(backStateName);
+            ft.commit();
+        }
+
         //to change the actionbar color
         getSupportActionBar().setBackgroundDrawable(newColor);
     }

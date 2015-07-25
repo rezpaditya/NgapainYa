@@ -1,3 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="profile_text_size">7pt</dimen>
 </resources>

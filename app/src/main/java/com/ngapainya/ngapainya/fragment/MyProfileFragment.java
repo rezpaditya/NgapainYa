@@ -9,6 +9,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -31,6 +34,12 @@ public class MyProfileFragment extends Fragment {
 
     private TextView txtShowFeed, txtShowFriend;
 
+    public void switchMode(){
+        Intent intent = new Intent(myContext, ContainerActivity.class);
+        startActivity(intent);
+        myContext.finish();
+    }
+
     @Override
     public void onAttach(Activity activity) {
         myContext=(FragmentActivity) activity;
@@ -43,6 +52,8 @@ public class MyProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         myFragmentView = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        setHasOptionsMenu(true);
 
         txtShowFeed = (TextView) myFragmentView.findViewById(R.id.txtShwFeed);
         txtShowFriend = (TextView) myFragmentView.findViewById(R.id.txtShwFriend);
@@ -69,10 +80,34 @@ public class MyProfileFragment extends Fragment {
                 txtShowFriend.setTextColor(getResources().getColor(R.color.Red));
                 txtShowFeed.setTextColor(Color.BLACK);
                 break;
-            case R.id.switchMode:
-                Intent intent = new Intent(myContext, ContainerActivity.class);
-                startActivity(intent);
-                myContext.finish();
+            case R.id.editProfileBtn:
+                //do something here
+                break;
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // TODO Auto-generated method stub
+        super.onCreateOptionsMenu(menu, inflater);
+        myContext.getMenuInflater().inflate(R.menu.menu_profile, menu);
+        final MenuItem item = menu.findItem(R.id.action_done);
+        /*item.getActionView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchMode();
+            }
+        });*/
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_done : {
+                switchMode();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -1,5 +1,6 @@
 package com.ngapainya.ngapainya.activity.volunteer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -113,8 +114,12 @@ public class PostTextActivity extends ActionBarActivity {
     }
 
     public void doPost(View view){
-        Toast.makeText(getBaseContext(), "You have Clicked a button",
-                Toast.LENGTH_SHORT).show();
+        /*Toast.makeText(getBaseContext(), "You have Clicked a button",
+                Toast.LENGTH_SHORT).show();*/
+        Intent intent = new Intent(this, ContainerActivity.class);
+        intent.putExtra("fragmentName", "HomeFragment");
+        setResult(1, intent);
+        finish();
     }
 
     @Override
