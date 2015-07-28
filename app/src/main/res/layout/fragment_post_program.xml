@@ -4,10 +4,12 @@
     android:layout_height="match_parent"
     android:background="@color/ColorBase"
     android:orientation="vertical"
-    android:padding="10dp"
+    android:paddingRight="10dp"
+    android:paddingLeft="10dp"
     tools:context="com.ngapainya.ngapainya.fragment.PostProgramFragment">
 
     <LinearLayout
+        android:layout_marginTop="10dp"
         android:paddingBottom="100dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -54,12 +56,27 @@
             android:background="@drawable/my_edittext2"
             android:hint="Type" />
 
-        <Spinner
-            android:id="@+id/language"
+        <LinearLayout
+            android:background="@drawable/my_edittext2"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:paddingLeft="40dp" />
+            android:layout_height="fill_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:textSize="8pt"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:text="Language"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <Spinner
+                android:layout_weight="1"
+                android:id="@+id/language"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
 
         <android.widget.EditText
             android:onClick="onClick"
@@ -98,24 +115,33 @@
             android:layout_height="wrap_content" />
 
         <EditText
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/my_edittext2"
             android:hint="Requirement"
             android:id="@+id/requirement"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:height="100dp" />
 
         <EditText
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/my_edittext2"
             android:hint="Accomodation"
             android:id="@+id/accomodation"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:height="100dp"/>
 
         <EditText
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/my_edittext2"
             android:hint="Description"
             android:id="@+id/description"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:height="100dp"/>
     </LinearLayout>
 </ScrollView>

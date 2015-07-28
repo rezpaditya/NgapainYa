@@ -1,4 +1,4 @@
-package com.ngapainya.ngapainya.fragment.child;
+package com.ngapainya.ngapainya.fragment;
 
 
 import android.app.Activity;
@@ -8,18 +8,18 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.ListView;
 
 import com.ngapainya.ngapainya.R;
-import com.squareup.picasso.Picasso;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GreetingSlideFragment extends Fragment {
+public class InviteFriend extends Fragment {
     private FragmentActivity myContext;
     private View myFragmentView;
+    private ListView myList;
 
     @Override
     public void onAttach(Activity activity) {
@@ -27,22 +27,17 @@ public class GreetingSlideFragment extends Fragment {
         super.onAttach(activity);
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        myFragmentView = inflater.inflate(R.layout.fragment_greeting_slide, container, false);
         // Inflate the layout for this fragment
+        myFragmentView  = inflater.inflate(R.layout.fragment_invite_friend, container, false);
 
-        //Initialize ImageView
-        ImageView imageView = (ImageView) myFragmentView.findViewById(R.id.imgGreeting);
-
-        //Loading image from below url into imageView
-        Picasso.with(myContext)
-                .load("http://nyewamobil.com/customer/images/car/")
-                .placeholder(R.drawable.bg_front)
-                .resize(500, 200)
-                .into(imageView);
+        myList = (ListView) myFragmentView.findViewById(R.id.list_friends);
 
         return myFragmentView;
     }
+
+
 }

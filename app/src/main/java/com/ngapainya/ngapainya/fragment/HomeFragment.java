@@ -3,7 +3,6 @@ package com.ngapainya.ngapainya.fragment;
 
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
-import android.net.ParseException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,20 +20,36 @@ import com.ngapainya.ngapainya.R;
 import com.ngapainya.ngapainya.activity.volunteer.ContainerActivity;
 import com.ngapainya.ngapainya.adapter.HomeAdapter;
 import com.ngapainya.ngapainya.fragment.child.DetailPostFragment;
+import com.ngapainya.ngapainya.helper.JSONParser;
+import com.ngapainya.ngapainya.helper.SessionManager;
 import com.ngapainya.ngapainya.model.Home;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener{
+public class HomeFragment extends Fragment implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
     private FragmentActivity myContext;
     private View myFragmentView;
     private ArrayList<Home> filelist;
     private ListView myList;
     private HomeAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    /*
+    * Variable for request data
+    * */
+    JSONArray json;
+    final int threshold = 10;
+    int iterator = 0;
 
     /*
     * these variables used to restore the listview
@@ -91,7 +106,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         filelist = new ArrayList<Home>();
         adapter = new HomeAdapter(myContext, filelist);
 
-        if(fromBackStack) {
+        if (fromBackStack) {
             filelist = savedFilelist;
             adapter = savedAdapter;
         }
@@ -106,11 +121,11 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onRefresh() {
         ArrayList<Home> new_filelist = new ArrayList<>();
-        new_filelist.add(new Home("Post", 4));
+        /*new_filelist.add(new Home("Post", 4));
 
         filelist.addAll(0, new_filelist);
         adapter.notifyDataSetChanged();
-        swipeRefreshLayout.setRefreshing(false);
+        swipeRefreshLayout.setRefreshing(false);*/
 
         Log.e("onRefresh", "onRefresh");
     }
@@ -124,29 +139,24 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         Home tmp = (Home) parent.getItemAtPosition(position);
         DetailPostFragment detailPostFragment = new DetailPostFragment();
         Bundle args = new Bundle();
-        switch (tmp.type) {
-            case 0:
-                args.putInt("postType", tmp.type);
+        switch (tmp.getAct_type()) {
+            case "status":
+                args.putInt("postType", 0);
                 detailPostFragment.setArguments(args);
                 ((ContainerActivity) getActivity()).changeFragment(detailPostFragment, new ColorDrawable(getResources().getColor(R.color.ColorPrimary)));
                 break;
-            case 1:
-                args.putInt("postType", tmp.type);
+            case "photo":
+                args.putInt("postType", 1);
                 detailPostFragment.setArguments(args);
                 ((ContainerActivity) getActivity()).changeFragment(detailPostFragment, new ColorDrawable(getResources().getColor(R.color.ColorPrimary)));
                 break;
-            case 2:
-                args.putInt("postType", tmp.type);
+            case "location":
+                args.putInt("postType", 2);
                 detailPostFragment.setArguments(args);
                 ((ContainerActivity) getActivity()).changeFragment(detailPostFragment, new ColorDrawable(getResources().getColor(R.color.ColorPrimary)));
                 break;
-            case 3:
-                args.putInt("postType", tmp.type);
-                detailPostFragment.setArguments(args);
-                ((ContainerActivity) getActivity()).changeFragment(detailPostFragment, new ColorDrawable(getResources().getColor(R.color.ColorPrimary)));
-                break;
-            case 4:
-                args.putInt("postType", tmp.type);
+            case "url":
+                args.putInt("postType", 3);
                 detailPostFragment.setArguments(args);
                 ((ContainerActivity) getActivity()).changeFragment(detailPostFragment, new ColorDrawable(getResources().getColor(R.color.ColorPrimary)));
                 break;
@@ -160,28 +170,73 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     * */
 
     private class RemoteDataTask extends AsyncTask<String, Void, ArrayList<Home>> {
+        SessionManager session;
+        HashMap<String, String> user;
+        String token;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            /*
+            * Get user information
+            * */
+            session = new SessionManager(myContext);
+            user = session.getUserDetails();
+            token = user.get(SessionManager.KEY_TOKEN);
         }
 
         @Override
         protected ArrayList<Home> doInBackground(String... urls) {
+
+            String url = "http://ainufaisal.com/activity/followed";
+            List<NameValuePair> nvp = new ArrayList<NameValuePair>();
+            nvp.add(new BasicNameValuePair("access_token", token));
+
+            JSONParser jParser = new JSONParser();
+            json = jParser.makeHttpRequest(url, "GET", nvp);      //get data from server
             try {
-                ArrayList<Home> new_filelist = new ArrayList<Home>();
-                //dummy data
-                new_filelist.add(new Home("post", 1)); //post image
-                new_filelist.add(new Home("post", 2)); //post location
-                new_filelist.add(new Home("post", 3)); //post url
-                new_filelist.add(new Home("post", 4)); //become friend with
-                new_filelist.add(new Home("post", 0)); //post status
-                new_filelist.add(new Home("post", 3)); //post url
-                new_filelist.add(new Home("post", 4)); //become friend with
-                new_filelist.add(new Home("post", 0)); //post status
-                filelist.addAll(new_filelist);
-            } catch (ParseException e) {
-                Log.e("Error", e.getMessage());
+                /*if data less than threshold, load them all
+                * or if not, load data as much as threshold, repeat it in loadmore class
+                * */
+                if (json.length() < threshold) {
+                    for (int i = 0; i < json.length(); i++) {
+                        JSONObject result = json.getJSONObject(i);
+
+                        Home temp_home = new Home();
+                        temp_home.setAct_id(result.getString("act_id"));
+                        temp_home.setAct_content(result.getString("act_content"));
+                        temp_home.setAct_type(result.getString("act_type"));
+                        temp_home.setAct_url(result.getString("act_url"));
+                        temp_home.setAct_lat(result.getString("act_lat"));
+                        temp_home.setAct_lng(result.getString("act_lng"));
+                        temp_home.setAct_address(result.getString("act_address"));
+                        temp_home.setUsername(result.getString("username"));
+                        temp_home.setUser_pic(result.getString("user_pic"));
+                        temp_home.setCreated_at(result.getString("created_at"));
+
+                        filelist.add(temp_home);
+                        Log.e("ok", " ambil data");
+                    }
+                } else {
+                    for (int i = 0; i < threshold; i++) {
+                        JSONObject result = json.getJSONObject(i);
+                        Home temp_home = new Home();
+                        temp_home.setAct_id(result.getString("act_id"));
+                        temp_home.setAct_content(result.getString("act_content"));
+                        temp_home.setAct_type(result.getString("act_type"));
+                        temp_home.setAct_url(result.getString("act_url"));
+                        temp_home.setAct_lat(result.getString("act_lat"));
+                        temp_home.setAct_lng(result.getString("act_lng"));
+                        temp_home.setAct_address(result.getString("act_address"));
+                        temp_home.setUsername(result.getString("username"));
+                        temp_home.setUser_pic(result.getString("user_pic"));
+                        temp_home.setCreated_at(result.getString("created_at"));
+                        filelist.add(temp_home);
+                        Log.e("ok", " ambil data");
+                    }
+                }
+            } catch (Exception e) {
+                Log.e("error", "tidak bisa ambil data 1");
                 e.printStackTrace();
             }
             return filelist;
@@ -191,6 +246,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         protected void onPostExecute(ArrayList<Home> organization) {
             myList.setAdapter(adapter);
             // Create an OnScrollListener
+            iterator = threshold;
             myList.setOnScrollListener(new AbsListView.OnScrollListener() {
 
                 @Override
@@ -235,11 +291,24 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         protected ArrayList<Home> doInBackground(String... urls) {
             try {
                 // web service request
-                ArrayList<Home> new_filelist = new ArrayList<Home>();
-                new_filelist.add(new Home("post", 0)); //post status
-                new_filelist.add(new Home("post", 1));
-                if(new_filelist  != null && new_filelist.size() > 0 ){
-                    filelist.addAll(new_filelist);
+                if (iterator != json.length()) {
+                    JSONObject result = json.getJSONObject(iterator);
+
+                    Home temp_home = new Home();
+                    temp_home.setAct_id(result.getString("act_id"));
+                    temp_home.setAct_content(result.getString("act_content"));
+                    temp_home.setAct_type(result.getString("act_type"));
+                    temp_home.setAct_url(result.getString("act_url"));
+                    temp_home.setAct_lat(result.getString("act_lat"));
+                    temp_home.setAct_lng(result.getString("act_lng"));
+                    temp_home.setAct_address(result.getString("act_address"));
+                    temp_home.setUsername(result.getString("username"));
+                    temp_home.setUser_pic(result.getString("user_pic"));
+                    temp_home.setCreated_at(result.getString("created_at"));
+
+                    filelist.add(temp_home);
+                    iterator++;
+                    Log.e("ok", " ambil data");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -256,5 +325,4 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
             myList.setSelectionFromTop(position, 0);
         }
     }
-
 }

@@ -19,25 +19,32 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.ngapainya.ngapainya.R;
+import com.ngapainya.ngapainya.activity.GreetingActivity;
 import com.ngapainya.ngapainya.fragment.ExploreFragment;
 import com.ngapainya.ngapainya.fragment.HomeFragment;
 import com.ngapainya.ngapainya.fragment.MyProfileFragment;
 import com.ngapainya.ngapainya.fragment.NotificationFragment;
+import com.ngapainya.ngapainya.helper.SessionManager;
 
 
 public class ContainerActivity extends ActionBarActivity {
     private Toolbar toolbar;
     private RadioGroup actionBarRadioGroup;
     private RadioGroup createPostRadioGroup;
+
     //variable fragment
     private MyProfileFragment myProfileFragment;
     private HomeFragment homeFragment;
     private ExploreFragment exploreFragment;
     private NotificationFragment notificationFragment;
+
     //define fragment manager
     private FragmentManager manager;
     private FragmentTransaction transaction;
     private View create_bar;
+
+    //manage session
+    private SessionManager sessionManager;
 
     public void onClick(View v){
         myProfileFragment.onClick(v);
@@ -69,6 +76,15 @@ public class ContainerActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
+
+        //check the login session
+        sessionManager = new SessionManager(this);
+        if(!sessionManager.checkLogin()){
+            Intent intent = new Intent(this, GreetingActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }
 
         create_bar = findViewById(R.id.create_post_bar); //use for make an animation
 

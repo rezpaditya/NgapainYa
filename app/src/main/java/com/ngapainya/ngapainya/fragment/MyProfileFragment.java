@@ -14,6 +14,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.ngapainya.ngapainya.R;
@@ -33,6 +35,7 @@ public class MyProfileFragment extends Fragment {
     private FragmentTabHost tabHost;
 
     private TextView txtShowFeed, txtShowFriend;
+    private ImageView propic;
 
     public void switchMode(){
         Intent intent = new Intent(myContext, ContainerActivity.class);
@@ -54,6 +57,8 @@ public class MyProfileFragment extends Fragment {
         myFragmentView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         setHasOptionsMenu(true);
+
+        propic = (ImageView) myFragmentView.findViewById(R.id.profile_image);
 
         txtShowFeed = (TextView) myFragmentView.findViewById(R.id.txtShwFeed);
         txtShowFriend = (TextView) myFragmentView.findViewById(R.id.txtShwFriend);
@@ -82,6 +87,23 @@ public class MyProfileFragment extends Fragment {
                 break;
             case R.id.editProfileBtn:
                 //do something here
+                break;
+            case R.id.profile_image:
+                PopupMenu popup = new PopupMenu(myContext, propic);
+                popup.getMenuInflater().inflate(R.menu.menu_pop_up_propic, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if (menuItem.getItemId() == R.id.capture) {
+                            //do something
+                        } else if (menuItem.getItemId() == R.id.gallery) {
+                            //do something
+                        }
+                        return true;
+                    }
+                });
+                popup.show();
                 break;
         }
     }

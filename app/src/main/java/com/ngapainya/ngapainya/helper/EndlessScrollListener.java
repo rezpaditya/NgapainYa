@@ -1,4 +1,4 @@
-package com.ngapainya.ngapainya.controller;
+package com.ngapainya.ngapainya.helper;
 
 import android.widget.AbsListView;
 

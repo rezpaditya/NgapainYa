@@ -16,21 +16,29 @@ import android.widget.Toast;
 import com.ngapainya.ngapainya.R;
 import com.ngapainya.ngapainya.activity.volunteer.ContainerActivity;
 import com.ngapainya.ngapainya.fragment.child.GreetingSlideFragment;
+import com.ngapainya.ngapainya.fragment.child.LoginFragment;
+import com.ngapainya.ngapainya.helper.SessionManager;
 
 
 public class GreetingActivity extends FragmentActivity implements ViewPager.OnPageChangeListener{
-    private static final int NUM_PAGES = 5;
+    private static final int NUM_PAGES = 3;
     private ViewPager mPager;
     private PagerAdapter mPagerAdapter;
+
     //pager indicator variable
     private LinearLayout pager_indicator;
     private int dotsCount;
     private ImageView[] dots;
 
+    //Manage session
+    private SessionManager sessionManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_greeting);
+
+        sessionManager = new SessionManager(this);
 
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
@@ -88,7 +96,15 @@ public class GreetingActivity extends FragmentActivity implements ViewPager.OnPa
 
         @Override
         public Fragment getItem(int position) {
-            return new GreetingSlideFragment();
+            Fragment fragment = null;
+            if(position == 0){
+                fragment = new GreetingSlideFragment();
+            }else if(position == 1){
+                fragment = new LoginFragment();
+            }else if(position == 2){
+                fragment = new LoginFragment();
+            }
+            return fragment;
         }
 
         @Override
@@ -109,13 +125,17 @@ public class GreetingActivity extends FragmentActivity implements ViewPager.OnPa
                 Toast.makeText(getBaseContext(), "Social 3", Toast.LENGTH_SHORT).show();
                 break;*/
         }
-
     }
 
+    /*
+    * This method use to redirect to the main page
+    * For testing, token will provide here
+    * */
+
     public void goTo (View view){
+        sessionManager.createLoginSession("rezpa", "respa@gmail.com", "respa");
         Intent intent = new Intent(this, ContainerActivity.class);
         startActivity(intent);
         finish();
     }
-
 }
