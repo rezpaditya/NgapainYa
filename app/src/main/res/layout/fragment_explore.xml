@@ -1,18 +1,21 @@
 <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.ngapainya.ngapainya.fragment.ExploreFragment"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipe_refresh_layout"
-    android:background="#fff">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:background="@color/white"
+    tools:context="com.ngapainya.ngapainya.fragment.volunteer.ExploreFragment">
 
     <ListView
-        android:paddingBottom="10dp"
-        android:paddingTop="10dip"
-        android:clipToPadding="false"
-        android:dividerHeight="1px"
-        android:divider="#ffe8e8e8"
+        android:id="@+id/list_explore"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/list_explore" />
+        android:clipToPadding="false"
+        android:divider="#ffe8e8e8"
+        android:dividerHeight="1px"
+        android:paddingBottom="70dp"
+        android:paddingTop="10dip" />
 
 </android.support.v4.widget.SwipeRefreshLayout>

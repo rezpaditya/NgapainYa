@@ -1,21 +1,60 @@
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ColorBase"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    android:id="@+id/swipe_refresh_layout"
-    tools:context="com.ngapainya.ngapainya.fragment.HomeFragment">
+    tools:context="com.ngapainya.ngapainya.fragment.volunteer.HomeFragment">
 
-    <ListView
-        android:paddingBottom="70dp"
-        android:paddingTop="10dip"
-        android:clipToPadding="false"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="5dp"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/list_home"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10dp"
+            android:paddingBottom="70dp"
+            android:paddingTop="10dip" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/layout_find_friend"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/list_home" />
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
 
-</android.support.v4.widget.SwipeRefreshLayout>
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/search" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="Nothing to show, find your friends now!" />
+
+        <Button
+            android:padding="5dp"
+            android:drawableLeft="@drawable/ic_action_add_person"
+            android:id="@+id/find_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/my_button_green"
+            android:text="Find friend"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+</RelativeLayout>

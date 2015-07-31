@@ -32,17 +32,35 @@ public class JSONParser {
     static String json = "";
 
 
-    public JSONObject getJSONFromUrl(String url) {
+    public JSONObject makeHttpRequestToObject(String url, String method,
+                                     List<NameValuePair> params) {
 
         // Making HTTP request
         try {
-            // defaultHttpClient
-            DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(url);
 
-            HttpResponse httpResponse = httpClient.execute(httpPost);
-            HttpEntity httpEntity = httpResponse.getEntity();
-            is = httpEntity.getContent();
+            // check for request method
+            if (method == "POST") {
+                // request method is POST
+                // defaultHttpClient
+                DefaultHttpClient httpClient = new DefaultHttpClient();
+                HttpPost httpPost = new HttpPost(url);
+                httpPost.setEntity(new UrlEncodedFormEntity(params));
+
+                HttpResponse httpResponse = httpClient.execute(httpPost);
+                HttpEntity httpEntity = httpResponse.getEntity();
+                is = httpEntity.getContent();
+
+            } else if (method == "GET") {
+                // request method is GET
+                DefaultHttpClient httpClient = new DefaultHttpClient();
+                String paramString = URLEncodedUtils.format(params, "utf-8");
+                url += "?" + paramString;
+                HttpGet httpGet = new HttpGet(url);
+
+                HttpResponse httpResponse = httpClient.execute(httpGet);
+                HttpEntity httpEntity = httpResponse.getEntity();
+                is = httpEntity.getContent();
+            }
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -75,7 +93,6 @@ public class JSONParser {
 
         // return JSON String
         return jObj;
-
     }
 
     public JSONArray makeHttpRequest(String url, String method,
@@ -140,6 +157,5 @@ public class JSONParser {
 
         // return JSON String
         return jArray;
-
     }
 }

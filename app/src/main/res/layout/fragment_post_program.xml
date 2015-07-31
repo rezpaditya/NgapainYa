@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:paddingRight="10dp"
     android:paddingLeft="10dp"
-    tools:context="com.ngapainya.ngapainya.fragment.PostProgramFragment">
+    tools:context="com.ngapainya.ngapainya.fragment.owner.PostProgramFragment">
 
     <LinearLayout
         android:layout_marginTop="10dp"

@@ -57,6 +57,20 @@ public class HomeAdapter extends BaseAdapter {
         ViewHolder holder = null;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         switch (list.get(position).getAct_type()) {
+            case "Text":
+                row = inflater.inflate(R.layout.item_home_sts, parent, false);
+
+                //define the view
+                ImageView propic_0 = (ImageView) row.findViewById(R.id.propic);
+                TextView content_0 = (TextView) row.findViewById(R.id.content);
+
+                //set the value to the view
+                content_0.setText(list.get(position).getAct_content());
+                Picasso.with(context)
+                        .load("http://ainufaisal.com/" + list.get(position).getUser_pic())
+                        .placeholder(R.drawable.propic_default)
+                        .into(propic_0);
+                break;
             case "status":
                 row = inflater.inflate(R.layout.item_home_sts, parent, false);
 
@@ -67,8 +81,8 @@ public class HomeAdapter extends BaseAdapter {
                 //set the value to the view
                 content_01.setText(list.get(position).getAct_content());
                 Picasso.with(context)
-                        .load("http://ainufaisal.com/"+list.get(position).getUser_pic())
-                        //.placeholder(R.drawable.bg_front)
+                        .load("http://ainufaisal.com/" + list.get(position).getUser_pic())
+                        .placeholder(R.drawable.propic_default)
                         .into(propic_01);
                 break;
             case "Photo":
@@ -79,11 +93,11 @@ public class HomeAdapter extends BaseAdapter {
 
                 content_02.setText(list.get(position).getAct_content());
                 Picasso.with(context)
-                        .load("http://ainufaisal.com/"+list.get(position).getUser_pic())
-                        //.placeholder(R.drawable.bg_front)
+                        .load("http://ainufaisal.com/" + list.get(position).getUser_pic())
+                        .placeholder(R.drawable.propic_default)
                         .into(propic_02);
                 Picasso.with(context)
-                        .load("http://ainufaisal.com/"+list.get(position).getAct_url())
+                        .load("http://ainufaisal.com/" + list.get(position).getAct_url())
                                 //.placeholder(R.drawable.bg_front)
                         .into(img);
                 break;
@@ -94,8 +108,8 @@ public class HomeAdapter extends BaseAdapter {
 
                 address.setText(list.get(position).getUsername() + " is at " + list.get(position).getAct_address());
                 Picasso.with(context)
-                        .load("http://ainufaisal.com/"+list.get(position).getUser_pic())
-                                //.placeholder(R.drawable.bg_front)
+                        .load("http://ainufaisal.com/" + list.get(position).getUser_pic())
+                        .placeholder(R.drawable.propic_default)
                         .into(propic_03);
                 break;
             case "Url":
@@ -105,8 +119,8 @@ public class HomeAdapter extends BaseAdapter {
 
                 url_content.setText(list.get(position).getAct_url());
                 Picasso.with(context)
-                        .load("http://ainufaisal.com/"+list.get(position).getUser_pic())
-                                //.placeholder(R.drawable.bg_front)
+                        .load("http://ainufaisal.com/" + list.get(position).getUser_pic())
+                        .placeholder(R.drawable.propic_default)
                         .into(propic_04);
                 break;
             case "become_friend":

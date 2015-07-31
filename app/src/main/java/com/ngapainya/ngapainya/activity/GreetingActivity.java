@@ -1,6 +1,8 @@
 package com.ngapainya.ngapainya.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -8,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,12 +18,22 @@ import android.widget.Toast;
 
 import com.ngapainya.ngapainya.R;
 import com.ngapainya.ngapainya.activity.volunteer.ContainerActivity;
-import com.ngapainya.ngapainya.fragment.child.GreetingSlideFragment;
-import com.ngapainya.ngapainya.fragment.child.LoginFragment;
+import com.ngapainya.ngapainya.fragment.volunteer.child.GreetingSlideFragment;
+import com.ngapainya.ngapainya.fragment.volunteer.child.LoginFragment;
+import com.ngapainya.ngapainya.fragment.volunteer.child.RegisterFragment;
+import com.ngapainya.ngapainya.helper.Config;
+import com.ngapainya.ngapainya.helper.JSONParser;
 import com.ngapainya.ngapainya.helper.SessionManager;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
-public class GreetingActivity extends FragmentActivity implements ViewPager.OnPageChangeListener{
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+
+public class GreetingActivity extends FragmentActivity implements ViewPager.OnPageChangeListener {
     private static final int NUM_PAGES = 3;
     private ViewPager mPager;
     private PagerAdapter mPagerAdapter;
@@ -97,12 +110,12 @@ public class GreetingActivity extends FragmentActivity implements ViewPager.OnPa
         @Override
         public Fragment getItem(int position) {
             Fragment fragment = null;
-            if(position == 0){
+            if (position == 0) {
                 fragment = new GreetingSlideFragment();
-            }else if(position == 1){
+            } else if (position == 1) {
                 fragment = new LoginFragment();
-            }else if(position == 2){
-                fragment = new LoginFragment();
+            } else if (position == 2) {
+                fragment = new RegisterFragment();
             }
             return fragment;
         }
@@ -129,13 +142,70 @@ public class GreetingActivity extends FragmentActivity implements ViewPager.OnPa
 
     /*
     * This method use to redirect to the main page
-    * For testing, token will provide here
     * */
 
-    public void goTo (View view){
-        sessionManager.createLoginSession("rezpa", "respa@gmail.com", "respa");
-        Intent intent = new Intent(this, ContainerActivity.class);
-        startActivity(intent);
-        finish();
+    public void goTo(View view) {
+        //sessionManager.createLoginSession("Rezpa Aditya", "respa@gmail.com", "respa");
+        new RemoteDataTask().execute();
+    }
+
+    private class RemoteDataTask extends AsyncTask<String, Void, String> {
+        ProgressDialog pDialog;
+        SessionManager session;
+        HashMap<String, String> user;
+        String token;
+        String email;
+        String password;
+        String name;
+        Config cfg = new Config();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pDialog = new ProgressDialog(GreetingActivity.this);
+            pDialog.setMessage("Please wait...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+
+            session = new SessionManager(GreetingActivity.this);
+            email = "rezpa.snk@gmail.com";
+            password = "blackout";
+            name = "Rezpa Aditya";
+            token = "respa"; //dummy
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String url = cfg.HOSTNAME + "/login";
+            List<NameValuePair> nvp = new ArrayList<NameValuePair>();
+            nvp.add(new BasicNameValuePair("email", email));
+            nvp.add(new BasicNameValuePair("password", password));
+
+            JSONParser jParser = new JSONParser();
+            //JSONObject json = jParser.makeHttpRequestToObject(url, "GET", nvp);      //get data from server
+            try {
+                /*if (json.getString("access_token") != null) {
+                    token   = json.getString("access_token");
+                } else {
+                    Log.e("error", "unable to get data 0");
+                }*/
+            } catch (Exception e) {
+                Log.e("error", "unable to get data 1");
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String organization) {
+            super.onPostExecute(organization);
+            pDialog.dismiss();
+            sessionManager.createLoginSession(name, email, token);
+            Intent intent = new Intent(GreetingActivity.this, ContainerActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 }

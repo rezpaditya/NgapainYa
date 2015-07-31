@@ -17,11 +17,11 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.ngapainya.ngapainya.R;
-import com.ngapainya.ngapainya.fragment.ExploreFragment;
-import com.ngapainya.ngapainya.fragment.HomeFragment;
-import com.ngapainya.ngapainya.fragment.MyProfileFragment;
-import com.ngapainya.ngapainya.fragment.NotificationFragment;
-import com.ngapainya.ngapainya.fragment.PostProgramFragment;
+import com.ngapainya.ngapainya.fragment.volunteer.ExploreFragment;
+import com.ngapainya.ngapainya.fragment.volunteer.HomeFragment;
+import com.ngapainya.ngapainya.fragment.volunteer.MyProfileFragment;
+import com.ngapainya.ngapainya.fragment.volunteer.NotificationFragment;
+import com.ngapainya.ngapainya.fragment.owner.PostProgramFragment;
 
 public class ContainerActivity extends ActionBarActivity {
     private Toolbar toolbar;

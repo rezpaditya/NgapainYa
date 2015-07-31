@@ -5,11 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ngapainya.ngapainya.R;
 import com.ngapainya.ngapainya.model.Explore;
+import com.squareup.picasso.Picasso;
 
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 
 /**
@@ -19,16 +22,42 @@ public class ExploreAdapter extends BaseAdapter {
     Context context;
     ArrayList<Explore> list;
     String image_url;
+    String str_month, str_day, en_month, en_day;
 
     public ExploreAdapter(Context context, ArrayList<Explore> items){
         this.context = context;
         list = items;
     }
 
+    public void splitDate(Explore tmp){
+        String pu_tmp = tmp.getProgram_date_start();
+        String date1 [] = pu_tmp.split("-");
+        String date2 [] = date1[2].split(" ");
+        //str_year  = date1[0];
+        str_month  = new DateFormatSymbols().getMonths()[Integer.parseInt(date1[1])-1];
+        str_day  = date2[0];
+
+        String do_tmp = tmp.getProgram_date_end();
+        String date3 [] = do_tmp.split("-");
+        String date4 [] = date3[2].split(" ");
+        //en_year = date3[0];
+        en_month = new DateFormatSymbols().getMonths()[Integer.parseInt(date3[1])-1];
+        en_day = date4[0];
+    }
+
     private class ViewHolder{
-        TextView tv_1;
+        TextView program_title;
+        TextView program_dec;
+        TextView start_date;
+        TextView end_date;
+        ImageView propic;
+
         ViewHolder(View v){
-            tv_1 = (TextView) v.findViewById(R.id.exp_title);
+            program_title   = (TextView) v.findViewById(R.id.program_title);
+            program_dec     = (TextView) v.findViewById(R.id.program_dec);
+            start_date      = (TextView) v.findViewById(R.id.start_date);
+            end_date        = (TextView) v.findViewById(R.id.end_date);
+            propic          = (ImageView) v.findViewById(R.id.propic);
         }
     }
 
@@ -62,8 +91,25 @@ public class ExploreAdapter extends BaseAdapter {
         }
 
         Explore temp = list.get(position);
-        holder.tv_1.setText(temp.title);
-        holder.tv_1.setTag(temp);
+        splitDate(temp);
+
+        holder.program_title.setText(temp.getProgram_name());
+        holder.program_title.setTag(temp);
+
+        holder.program_dec.setText(temp.getProgram_desc());
+        holder.program_dec.setTag(temp);
+
+        holder.start_date.setText(str_day+" "+str_month);
+        holder.start_date.setTag(temp);
+
+        holder.end_date.setText(en_day+" "+en_month);
+        holder.end_date.setTag(temp);
+
+        Picasso.with(context)
+                .load("http://ainufaisal.com/"+list.get(position).getUser_pic())
+                .placeholder(R.drawable.propic_default)
+                .into(holder.propic);
+        holder.propic.setTag(temp);
 
         return row;
     }

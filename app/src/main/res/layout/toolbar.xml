@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/ColorPrimary"
-    app:theme="@style/ToolBarStyle">
+    app:theme="@style/ToolBarStyle"
+    app:titleTextAppearance="@style/Toolbar.TitleText" >
 
     <!--<LinearLayout
         android:layout_width="fill_parent"
@@ -12,6 +13,8 @@
         android:orientation="vertical"
         android:gravity="center_horizontal">
         <ImageView
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageView"

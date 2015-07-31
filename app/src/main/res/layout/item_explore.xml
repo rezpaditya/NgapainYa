@@ -12,7 +12,7 @@
         android:src="@drawable/logo_1"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/imageView3" />
+        android:id="@+id/propic" />
 
     <LinearLayout
         android:layout_weight="2"
@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Event's Title"
-            android:id="@+id/exp_title" />
+            android:id="@+id/program_title" />
 
         <TextView
             android:paddingTop="5dp"
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Neque porro quisquam est qui dolorem ipsum quia dolor sit ..."
-            android:id="@+id/textView3" />
+            android:id="@+id/program_dec" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -41,7 +41,6 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:textSize="4pt"
                 android:textColor="#fff"
                 android:padding="5dp"
                 android:background="@drawable/background_date_green"
@@ -49,10 +48,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="22 Aug"
-                android:id="@+id/textView4" />
+                android:id="@+id/start_date" />
 
             <TextView
-                android:textSize="4pt"
                 android:textColor="#fff"
                 android:padding="5dp"
                 android:background="@drawable/background_date_red"
@@ -60,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="25 Aug"
-                android:id="@+id/textView5" />
+                android:id="@+id/end_date" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

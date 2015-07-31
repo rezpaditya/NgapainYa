@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@color/ColorBase"
-    tools:context="com.ngapainya.ngapainya.fragment.child.GreetingSlideFragment">
+    tools:context="com.ngapainya.ngapainya.fragment.volunteer.child.GreetingSlideFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
@@ -29,7 +29,7 @@
             android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Find Activity"
+            android:text="Click Here!"
             android:id="@+id/textView13" />
 
         <TextView

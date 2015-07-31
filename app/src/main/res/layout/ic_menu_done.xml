@@ -7,6 +7,7 @@
     android:paddingBottom="14dp"
     android:gravity="center"
     android:text="Done"
-    android:textColor="#ff37745f"
+    android:textSize="20sp"
+    android:textColor="@color/ColorPrimaryDark"
     android:textAllCaps="false"
     android:clickable="true" />
