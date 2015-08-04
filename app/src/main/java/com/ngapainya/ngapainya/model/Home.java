@@ -1,11 +1,12 @@
 package com.ngapainya.ngapainya.model;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by Ari Anggraeni on 7/8/2015.
  */
-public class Home implements Serializable {
+public class Home implements Parcelable {
     /**
      * Type
      * 0 = post status
@@ -103,6 +104,16 @@ public class Home implements Serializable {
 
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
     }
 }
 

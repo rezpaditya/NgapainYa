@@ -141,11 +141,15 @@ public class GreetingActivity extends FragmentActivity implements ViewPager.OnPa
     }
 
     /*
-    * This method use to redirect to the main page
+    * This method use to redirect to the main page (temporary)
     * */
 
     public void goTo(View view) {
         //sessionManager.createLoginSession("Rezpa Aditya", "respa@gmail.com", "respa");
+
+        /*
+        * temporary this method call remoteDataTask, it should be in login page
+        * */
         new RemoteDataTask().execute();
     }
 

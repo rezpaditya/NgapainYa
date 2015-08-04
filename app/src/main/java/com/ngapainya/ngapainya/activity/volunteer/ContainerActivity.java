@@ -29,6 +29,8 @@ import com.ngapainya.ngapainya.fragment.volunteer.ExploreFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.HomeFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.MyProfileFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.NotificationFragment;
+import com.ngapainya.ngapainya.fragment.volunteer.child.EditProfileFragment;
+import com.ngapainya.ngapainya.fragment.volunteer.child.FindFriendFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.child.post.PostPhotoFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.child.post.PostStatusFragment;
 import com.ngapainya.ngapainya.helper.SessionManager;
@@ -42,7 +44,7 @@ public class ContainerActivity extends ActionBarActivity {
     private RadioGroup actionBarRadioGroup;
     private RadioGroup createPostRadioGroup;
 
-    //variable fragment
+    //variable main fragment
     private MyProfileFragment myProfileFragment;
     private HomeFragment homeFragment;
     private ExploreFragment exploreFragment;
@@ -69,6 +71,11 @@ public class ContainerActivity extends ActionBarActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
@@ -89,17 +96,30 @@ public class ContainerActivity extends ActionBarActivity {
 
         homeTitleBar(); //use custom font to the title bar
 
-        //customize action bar font
-        /*code here*/
-
         //set home fragment for default
         RadioButton r1 = (RadioButton) findViewById(R.id.homeBtn);
         r1.setChecked(true);
 
         //use to call starting fragment
         if (savedInstanceState == null) {
-            homeFragment = new HomeFragment();
-            changeFragment(homeFragment);
+            Bundle bundle = getIntent().getExtras();
+            String string = "";
+            if (bundle != null) {
+                string = bundle.getString("extra");
+                switch (string){
+                    case "find_friend":
+                        FindFriendFragment findFriendFragment = new FindFriendFragment();
+                        changeFragment(findFriendFragment);
+                        break;
+                    case "edit_profile":
+                        EditProfileFragment editProfileFragment = new EditProfileFragment();
+                        changeFragment(editProfileFragment);
+                        break;
+                }
+            }else{
+                homeFragment = new HomeFragment();
+                changeFragment(homeFragment);
+            }
         }
 
         actionBarRadioGroup = (RadioGroup) findViewById(R.id.actionRadioBtn);
@@ -192,14 +212,6 @@ public class ContainerActivity extends ActionBarActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        /*if(requestCode==0 && resultCode==1){
-            new Handler().post(new Runnable() {
-                public void run() {
-                    homeFragment = new HomeFragment();
-                    changeFragment(homeFragment);
-                }
-            });
-        }*/
     }
 
     public void changeActionbarStyle(boolean isProfile){
@@ -311,19 +323,24 @@ public class ContainerActivity extends ActionBarActivity {
     }
 
     public void changeFragment(Fragment fragment){
-        Fragment newFrag = fragment;
 
         //old code
         /*manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
-        transaction.replace(R.id.content_fragment, newFrag);
+        transaction.replace(R.id.content_fragment, fragment);
         transaction.addToBackStack(null);
         transaction.commit();*/
 
         //newest code
         String backStateName = fragment.getClass().getName();
         FragmentManager manager = getSupportFragmentManager();
-        boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
+        boolean fragmentPopped = false;
+        for(int i=0;i<manager.getBackStackEntryCount();i++){
+            if(manager.getBackStackEntryAt(i).getName().equals(backStateName)){
+                fragmentPopped = manager.popBackStackImmediate(i, 0);
+            }
+        }
+
         if (!fragmentPopped){ //fragment not in back stack, create it.
             FragmentTransaction ft = manager.beginTransaction();
             ft.replace(R.id.content_fragment, fragment, backStateName);
@@ -331,6 +348,8 @@ public class ContainerActivity extends ActionBarActivity {
             ft.commit();
             Log.e("backStateName", backStateName);
         }
+
+        Log.e("backStateName", Boolean.toString(fragmentPopped));
     }
 
 }

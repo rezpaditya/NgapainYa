@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:background="@color/ColorBase"
+    tools:context="com.ngapainya.ngapainya.fragment.volunteer.child.post.PostPhotoFragment">
+
+
+    <ImageView
+        android:background="@color/white"
+        android:padding="10dp"
+        android:src="@drawable/bg_front"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/preview" />
+
+    <EditText
+        android:hint="Write a caption..."
+        android:padding="10dp"
+        android:background="@drawable/my_edittext"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:id="@+id/caption" />
+</LinearLayout>

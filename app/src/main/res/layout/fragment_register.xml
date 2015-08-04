@@ -1,0 +1,61 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background_card_base"
+    tools:context="com.ngapainya.ngapainya.fragment.volunteer.child.RegisterFragment">
+
+    <LinearLayout
+        android:padding="20dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:padding="10dp"
+            android:drawableLeft="@drawable/ic_action_mail"
+            android:inputType="textEmailAddress"
+            android:hint="Your Email"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background_card"
+            android:id="@+id/email"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top" />
+
+        <EditText
+            android:padding="10dp"
+            android:drawableLeft="@drawable/ic_action_person"
+            android:hint="Username"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background_card"
+            android:id="@+id/username"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top" />
+
+        <EditText
+            android:padding="10dp"
+            android:drawableLeft="@drawable/ic_action_secure"
+            android:inputType="textPassword"
+            android:hint="Password"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background_card"
+            android:id="@+id/password"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top" />
+
+        <Button
+            android:textAllCaps="false"
+            android:textColor="#fff"
+            android:background="@drawable/my_button_green"
+            android:id="@+id/regist_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:text="Register" />
+    </LinearLayout>
+
+</ScrollView>

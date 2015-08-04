@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="6dp"
-            android:src="@drawable/propic_01"/>
+            android:src="@drawable/propic_default"/>
         <ImageView
             android:src="@drawable/rounded_img"
             android:layout_width="match_parent"

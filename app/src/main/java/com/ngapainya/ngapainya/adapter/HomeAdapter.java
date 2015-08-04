@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,41 +16,23 @@ import java.util.ArrayList;
 /**
  * Created by Ari Anggraeni on 7/8/2015.
  */
-public class HomeAdapter extends BaseAdapter {
+public class HomeAdapter extends GNowListAdapter {
     Context context;
     ArrayList<Home> list;
-    private int lastPosition = -1;
 
-    public HomeAdapter(Context context, ArrayList<Home> items) {
+    public HomeAdapter(Context context, SpeedScrollListener scrollListener, ArrayList<Home> items) {
+        super(context, scrollListener, items);
         this.context = context;
         list = items;
     }
 
-    private class ViewHolder {
-        TextView tv_1;
-
-        ViewHolder(View v) {
-            tv_1 = (TextView) v.findViewById(R.id.textView7);
-        }
-    }
+   /* public HomeAdapter(Context context, ArrayList<Home> items) {
+        this.context = context;
+        list = items;
+    }*/
 
     @Override
-    public int getCount() {
-        return list.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return list.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    protected View getRowView(int position, View convertView, ViewGroup parent) {
 
         View row = convertView;
         ViewHolder holder = null;
@@ -139,5 +120,28 @@ public class HomeAdapter extends BaseAdapter {
             lastPosition = position;
         }*/
         return row;
+    }
+
+    private class ViewHolder {
+        TextView tv_1;
+
+        ViewHolder(View v) {
+            tv_1 = (TextView) v.findViewById(R.id.textView7);
+        }
+    }
+
+    @Override
+    public int getCount() {
+        return list.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return list.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 }

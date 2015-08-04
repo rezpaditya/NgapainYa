@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="PROFILE">
+        <PreferenceScreen android:title="Edit profile" android:key="eProfile" android:icon="@drawable/ic_action_person">
+        </PreferenceScreen>
+
+        <PreferenceScreen android:title="Switch mode" android:icon="@drawable/ic_action_mail" android:summary="" android:key="switch">
+        </PreferenceScreen>
+
+        <PreferenceScreen android:title="Find friends" android:key="fFriend" android:icon="@drawable/ic_action_add_person_dark">
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="SECURITY">
+
+        <PreferenceScreen android:title="Logout" android:key="logout" android:icon="@drawable/ic_action_cancel">
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
