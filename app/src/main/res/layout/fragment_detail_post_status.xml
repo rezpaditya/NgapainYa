@@ -90,12 +90,13 @@
             android:orientation="horizontal">
 
             <EditText
+                android:padding="10dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:id="@+id/content_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/my_edittext"
+                android:background="@drawable/background_card"
                 android:hint="Write a comment..." />
 
             <Button

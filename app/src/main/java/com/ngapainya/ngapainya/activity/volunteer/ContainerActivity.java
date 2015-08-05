@@ -33,6 +33,7 @@ import com.ngapainya.ngapainya.fragment.volunteer.child.EditProfileFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.child.FindFriendFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.child.post.PostPhotoFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.child.post.PostStatusFragment;
+import com.ngapainya.ngapainya.fragment.volunteer.child.post.PostUrlFragment;
 import com.ngapainya.ngapainya.helper.SessionManager;
 import com.ngapainya.ngapainya.helper.TypefaceSpan;
 
@@ -50,6 +51,11 @@ public class ContainerActivity extends ActionBarActivity {
     private ExploreFragment exploreFragment;
     private NotificationFragment notificationFragment;
 
+    //variable child fragment
+    private PostStatusFragment postStatusFragment;
+    private PostPhotoFragment postPhotoFragment;
+    private PostUrlFragment postUrlFragment;
+
     //define fragment manager
     private FragmentManager manager;
     private FragmentTransaction transaction;
@@ -58,14 +64,14 @@ public class ContainerActivity extends ActionBarActivity {
     //manage session
     private SessionManager sessionManager;
 
-    public void homeTitleBar(){
+    public void homeTitleBar() {
         toolbar.setTitleTextAppearance(ContainerActivity.this, R.style.Toolbar_TitleText);
         SpannableString s = new SpannableString("Ngapain");
         s.setSpan(new TypefaceSpan(this, "Mission-Script.otf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         getSupportActionBar().setTitle(s);
     }
 
-    public void standardTitleBar(String title){
+    public void standardTitleBar(String title) {
         toolbar.setTitleTextAppearance(ContainerActivity.this, R.style.Toolbar_SmallTitleText);
         getSupportActionBar().setTitle(title);
     }
@@ -82,7 +88,7 @@ public class ContainerActivity extends ActionBarActivity {
 
         //check the login session
         sessionManager = new SessionManager(this);
-        if(!sessionManager.checkLogin()){
+        if (!sessionManager.checkLogin()) {
             Intent intent = new Intent(this, GreetingActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
@@ -94,11 +100,22 @@ public class ContainerActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(this.toolbar);
 
-        homeTitleBar(); //use custom font to the title bar
+
 
         //set home fragment for default
         RadioButton r1 = (RadioButton) findViewById(R.id.homeBtn);
         r1.setChecked(true);
+
+        /*Instantiate the Fragment*/
+        homeFragment            = new HomeFragment();
+        exploreFragment         = new ExploreFragment();
+        notificationFragment    = new NotificationFragment();
+        myProfileFragment       = new MyProfileFragment();
+
+        postStatusFragment      = new PostStatusFragment();
+        postPhotoFragment       = new PostPhotoFragment();
+        postUrlFragment         = new PostUrlFragment();
+
 
         //use to call starting fragment
         if (savedInstanceState == null) {
@@ -106,19 +123,21 @@ public class ContainerActivity extends ActionBarActivity {
             String string = "";
             if (bundle != null) {
                 string = bundle.getString("extra");
-                switch (string){
+                switch (string) {
                     case "find_friend":
                         FindFriendFragment findFriendFragment = new FindFriendFragment();
                         changeFragment(findFriendFragment);
+                        standardTitleBar("Find friend");
                         break;
                     case "edit_profile":
                         EditProfileFragment editProfileFragment = new EditProfileFragment();
                         changeFragment(editProfileFragment);
+                        standardTitleBar("Edit profile");
                         break;
                 }
-            }else{
-                homeFragment = new HomeFragment();
+            } else {
                 changeFragment(homeFragment);
+                homeTitleBar(); //use custom font to the title bar
             }
         }
 
@@ -131,28 +150,24 @@ public class ContainerActivity extends ActionBarActivity {
 
                 switch (pos) {
                     case 0:
-                        homeFragment = new HomeFragment();
                         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                         homeTitleBar();
                         changeFragment(homeFragment);
                         changeActionbarStyle(false);
                         break;
                     case 1:
-                        exploreFragment = new ExploreFragment();
                         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                         standardTitleBar("Explore");
                         changeFragment(exploreFragment);
                         changeActionbarStyle(false);
                         break;
                     case 3:
-                        notificationFragment = new NotificationFragment();
                         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                         standardTitleBar("Notification");
                         changeFragment(notificationFragment);
                         changeActionbarStyle(false);
                         break;
                     case 4:
-                        myProfileFragment = new MyProfileFragment();
                         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                         standardTitleBar("Username");
                         changeFragment(myProfileFragment);
@@ -170,34 +185,29 @@ public class ContainerActivity extends ActionBarActivity {
         createPostRadioGroup = (RadioGroup) findViewById(R.id.createPostRadioBtn);
         createPostRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId)
-            {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
                 int pos;
                 pos = createPostRadioGroup.indexOfChild(findViewById(checkedId));
                 RadioButton r1 = (RadioButton) findViewById(R.id.statusBtn);
                 RadioButton r2 = (RadioButton) findViewById(R.id.locationBtn);
                 RadioButton r3 = (RadioButton) findViewById(R.id.picBtn);
                 RadioButton r4 = (RadioButton) findViewById(R.id.linkBtn);
-                switch (pos)
-                {
-                    case 0 :
-                        PostStatusFragment postStatusFragment = new PostStatusFragment();
+                switch (pos) {
+                    case 0:
                         changeFragment(postStatusFragment);
                         r1.setChecked(false);
                         break;
-                    case 1 :
+                    case 1:
                         Toast.makeText(getBaseContext(), "You have Clicked RadioButton 3.2",
                                 Toast.LENGTH_SHORT).show();
                         r2.setChecked(false);
                         break;
-                    case 2 :
-                        PostPhotoFragment postPhotoFragment = new PostPhotoFragment();
+                    case 2:
                         changeFragment(postPhotoFragment);
                         r3.setChecked(false);
                         break;
-                    case 3 :
-                        Toast.makeText(getBaseContext(), "You have Clicked RadioButton 3.4",
-                                Toast.LENGTH_SHORT).show();
+                    case 3:
+                        changeFragment(postUrlFragment);
                         r4.setChecked(false);
                         break;
                 }
@@ -205,7 +215,7 @@ public class ContainerActivity extends ActionBarActivity {
         });
     }
 
-    public void onClick(View v){
+    public void onClick(View v) {
         myProfileFragment.onClick(v);
     }
 
@@ -214,8 +224,8 @@ public class ContainerActivity extends ActionBarActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void changeActionbarStyle(boolean isProfile){
-        if(isProfile) {
+    public void changeActionbarStyle(boolean isProfile) {
+        if (isProfile) {
             //This method is used to change the status bar color
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getWindow();
@@ -234,7 +244,7 @@ public class ContainerActivity extends ActionBarActivity {
 
             getSupportActionBar()
                     .setTitle(user.get(SessionManager.KEY_NAME));
-        }else{
+        } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getWindow();
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -247,48 +257,54 @@ public class ContainerActivity extends ActionBarActivity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1){
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finish();
-        }
-        else {
+        } else {
             super.onBackPressed();
 
             String packageName = "com.ngapainya.ngapainya.fragment.volunteer.";
-            Fragment fragmentPopped = getSupportFragmentManager().findFragmentByTag(packageName+"MyProfileFragment");
+            Fragment fragmentPopped = getSupportFragmentManager().findFragmentByTag(packageName + "MyProfileFragment");
 
             if (fragmentPopped != null && fragmentPopped.isVisible()) {
                 changeActionbarStyle(true);
-            }
-            else {
+            } else {
                 changeActionbarStyle(false);
             }
         }
     }
 
-    public void createPost (View view){
-        ToggleButton createStatusBtn = (ToggleButton) findViewById(R.id.createStatusBtn);
+    public void createPost(View view) {
+        final ToggleButton createStatusBtn = (ToggleButton) findViewById(R.id.createStatusBtn);
 
-        if(createStatusBtn.isChecked()){
+        RelativeLayout actionbar = (RelativeLayout) findViewById(R.id.actionbar);
+        actionbar.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        final int height = actionbar.getMeasuredHeight();
+        Log.e("height", String.valueOf(height));
+
+        if (createStatusBtn.isChecked()) {
             //Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_in_anim);
-            Animation slideUp = new TranslateAnimation(0, 0, 0, -60);
+            Animation slideUp = new TranslateAnimation(0, 0, 0, -height);
             //slideUp.setFillAfter(true);
             slideUp.setFillEnabled(true);
             slideUp.setDuration(500);
 
             create_bar.startAnimation(slideUp);
             slideUp.setAnimationListener(new Animation.AnimationListener() {
+                ToggleButton toggle = createStatusBtn;
+                int h = height;
                 @Override
                 public void onAnimationStart(Animation animation) {
-
+                    toggle.setClickable(false);
                 }
 
                 @Override
                 public void onAnimationEnd(Animation arg0) {
                     RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) create_bar.getLayoutParams();
-                    lp.bottomMargin = 60; // use topmargin for the y-property, left margin for the x-property of your view
+                    lp.bottomMargin = h; // use topmargin for the y-property, left margin for the x-property of your view
                     create_bar.setLayoutParams(lp);
+                    toggle.setClickable(true);
                 }
 
                 @Override
@@ -296,15 +312,15 @@ public class ContainerActivity extends ActionBarActivity {
 
                 }
             });
-        }else{
+        } else {
             Animation slideDown = new TranslateAnimation(0, 0, 0, 100);
             slideDown.setDuration(300);
-
             create_bar.startAnimation(slideDown);
             slideDown.setAnimationListener(new Animation.AnimationListener() {
+                ToggleButton toggle = createStatusBtn;
                 @Override
                 public void onAnimationStart(Animation animation) {
-
+                    toggle.setClickable(false);
                 }
 
                 @Override
@@ -312,6 +328,7 @@ public class ContainerActivity extends ActionBarActivity {
                     RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) create_bar.getLayoutParams();
                     lp.bottomMargin = 0; // use topmargin for the y-property, left margin for the x-property of your view
                     create_bar.setLayoutParams(lp);
+                    toggle.setClickable(true);
                 }
 
                 @Override
@@ -322,34 +339,30 @@ public class ContainerActivity extends ActionBarActivity {
         }
     }
 
-    public void changeFragment(Fragment fragment){
+    public void changeFragment(Fragment fragment) {
 
         //old code
-        /*manager = getSupportFragmentManager();
+        manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
         transaction.replace(R.id.content_fragment, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();*/
+        transaction.addToBackStack(fragment.getClass().getName());
+        transaction.commit();
+
+        Log.e("name", fragment.getClass().getName());
 
         //newest code
-        String backStateName = fragment.getClass().getName();
-        FragmentManager manager = getSupportFragmentManager();
-        boolean fragmentPopped = false;
-        for(int i=0;i<manager.getBackStackEntryCount();i++){
-            if(manager.getBackStackEntryAt(i).getName().equals(backStateName)){
-                fragmentPopped = manager.popBackStackImmediate(i, 0);
-            }
-        }
+        /*String backStateName = fragment.getClass().getName();
 
-        if (!fragmentPopped){ //fragment not in back stack, create it.
+        FragmentManager manager = getSupportFragmentManager();
+        boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
+
+        if (!fragmentPopped) { //fragment not in back stack, create it.
             FragmentTransaction ft = manager.beginTransaction();
-            ft.replace(R.id.content_fragment, fragment, backStateName);
+            ft.replace(R.id.content_fragment, fragment);
             ft.addToBackStack(backStateName);
             ft.commit();
-            Log.e("backStateName", backStateName);
-        }
-
-        Log.e("backStateName", Boolean.toString(fragmentPopped));
+        }*/
     }
 
 }
+

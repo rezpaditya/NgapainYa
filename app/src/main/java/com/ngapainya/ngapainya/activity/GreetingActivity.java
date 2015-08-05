@@ -176,7 +176,7 @@ public class GreetingActivity extends FragmentActivity implements ViewPager.OnPa
             session = new SessionManager(GreetingActivity.this);
             email = "rezpa.snk@gmail.com";
             password = "blackout";
-            name = "Rezpa Aditya";
+            name = "respa";
             token = "respa"; //dummy
         }
 

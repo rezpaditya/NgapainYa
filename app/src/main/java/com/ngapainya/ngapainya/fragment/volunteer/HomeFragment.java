@@ -180,10 +180,9 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onRefresh() {
         filelist = new ArrayList<Home>();
-        adapter = new HomeAdapter(myContext, speedScrollListener, filelist);
+        //adapter = new HomeAdapter(myContext, speedScrollListener, filelist);
         new RemoteDataTask().execute();
         swipeRefreshLayout.setRefreshing(false);
-
         Log.e("onRefresh", "onRefresh");
     }
 
@@ -196,6 +195,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         Home tmp = (Home) parent.getItemAtPosition(position);
         DetailPostFragment detailPostFragment = new DetailPostFragment();
         Bundle args = new Bundle();
+        args.putString("username", tmp.getUsername());
         switch (tmp.getAct_type()) {
             case "Text":
                 args.putInt("postType", 0);

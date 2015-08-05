@@ -26,7 +26,7 @@ import android.widget.TextView;
 
 import com.ngapainya.ngapainya.R;
 import com.ngapainya.ngapainya.activity.owner.ContainerActivity;
-import com.ngapainya.ngapainya.activity.volunteer.SettingsActivity;
+import com.ngapainya.ngapainya.activity.SettingsActivity;
 import com.ngapainya.ngapainya.fragment.volunteer.child.EditProfileFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.child.ShowFeedFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.child.ShowFriendFragment;
@@ -92,15 +92,23 @@ public class MyProfileFragment extends Fragment {
         super.onAttach(activity);
     }
 
+    /*@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        new getMyProfile().execute();
+
+    }*/
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         myFragmentView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        new getMyProfile().execute();
-
         setHasOptionsMenu(true);
+
+        new getMyProfile().execute();
 
         /*
         * Initialize the variables
@@ -139,7 +147,7 @@ public class MyProfileFragment extends Fragment {
                         ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
                                 getActivity()).changeFragment(editProfile);
                 ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
-                        getActivity()).standardTitleBar("Edit Profile");
+                        getActivity()).standardTitleBar("Edi_t Profile");
                 break;
             case R.id.profile_image:
                 PopupMenu popup = new PopupMenu(myContext, propic);

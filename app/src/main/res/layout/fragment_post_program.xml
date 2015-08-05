@@ -16,26 +16,34 @@
         android:orientation="vertical">
 
         <EditText
+            android:drawableLeft="@drawable/ic_action_person"
+            android:layout_marginBottom="5dp"
+            android:padding="10dp"
             android:id="@+id/name"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/my_edittext2"
+            android:background="@drawable/background_card"
             android:ems="10"
             android:hint="Name"
             android:inputType="textPersonName" />
 
         <EditText
+            android:drawableLeft="@drawable/ic_action_place"
             android:id="@+id/editText4"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/my_edittext2"
+            android:layout_marginBottom="5dp"
+            android:padding="10dp"
+            android:background="@drawable/background_card"
             android:hint="Location" />
 
         <EditText
             android:id="@+id/editText5"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/my_edittext2"
+            android:layout_marginBottom="5dp"
+            android:padding="10dp"
+            android:background="@drawable/background_card"
             android:ems="10"
             android:hint="Partner"
             android:inputType="textPersonName" />
@@ -44,7 +52,9 @@
             android:id="@+id/editText6"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/my_edittext2"
+            android:layout_marginBottom="5dp"
+            android:padding="10dp"
+            android:background="@drawable/background_card"
             android:ems="10"
             android:hint="Fee"
             android:inputType="numberDecimal" />
@@ -53,11 +63,15 @@
             android:id="@+id/editText7"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/my_edittext2"
+            android:layout_marginBottom="5dp"
+            android:padding="10dp"
+            android:background="@drawable/background_card"
             android:hint="Type" />
 
         <LinearLayout
-            android:background="@drawable/my_edittext2"
+            android:layout_marginBottom="5dp"
+            android:padding="10dp"
+            android:background="@drawable/background_card"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="horizontal">
@@ -79,9 +93,12 @@
         </LinearLayout>
 
         <android.widget.EditText
+            android:drawableLeft="@drawable/ic_calendar_icon"
             android:onClick="onClick"
             android:hint="Project Start"
-            android:background="@drawable/my_edittext2"
+            android:layout_marginBottom="5dp"
+            android:padding="10dp"
+            android:background="@drawable/background_card"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="date"
@@ -90,9 +107,12 @@
             android:focusable="false" />
 
         <android.widget.EditText
+            android:drawableLeft="@drawable/ic_calendar_icon"
             android:onClick="onClick"
             android:hint="Project End"
-            android:background="@drawable/my_edittext2"
+            android:layout_marginBottom="5dp"
+            android:padding="10dp"
+            android:background="@drawable/background_card"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="date"
@@ -101,14 +121,18 @@
             android:focusable="false" />
 
         <EditText
-            android:background="@drawable/my_edittext2"
+            android:layout_marginBottom="5dp"
+            android:padding="10dp"
+            android:background="@drawable/background_card"
             android:hint="Age Min"
             android:id="@+id/ageMin"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
 
         <EditText
-            android:background="@drawable/my_edittext2"
+            android:layout_marginBottom="5dp"
+            android:padding="10dp"
+            android:background="@drawable/background_card"
             android:hint="Age Max"
             android:id="@+id/ageMax"
             android:layout_width="fill_parent"
@@ -116,8 +140,9 @@
 
         <EditText
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/my_edittext2"
+            android:layout_marginBottom="5dp"
+            android:padding="10dp"
+            android:background="@drawable/background_card"
             android:hint="Requirement"
             android:id="@+id/requirement"
             android:layout_width="fill_parent"
@@ -126,8 +151,9 @@
 
         <EditText
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/my_edittext2"
+            android:layout_marginBottom="5dp"
+            android:padding="10dp"
+            android:background="@drawable/background_card"
             android:hint="Accomodation"
             android:id="@+id/accomodation"
             android:layout_width="fill_parent"
@@ -136,8 +162,9 @@
 
         <EditText
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/my_edittext2"
+            android:layout_marginBottom="5dp"
+            android:padding="10dp"
+            android:background="@drawable/background_card"
             android:hint="Description"
             android:id="@+id/description"
             android:layout_width="fill_parent"

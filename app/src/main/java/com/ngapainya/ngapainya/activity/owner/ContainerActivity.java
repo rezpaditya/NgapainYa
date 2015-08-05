@@ -1,13 +1,18 @@
 package com.ngapainya.ngapainya.activity.owner;
 
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.RadioButton;
@@ -17,11 +22,17 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.ngapainya.ngapainya.R;
+import com.ngapainya.ngapainya.fragment.owner.PostProgramFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.ExploreFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.HomeFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.MyProfileFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.NotificationFragment;
-import com.ngapainya.ngapainya.fragment.owner.PostProgramFragment;
+import com.ngapainya.ngapainya.fragment.volunteer.child.EditProfileFragment;
+import com.ngapainya.ngapainya.fragment.volunteer.child.FindFriendFragment;
+import com.ngapainya.ngapainya.helper.SessionManager;
+import com.ngapainya.ngapainya.helper.TypefaceSpan;
+
+import java.util.HashMap;
 
 public class ContainerActivity extends ActionBarActivity {
     private Toolbar toolbar;
@@ -37,10 +48,55 @@ public class ContainerActivity extends ActionBarActivity {
     private HomeFragment homeFragment;
     private ExploreFragment exploreFragment;
     private NotificationFragment notificationFragment;
+
     private PostProgramFragment postProgramFragment;
 
     public void onClick(View view){
         postProgramFragment.onClick(view);
+    }
+
+    public void homeTitleBar() {
+        toolbar.setTitleTextAppearance(ContainerActivity.this, R.style.Toolbar_TitleText);
+        SpannableString s = new SpannableString("Ngapain");
+        s.setSpan(new TypefaceSpan(this, "Mission-Script.otf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        getSupportActionBar().setTitle(s);
+    }
+
+    public void standardTitleBar(String title) {
+        toolbar.setTitleTextAppearance(ContainerActivity.this, R.style.Toolbar_SmallTitleText);
+        getSupportActionBar().setTitle(title);
+    }
+
+    public void changeActionbarStyle(boolean isProfile) {
+        if (isProfile) {
+            //This method is used to change the status bar color
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Window window = getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.setStatusBarColor(getResources().getColor(R.color.ActionbarColorDark));
+            }
+            getSupportActionBar()
+                    .setBackgroundDrawable
+                            (new ColorDrawable(getResources().getColor(R.color.ActionbarColor)));
+
+            SessionManager sessionManager;
+            HashMap<String, String> user;
+
+            sessionManager = new SessionManager(this);
+            user = sessionManager.getUserDetails();
+
+            getSupportActionBar()
+                    .setTitle(user.get(SessionManager.KEY_NAME));
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Window window = getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.setStatusBarColor(getResources().getColor(R.color.ColorPrimaryDark));
+            }
+            getSupportActionBar()
+                    .setBackgroundDrawable
+                            (new ColorDrawable(getResources().getColor(R.color.ColorOwner)));
+        }
     }
 
     @Override
@@ -50,7 +106,16 @@ public class ContainerActivity extends ActionBarActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(this.toolbar);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.ColorOwner)));
+        getSupportActionBar()
+                .setBackgroundDrawable
+                        (new ColorDrawable(getResources().getColor(R.color.ColorOwner)));
+
+
+        /*Instantiate the Fragment*/
+        homeFragment            = new HomeFragment();
+        exploreFragment         = new ExploreFragment();
+        notificationFragment    = new NotificationFragment();
+        myProfileFragment       = new MyProfileFragment();
 
         postProgramFragment = new PostProgramFragment();
 
@@ -60,8 +125,27 @@ public class ContainerActivity extends ActionBarActivity {
         RadioButton r1 = (RadioButton) findViewById(R.id.homeBtn);
         r1.setChecked(true);
 
-        homeFragment = new HomeFragment();
-        changeFragment(homeFragment, new ColorDrawable(getResources().getColor(R.color.ColorOwner)));
+        //use to call starting fragment
+        if (savedInstanceState == null) {
+            Bundle bundle = getIntent().getExtras();
+            String string = "";
+            if (bundle != null) {
+                string = bundle.getString("extra");
+                switch (string) {
+                    case "find_friend":
+                        FindFriendFragment findFriendFragment = new FindFriendFragment();
+                        changeFragment(findFriendFragment);
+                        break;
+                    case "edit_profile":
+                        EditProfileFragment editProfileFragment = new EditProfileFragment();
+                        changeFragment(editProfileFragment);
+                        break;
+                }
+            } else {
+                changeFragment(homeFragment);
+                homeTitleBar();
+            }
+        }
 
         actionBarRadioGroup = (RadioGroup) findViewById(R.id.actionRadioBtn);
         actionBarRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -72,20 +156,28 @@ public class ContainerActivity extends ActionBarActivity {
 
                 switch (pos) {
                     case 0:
-                        homeFragment = new HomeFragment();
-                        changeFragment(homeFragment, new ColorDrawable(getResources().getColor(R.color.ColorOwner)));
+                        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                        homeTitleBar();
+                        changeFragment(homeFragment);
+                        changeActionbarStyle(false);
                         break;
                     case 1:
-                        exploreFragment = new ExploreFragment();
-                        changeFragment(exploreFragment, new ColorDrawable(getResources().getColor(R.color.ColorOwner)));
+                        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                        standardTitleBar("Explore");
+                        changeFragment(exploreFragment);
+                        changeActionbarStyle(false);
                         break;
                     case 3:
-                        notificationFragment = new NotificationFragment();
-                        changeFragment(notificationFragment, new ColorDrawable(getResources().getColor(R.color.ColorOwner)));
+                        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                        standardTitleBar("Notification");
+                        changeFragment(notificationFragment);
+                        changeActionbarStyle(false);
                         break;
                     case 4:
-                        myProfileFragment = new MyProfileFragment();
-                        changeFragment(myProfileFragment, new ColorDrawable(getResources().getColor(R.color.ActionbarColor)));
+                        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                        standardTitleBar("Username");
+                        changeFragment(myProfileFragment);
+                        changeActionbarStyle(true);
                         break;
                     default:
                         //The default selection is RadioButton 1
@@ -107,10 +199,13 @@ public class ContainerActivity extends ActionBarActivity {
                 RadioButton r2 = (RadioButton) findViewById(R.id.locationBtn);
                 RadioButton r3 = (RadioButton) findViewById(R.id.picBtn);
                 RadioButton r4 = (RadioButton) findViewById(R.id.linkBtn);
+                RadioButton r5 = (RadioButton) findViewById(R.id.programBtn);
                 switch (pos)
                 {
                     case 0 :
-                        changeFragment(postProgramFragment, new ColorDrawable(getResources().getColor(R.color.ColorOwner)));
+                        Toast.makeText(getBaseContext(), "You have Clicked RadioButton 3.1",
+                                Toast.LENGTH_SHORT).show();
+                        r1.setChecked(false);
                         break;
                     case 1 :
                         Toast.makeText(getBaseContext(), "You have Clicked RadioButton 3.2",
@@ -127,9 +222,32 @@ public class ContainerActivity extends ActionBarActivity {
                                 Toast.LENGTH_SHORT).show();
                         r4.setChecked(false);
                         break;
+                    case 4 :
+                        changeFragment(postProgramFragment);
+                        r5.setChecked(false);
+                        break;
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            finish();
+        } else {
+            super.onBackPressed();
+
+            String packageName = "com.ngapainya.ngapainya.fragment.volunteer.";
+            Fragment fragmentPopped = getSupportFragmentManager().findFragmentByTag(packageName + "MyProfileFragment");
+
+            if (fragmentPopped != null && fragmentPopped.isVisible()) {
+                changeActionbarStyle(true);
+            } else {
+                changeActionbarStyle(false);
+            }
+        }
     }
 
     public void createPost(View view) {
@@ -187,16 +305,26 @@ public class ContainerActivity extends ActionBarActivity {
         }
     }
 
-    public void changeFragment(Fragment fragment, ColorDrawable colorDrawable) {
-        Fragment newFrag = fragment;
-        ColorDrawable newColor = colorDrawable;
+    public void changeFragment(Fragment fragment) {
 
+        //old code
         manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
-        transaction.replace(R.id.content_fragment, newFrag);
-        transaction.addToBackStack(null);
+        transaction.replace(R.id.content_fragment, fragment);
+        transaction.addToBackStack(fragment.getClass().getName());
         transaction.commit();
-        //to change the actionbar color
-        getSupportActionBar().setBackgroundDrawable(newColor);
+
+        //newest code
+        /*String backStateName = fragment.getClass().getName();
+
+        FragmentManager manager = getSupportFragmentManager();
+        boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
+
+        if (!fragmentPopped) { //fragment not in back stack, create it.
+            FragmentTransaction ft = manager.beginTransaction();
+            ft.replace(R.id.content_fragment, fragment);
+            ft.addToBackStack(backStateName);
+            ft.commit();
+        }*/
     }
 }

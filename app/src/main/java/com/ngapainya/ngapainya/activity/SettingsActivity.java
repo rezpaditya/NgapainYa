@@ -1,4 +1,4 @@
-package com.ngapainya.ngapainya.activity.volunteer;
+package com.ngapainya.ngapainya.activity;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -17,10 +17,8 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.ngapainya.ngapainya.R;
-import com.ngapainya.ngapainya.activity.GreetingActivity;
 import com.ngapainya.ngapainya.helper.SessionManager;
 
 import java.util.List;
@@ -91,7 +89,8 @@ public class SettingsActivity extends PreferenceActivity {
         switchM.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Log.e("email", "works");
+                Intent intent = new Intent(SettingsActivity.this, com.ngapainya.ngapainya.activity.owner.ContainerActivity.class);
+                startActivity(intent);
                 return true;
             }
         });

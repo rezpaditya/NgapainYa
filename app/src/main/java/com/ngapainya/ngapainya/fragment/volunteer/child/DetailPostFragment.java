@@ -10,6 +10,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -19,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ngapainya.ngapainya.R;
+import com.ngapainya.ngapainya.activity.volunteer.ContainerActivity;
+import com.ngapainya.ngapainya.fragment.volunteer.HomeFragment;
 import com.ngapainya.ngapainya.helper.Config;
 import com.ngapainya.ngapainya.helper.JSONParser;
 import com.ngapainya.ngapainya.helper.SessionManager;
@@ -108,6 +113,30 @@ public class DetailPostFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // TODO Auto-generated method stub
+        super.onCreateOptionsMenu(menu, inflater);
+
+        SessionManager session = new SessionManager(myContext);
+        HashMap<String, String> user = session.getUserDetails();
+        String usr = user.get(SessionManager.KEY_NAME);
+        String username = getArguments().getString("username");
+        if(username != null && username.equals(usr)){
+            myContext.getMenuInflater().inflate(R.menu.menu_detail_post, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                new deletePost().execute();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -115,6 +144,8 @@ public class DetailPostFragment extends Fragment {
                 getActivity()).getSupportActionBar()
                 .setBackgroundDrawable
                         (new ColorDrawable(getResources().getColor(R.color.ColorPrimary)));
+
+        setHasOptionsMenu(true);
 
         isSuccess = false;
         postType = getArguments().getInt("postType"); //get the post type
@@ -268,6 +299,57 @@ public class DetailPostFragment extends Fragment {
             new getDetailPost().execute();
             Toast.makeText(myContext, "comment sent",
                     Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public class deletePost extends AsyncTask<String, String, String> {
+        ProgressDialog pDialog;
+        SessionManager session;
+        HashMap<String, String> user;
+        String token;
+        Config cfg = new Config();
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Please wait...");
+            pDialog.setIndeterminate(false);
+            pDialog.show();
+
+            session = new SessionManager(myContext);
+            user = session.getUserDetails();
+            token = user.get(SessionManager.KEY_TOKEN);
+        }
+
+        @Override
+        protected String doInBackground(String... arg0) {
+            String url = cfg.HOSTNAME +"/activity/delete/"+act_id;
+            List<NameValuePair> nvp = new ArrayList<NameValuePair>();
+            nvp.add(new BasicNameValuePair("access_token", token));
+
+            JSONParser jParser = new JSONParser();
+            JSONObject json = jParser.makeHttpRequestToObject(url, "GET", nvp);      //get data from server
+
+            try {
+                if(json != null){
+                    Log.e("post", "deleted");
+                }
+            } catch (Exception e) {
+
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            pDialog.dismiss();
+            Toast.makeText(myContext, "post deleted",
+                    Toast.LENGTH_SHORT).show();
+            HomeFragment homeFragment = new HomeFragment();
+                    ((ContainerActivity) getActivity()).changeFragment(homeFragment);
         }
     }
 

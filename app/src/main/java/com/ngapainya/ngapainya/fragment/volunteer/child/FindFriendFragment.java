@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -68,6 +69,10 @@ public class FindFriendFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         myFragmentView = inflater.inflate(R.layout.fragment_find_friend, container, false);
+
+        ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
+                getActivity()).getSupportActionBar()
+                .setDisplayHomeAsUpEnabled(true);
 
         isFounded = false;
 
@@ -173,5 +178,15 @@ public class FindFriendFragment extends Fragment {
                 Log.e("not found", "works");
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                myContext.onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

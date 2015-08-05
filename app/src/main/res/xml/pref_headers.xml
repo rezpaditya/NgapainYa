@@ -3,15 +3,15 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="com.ngapainya.ngapainya.activity.volunteer.SettingsActivity$GeneralPreferenceFragment"
+        android:fragment="com.ngapainya.ngapainya.activity.SettingsActivity$GeneralPreferenceFragment"
         android:title="@string/pref_header_general" />
 
     <header
-        android:fragment="com.ngapainya.ngapainya.activity.volunteer.SettingsActivity$NotificationPreferenceFragment"
+        android:fragment="com.ngapainya.ngapainya.activity.SettingsActivity$NotificationPreferenceFragment"
         android:title="@string/pref_header_notifications" />
 
     <header
-        android:fragment="com.ngapainya.ngapainya.activity.volunteer.SettingsActivity$DataSyncPreferenceFragment"
+        android:fragment="com.ngapainya.ngapainya.activity.SettingsActivity$DataSyncPreferenceFragment"
         android:title="@string/pref_header_data_sync" />
 
 </preference-headers>

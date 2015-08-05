@@ -34,5 +34,11 @@
             android:drawableTop="@drawable/ic_icon_normal_post_owner_post_link"
             android:layout_marginLeft="5dp"
             />
+        <RadioButton
+            android:id="@+id/programBtn"
+            style="@style/navbar_button"
+            android:drawableTop="@drawable/ic_icon_normal_post_owner_post_program"
+            android:layout_marginLeft="5dp"
+            />
     </RadioGroup>
 </RelativeLayout>
