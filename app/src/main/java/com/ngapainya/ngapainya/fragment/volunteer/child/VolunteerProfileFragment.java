@@ -91,7 +91,7 @@ public class VolunteerProfileFragment extends Fragment {
         tabHost = (FragmentTabHost) myFragmentView.findViewById(android.R.id.tabhost);  // The activity TabHost
         tabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
 
-        tabHost.addTab(tabHost.newTabSpec(FOLLOWING_SPEC).setIndicator("Following"), ShowFeedFragment.class, null);
+        //tabHost.addTab(tabHost.newTabSpec(FOLLOWING_SPEC).setIndicator("Following"), ShowFeedFragment.class, null);
         tabHost.addTab(tabHost.newTabSpec(YOU_SPEC).setIndicator("You"), ShowFriendFragment.class, null);
         tabHost.setCurrentTab(0);
 
@@ -190,6 +190,7 @@ public class VolunteerProfileFragment extends Fragment {
             }
         }
     }
+
     public class doFollow extends AsyncTask<String, String, String> {
         SessionManager session;
         HashMap<String, String> user;

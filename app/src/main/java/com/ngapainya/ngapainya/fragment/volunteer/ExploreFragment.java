@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -38,13 +40,15 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ExploreFragment extends Fragment implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class ExploreFragment extends Fragment implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener {
     private FragmentActivity myContext;
     private View myFragmentView;
     private ArrayList<Explore> filelist;
     private ListView myList;
     private ExploreAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    private String keyword;
 
     /*
     * Variable for request data
@@ -61,6 +65,8 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
     private ExploreAdapter savedAdapter;
     private ArrayList<Explore> savedFilelist;
 
+    private SearchView mSearchView;
+
     @Override
     public void onAttach(Activity activity) {
         myContext = (FragmentActivity) activity;
@@ -72,8 +78,24 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         // TODO Auto-generated method stub
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_search, menu);
-        /*menu.add(0, 0, 0, "History").setIcon(R.drawable.logo)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);*/
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        mSearchView = (SearchView) searchItem.getActionView();
+        setupSearchView(searchItem);
+    }
+
+    protected boolean isAlwaysExpanded() {
+        return false;
+    }
+
+    private void setupSearchView(MenuItem searchItem) {
+
+        if (isAlwaysExpanded()) {
+            mSearchView.setIconifiedByDefault(false);
+        } else {
+            searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
+                    | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        }
+        mSearchView.setOnQueryTextListener(this);
     }
 
     @Override
@@ -130,12 +152,100 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public void onRefresh() {
-        filelist = new ArrayList<Explore>();
-        adapter = new ExploreAdapter(myContext, filelist);
+        filelist.clear();
         new RemoteDataTask().execute();
         swipeRefreshLayout.setRefreshing(false);
 
         Log.e("onRefresh", "onRefresh");
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        keyword = s;
+        if(keyword != null) {
+            new doSearch().execute();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        Log.e("onQueryTextChange", "works "+s);
+        return true;
+    }
+
+    private class doSearch extends AsyncTask<String, Void, ArrayList<Explore>> {
+        SessionManager session;
+        HashMap<String, String> user;
+        String token;
+        Config cfg = new Config();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            session = new SessionManager(myContext);
+            user = session.getUserDetails();
+            token = user.get(SessionManager.KEY_TOKEN);
+
+            filelist.clear();
+        }
+
+        private void addList(JSONObject result){
+            try {
+                Explore temp_home = new Explore();
+                temp_home.setProgram_id(result.getString("program_id"));
+                temp_home.setProgram_name(result.getString("program_name"));
+                temp_home.setUser_id(result.getString("user_id"));
+                temp_home.setProgram_desc(result.getString("program_desc"));
+                temp_home.setProgram_date_start(result.getString("program_date_start"));
+                temp_home.setProgram_date_end(result.getString("program_date_end"));
+                //temp_home.setUser_pic(result.getString("user_pic"));
+
+                filelist.add(temp_home);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected ArrayList<Explore> doInBackground(String... urls) {
+            String url = cfg.HOSTNAME +"/program/search";
+            List<NameValuePair> nvp = new ArrayList<NameValuePair>();
+            nvp.add(new BasicNameValuePair("access_token", token));
+            nvp.add(new BasicNameValuePair("search", keyword));
+
+            JSONParser jParser = new JSONParser();
+            JSONArray json = jParser.makeHttpRequest(url, "GET", nvp);      //get data from server
+            try {
+                for (int i = 0; i < json.length(); i++) {
+                    JSONObject result = json.getJSONObject(i);
+                    addList(result);
+                    Log.e("ok", " ambil data");
+                }
+            } catch (Exception e) {
+                Log.e("error", "tidak bisa ambil data 1");
+                e.printStackTrace();
+            }
+            return filelist;
+            /*try {
+                ArrayList<Explore> new_filelist = new ArrayList<Explore>();
+                //dummy data
+                for (int i = 0; i < 10; i++) {
+                    filelist.add(new Explore("img " + i, "title " + i, "text " + i, "strDate " + i, "endDate " + i, "image"));
+                }
+                filelist.addAll(new_filelist);
+            } catch (ParseException e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return filelist;*/
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Explore> organization) {
+            // Create an OnScrollListener
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private class RemoteDataTask extends AsyncTask<String, Void, ArrayList<Explore>> {

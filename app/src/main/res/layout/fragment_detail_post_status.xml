@@ -1,112 +1,133 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
+    android:background="@color/ColorBase"
     android:orientation="vertical"
     tools:context="com.ngapainya.ngapainya.fragment.volunteer.child.DetailPostFragment">
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <ImageView
-            android:layout_gravity="center_vertical"
-            android:id="@+id/imageView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_icon_timeline_post_status" />
-
-        <ImageView
-            android:visibility="gone"
-            android:layout_gravity="center_vertical"
-            android:id="@+id/postTypeIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_icon_timeline_places" />
-
-
-        <FrameLayout
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="5dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp">
-            <ImageView
-                android:id="@+id/avatar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="6dp"
-                android:src="@drawable/propic_default"/>
-            <ImageView
-                android:src="@drawable/rounded_img"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp" />
-
-            <TextView
-                android:id="@+id/time"
-                android:textColor="#666"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:paddingLeft="5dp" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/comment"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@color/ColorBase"
-        android:orientation="vertical"
-        android:padding="10dp">
-
-        <ListView
-            android:visibility="gone"
-            android:id="@+id/list_home"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="10dp"
-            android:paddingBottom="70dp"
-            android:paddingTop="10dip" />
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <EditText
-                android:padding="10dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:id="@+id/content_comment"
+            <ImageView
+                android:id="@+id/imageView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_card"
-                android:hint="Write a comment..." />
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_icon_timeline_post_status" />
 
-            <Button
-                android:textAllCaps="false"
-                android:text="Post"
-                android:textColor="@color/white"
-                android:background="@drawable/my_button_green"
+            <ImageView
+                android:id="@+id/postTypeIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/post_comment_btn" />
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_icon_timeline_places"
+                android:visibility="gone" />
+
+
+            <FrameLayout
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="5dp">
+
+                <ImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="6dp"
+                    android:src="@drawable/propic_default" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/rounded_img" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp" />
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:textColor="#666" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="3dip"
+            android:background="@drawable/drop_shadow" />
+
+        <LinearLayout
+            android:background="@color/ColorBase"
+            android:id="@+id/comment"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <!--<ListView
+                android:visibility="gone"
+                android:id="@+id/list_comment"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="10dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dip" />-->
+            <LinearLayout
+                android:layout_marginBottom="5dp"
+                android:id="@+id/list_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"></LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/content_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/background_card"
+                    android:hint="Write a comment..."
+                    android:padding="10dp" />
+
+                <Button
+                    android:id="@+id/post_comment_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/my_button_green"
+                    android:text="Post"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

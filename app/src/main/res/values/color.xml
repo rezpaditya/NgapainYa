@@ -8,6 +8,7 @@
     <color name="Grey">#666</color>
     <color name="Red">#F35D5E</color>
     <color name="ColorOwner">#F5A623</color>
+    <color name="ColorOwnerDark">#ffd18723</color>
     <!--<color name="ColorMenuFrame">#32323A</color>
     <color name="ColorSelected">#56ffffff</color>
     <color name="ColorPending">#ff969a99</color>

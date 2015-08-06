@@ -1,10 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/profileFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/profileFragment"
     tools:context="com.ngapainya.ngapainya.fragment.volunteer.MyProfileFragment">
 
     <LinearLayout
@@ -118,10 +118,10 @@
 
             <Button
                 android:id="@+id/editProfileBtn"
+                android:onClick="onClick"
                 android:layout_width="fill_parent"
                 android:layout_height="25dp"
                 android:background="@drawable/my_button_red"
-                android:onClick="onClick"
                 android:text="Edit Profile"
                 android:textAllCaps="false"
                 android:textColor="#fff"
@@ -138,11 +138,11 @@
 
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:onClick="onClick"
         android:id="@+id/profile_image"
         android:layout_width="85dp"
         android:layout_height="85dp"
         android:layout_marginLeft="20dp"
-        android:onClick="onClick"
         android:src="@drawable/propic_default"
         app:border_color="#fff"
         app:border_width="2dp" />
@@ -173,81 +173,114 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:id="@+id/showFeed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:onClick="onClick"
+                    android:id="@+id/showFeed"
+                    android:padding="5dp"
                     android:orientation="horizontal"
-                    android:padding="5dp">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/txtShwFeed"
+                        android:textColor="@color/Red"
+                        android:padding="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Feed"
-                        android:textColor="@color/Red" />
+                        android:text="Feed" />
 
                     <TextView
                         android:id="@+id/sum_post"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/background_date_red"
+                        android:textSize="5pt"
+                        android:textStyle="bold"
+                        android:textColor="#fff"
                         android:paddingLeft="3dp"
                         android:paddingRight="3dp"
-                        android:text="0"
-                        android:textColor="#fff"
-                        android:textSize="5pt"
-                        android:textStyle="bold" />
+                        android:background="@drawable/background_date_red"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0" />
                 </LinearLayout>
 
                 <View
                     android:layout_width="1px"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_height="match_parent"
                     android:background="#ffe2e2e2" />
 
                 <LinearLayout
-                    android:id="@+id/showFriend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:onClick="onClick"
+                    android:id="@+id/showProgram"
+                    android:padding="5dp"
                     android:orientation="horizontal"
-                    android:padding="5dp">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/txtShwProgram"
+                        android:padding="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Programs" />
+
+                    <TextView
+                        android:id="@+id/sum_program"
+                        android:textSize="5pt"
+                        android:textStyle="bold"
+                        android:textColor="#fff"
+                        android:paddingLeft="3dp"
+                        android:paddingRight="3dp"
+                        android:background="@drawable/background_date_red"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_height="match_parent"
+                    android:background="#ffe2e2e2" />
+
+                <LinearLayout
+                    android:onClick="onClick"
+                    android:id="@+id/showFriend"
+                    android:padding="5dp"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/txtShwFriend"
+                        android:padding="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="5dp"
                         android:text="Friends" />
 
                     <TextView
                         android:id="@+id/sum_friend"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/background_date_red"
+                        android:textSize="5pt"
+                        android:textStyle="bold"
+                        android:textColor="#fff"
                         android:paddingLeft="3dp"
                         android:paddingRight="3dp"
-                        android:text="22"
-                        android:textColor="#fff"
-                        android:textSize="5pt"
-                        android:textStyle="bold" />
+                        android:background="@drawable/background_date_red"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0" />
                 </LinearLayout>
+
             </LinearLayout>
 
-
-
             <FrameLayout
+                android:background="@color/white"
                 android:id="@android:id/tabcontent"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_below="@+id/tabbar"
-                android:background="@color/white" />
+                android:layout_below="@+id/tabbar" />
 
         </RelativeLayout>
     </android.support.v4.app.FragmentTabHost>
-
 
 </RelativeLayout>

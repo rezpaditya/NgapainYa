@@ -22,10 +22,10 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.ngapainya.ngapainya.R;
+import com.ngapainya.ngapainya.fragment.owner.OwnerProfileFragment;
 import com.ngapainya.ngapainya.fragment.owner.PostProgramFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.ExploreFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.HomeFragment;
-import com.ngapainya.ngapainya.fragment.volunteer.MyProfileFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.NotificationFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.child.EditProfileFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.child.FindFriendFragment;
@@ -44,7 +44,7 @@ public class ContainerActivity extends ActionBarActivity {
     private FragmentTransaction transaction;
 
     //variable fragment
-    private MyProfileFragment myProfileFragment;
+    private OwnerProfileFragment ownerProfileFragment;
     private HomeFragment homeFragment;
     private ExploreFragment exploreFragment;
     private NotificationFragment notificationFragment;
@@ -52,7 +52,7 @@ public class ContainerActivity extends ActionBarActivity {
     private PostProgramFragment postProgramFragment;
 
     public void onClick(View view){
-        postProgramFragment.onClick(view);
+        ownerProfileFragment.onClick(view);
     }
 
     public void homeTitleBar() {
@@ -110,12 +110,19 @@ public class ContainerActivity extends ActionBarActivity {
                 .setBackgroundDrawable
                         (new ColorDrawable(getResources().getColor(R.color.ColorOwner)));
 
+        //This method is used to change the status bar color
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.ColorOwnerDark));
+        }
+
 
         /*Instantiate the Fragment*/
         homeFragment            = new HomeFragment();
         exploreFragment         = new ExploreFragment();
         notificationFragment    = new NotificationFragment();
-        myProfileFragment       = new MyProfileFragment();
+        ownerProfileFragment    = new OwnerProfileFragment();
 
         postProgramFragment = new PostProgramFragment();
 
@@ -176,7 +183,7 @@ public class ContainerActivity extends ActionBarActivity {
                     case 4:
                         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                         standardTitleBar("Username");
-                        changeFragment(myProfileFragment);
+                        changeFragment(ownerProfileFragment);
                         changeActionbarStyle(true);
                         break;
                     default:
@@ -251,11 +258,15 @@ public class ContainerActivity extends ActionBarActivity {
     }
 
     public void createPost(View view) {
-        ToggleButton createStatusBtn = (ToggleButton) findViewById(R.id.createStatusBtn);
+        final ToggleButton createStatusBtn = (ToggleButton) findViewById(R.id.createStatusBtn);
+
+        RelativeLayout actionbar = (RelativeLayout) findViewById(R.id.actionbar);
+        actionbar.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        final int height = actionbar.getMeasuredHeight();
 
         if (createStatusBtn.isChecked()) {
             //Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_in_anim);
-            Animation slideUp = new TranslateAnimation(0, 0, 0, -60);
+            Animation slideUp = new TranslateAnimation(0, 0, 0, -height);
             //slideUp.setFillAfter(true);
             slideUp.setFillEnabled(true);
             slideUp.setDuration(500);
@@ -264,14 +275,15 @@ public class ContainerActivity extends ActionBarActivity {
             slideUp.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
-
+                    createStatusBtn.setClickable(false);
                 }
 
                 @Override
                 public void onAnimationEnd(Animation arg0) {
                     RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) create_bar.getLayoutParams();
-                    lp.bottomMargin = 60; // use topmargin for the y-property, left margin for the x-property of your view
+                    lp.bottomMargin = height; // use topmargin for the y-property, left margin for the x-property of your view
                     create_bar.setLayoutParams(lp);
+                    createStatusBtn.setClickable(true);
                 }
 
                 @Override
@@ -287,7 +299,7 @@ public class ContainerActivity extends ActionBarActivity {
             slideDown.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
-
+                    createStatusBtn.setClickable(false);
                 }
 
                 @Override
@@ -295,6 +307,7 @@ public class ContainerActivity extends ActionBarActivity {
                     RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) create_bar.getLayoutParams();
                     lp.bottomMargin = 0; // use topmargin for the y-property, left margin for the x-property of your view
                     create_bar.setLayoutParams(lp);
+                    createStatusBtn.setClickable(true);
                 }
 
                 @Override

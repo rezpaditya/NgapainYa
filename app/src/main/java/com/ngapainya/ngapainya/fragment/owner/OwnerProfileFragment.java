@@ -1,4 +1,4 @@
-package com.ngapainya.ngapainya.fragment.volunteer;
+package com.ngapainya.ngapainya.fragment.owner;
 
 
 import android.app.Activity;
@@ -25,8 +25,8 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.ngapainya.ngapainya.R;
-import com.ngapainya.ngapainya.activity.owner.ContainerActivity;
 import com.ngapainya.ngapainya.activity.SettingsActivity;
+import com.ngapainya.ngapainya.activity.owner.ContainerActivity;
 import com.ngapainya.ngapainya.fragment.volunteer.child.EditProfileFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.child.ShowFeedFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.child.ShowFriendFragment;
@@ -50,7 +50,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyProfileFragment extends Fragment {
+public class OwnerProfileFragment extends Fragment {
     private FragmentActivity myContext;
     private View myFragmentView;
 
@@ -61,10 +61,12 @@ public class MyProfileFragment extends Fragment {
 
     private static final String FOLLOWING_SPEC = "following";
     private static final String YOU_SPEC = "you";
+    private static final String PROGRAM = "program";
     private FragmentTabHost tabHost;
     /*
     * Variable to retrieve from view
     * */
+    private TextView txtShowProgram;
     private TextView txtShowFeed;
     private TextView txtShowFriend;
     private TextView ttl_post;
@@ -106,7 +108,7 @@ public class MyProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        myFragmentView = inflater.inflate(R.layout.fragment_profile, container, false);
+        myFragmentView = inflater.inflate(R.layout.fragment_profile_owner, container, false);
 
         setHasOptionsMenu(true);
 
@@ -116,6 +118,7 @@ public class MyProfileFragment extends Fragment {
         * Initialize the variables
         * */
         propic          = (ImageView) myFragmentView.findViewById(R.id.profile_image);
+        txtShowProgram  = (TextView) myFragmentView.findViewById(R.id.txtShwProgram);
         txtShowFeed     = (TextView) myFragmentView.findViewById(R.id.txtShwFeed);
         txtShowFriend   = (TextView) myFragmentView.findViewById(R.id.txtShwFriend);
         ttl_post        = (TextView) myFragmentView.findViewById(R.id.ttl_post);
@@ -128,6 +131,7 @@ public class MyProfileFragment extends Fragment {
         tabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
 
         tabHost.addTab(tabHost.newTabSpec(FOLLOWING_SPEC).setIndicator("Following"), ShowFeedFragment.class, null);
+        tabHost.addTab(tabHost.newTabSpec(PROGRAM).setIndicator("Program"), ShowProgram.class, null);
         tabHost.addTab(tabHost.newTabSpec(YOU_SPEC).setIndicator("You"), ShowFriendFragment.class, null);
         tabHost.setCurrentTab(0);
 
@@ -140,11 +144,19 @@ public class MyProfileFragment extends Fragment {
                 tabHost.setCurrentTab(0);
                 txtShowFeed.setTextColor(getResources().getColor(R.color.Red));
                 txtShowFriend.setTextColor(Color.BLACK);
+                txtShowProgram.setTextColor(Color.BLACK);
+                break;
+            case R.id.showProgram:
+                tabHost.setCurrentTab(1);
+                txtShowProgram.setTextColor(getResources().getColor(R.color.Red));
+                txtShowFeed.setTextColor(Color.BLACK);
+                txtShowFriend.setTextColor(Color.BLACK);
                 break;
             case R.id.showFriend:
-                tabHost.setCurrentTab(1);
+                tabHost.setCurrentTab(2);
                 txtShowFriend.setTextColor(getResources().getColor(R.color.Red));
                 txtShowFeed.setTextColor(Color.BLACK);
+                txtShowProgram.setTextColor(Color.BLACK);
                 break;
             case R.id.editProfileBtn:
                 EditProfileFragment editProfile = new EditProfileFragment();

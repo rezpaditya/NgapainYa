@@ -78,6 +78,11 @@
             </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="5dip"
+            android:background="@drawable/drop_shadow" />
+
 
         <LinearLayout
             android:padding="10dp"

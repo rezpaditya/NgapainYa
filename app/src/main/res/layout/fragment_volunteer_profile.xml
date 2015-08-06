@@ -166,7 +166,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <LinearLayout
+                <!--<LinearLayout
                     android:onClick="onClick"
                     android:id="@+id/showFeed"
                     android:padding="5dp"
@@ -199,17 +199,17 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:layout_height="match_parent"
-                    android:background="#ffe2e2e2" />
+                    android:background="#ffe2e2e2" />-->
 
                 <LinearLayout
-                    android:onClick="onClick"
-                    android:id="@+id/showFriend"
+                    android:id="@+id/showFriendVolunteer"
                     android:padding="5dp"
                     android:orientation="horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
                     <TextView
+                        android:textColor="@color/Red"
                         android:id="@+id/txtShwFriend"
                         android:padding="5dp"
                         android:layout_width="wrap_content"

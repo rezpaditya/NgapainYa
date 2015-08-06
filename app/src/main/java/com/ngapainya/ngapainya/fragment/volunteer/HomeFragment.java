@@ -179,8 +179,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
      */
     @Override
     public void onRefresh() {
-        filelist = new ArrayList<Home>();
-        //adapter = new HomeAdapter(myContext, speedScrollListener, filelist);
+        filelist.clear();
         new RemoteDataTask().execute();
         swipeRefreshLayout.setRefreshing(false);
         Log.e("onRefresh", "onRefresh");

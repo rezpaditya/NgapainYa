@@ -19,24 +19,24 @@
             android:drawableLeft="@drawable/ic_action_person"
             android:layout_marginBottom="5dp"
             android:padding="10dp"
-            android:id="@+id/name"
+            android:id="@+id/title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/background_card"
             android:ems="10"
-            android:hint="Name"
+            android:hint="Title"
             android:inputType="textPersonName" />
 
         <EditText
             android:drawableLeft="@drawable/ic_action_place"
-            android:id="@+id/editText4"
+            android:id="@+id/address"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:padding="10dp"
             android:background="@drawable/background_card"
-            android:hint="Location" />
-
+            android:hint="Address" />
+<!--
         <EditText
             android:id="@+id/editText5"
             android:layout_width="fill_parent"
@@ -46,10 +46,10 @@
             android:background="@drawable/background_card"
             android:ems="10"
             android:hint="Partner"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName" />-->
 
         <EditText
-            android:id="@+id/editText6"
+            android:id="@+id/fee"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
@@ -59,16 +59,16 @@
             android:hint="Fee"
             android:inputType="numberDecimal" />
 
-        <EditText
+        <!--<EditText
             android:id="@+id/editText7"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:padding="10dp"
             android:background="@drawable/background_card"
-            android:hint="Type" />
+            android:hint="Type" />-->
 
-        <LinearLayout
+        <!--<LinearLayout
             android:layout_marginBottom="5dp"
             android:padding="10dp"
             android:background="@drawable/background_card"
@@ -90,7 +90,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"/>
 
-        </LinearLayout>
+        </LinearLayout>-->
 
         <android.widget.EditText
             android:drawableLeft="@drawable/ic_calendar_icon"
@@ -121,6 +121,7 @@
             android:focusable="false" />
 
         <EditText
+            android:inputType="numberDecimal"
             android:layout_marginBottom="5dp"
             android:padding="10dp"
             android:background="@drawable/background_card"
@@ -130,6 +131,7 @@
             android:layout_height="wrap_content" />
 
         <EditText
+            android:inputType="numberDecimal"
             android:layout_marginBottom="5dp"
             android:padding="10dp"
             android:background="@drawable/background_card"
@@ -137,6 +139,17 @@
             android:id="@+id/ageMax"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
+
+        <EditText
+            android:inputType="numberDecimal"
+            android:layout_marginBottom="5dp"
+            android:padding="10dp"
+            android:background="@drawable/background_card"
+            android:hint="Quota"
+            android:id="@+id/quota"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
 
         <EditText
             android:layout_marginTop="10dp"

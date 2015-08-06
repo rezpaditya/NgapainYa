@@ -18,15 +18,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ngapainya.ngapainya.R;
 import com.ngapainya.ngapainya.activity.volunteer.ContainerActivity;
+import com.ngapainya.ngapainya.adapter.CommentAdapter;
 import com.ngapainya.ngapainya.fragment.volunteer.HomeFragment;
 import com.ngapainya.ngapainya.helper.Config;
 import com.ngapainya.ngapainya.helper.JSONParser;
 import com.ngapainya.ngapainya.helper.SessionManager;
+import com.ngapainya.ngapainya.model.Comment;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.NameValuePair;
@@ -66,6 +70,12 @@ public class DetailPostFragment extends Fragment {
     private String content;
     private String time;
     private String photo_url;
+
+    /*variable for populate comment*/
+    ListView myList;
+    ArrayList<Comment> filelist;
+    CommentAdapter adapter;
+    LinearLayout layout_list;
 
     @Override
     public void onAttach(Activity activity) {
@@ -137,6 +147,14 @@ public class DetailPostFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        filelist    = new ArrayList<>();
+        adapter     = new CommentAdapter(myContext, filelist);
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -155,6 +173,27 @@ public class DetailPostFragment extends Fragment {
                 myFragmentView = inflater.inflate(R.layout.fragment_detail_post_status, container, false);
                 initializeVariable(); //must be called
                 new getDetailPost().execute();
+
+                layout_list = (LinearLayout) myFragmentView.findViewById(R.id.list_comment);
+
+                //new getComment().execute();
+                //use dummy data
+                for (int i=0;i<20;i++) {
+                    Comment tmp = new Comment();
+                    tmp.setUser_comment("hahaha "+i);
+                    filelist.add(tmp);
+                }
+
+                if(filelist.size() > 0){
+                    //myList.setVisibility(View.VISIBLE);
+                    final int adapterCount = adapter.getCount();
+
+                    for (int i = 0; i < adapterCount; i++) {
+                        View item = adapter.getView(i, null, null);
+                        layout_list.addView(item);
+                    }
+                }
+
                 break;
             case 1:
                 myFragmentView = inflater.inflate(R.layout.fragment_detail_image_post, container, false);
@@ -177,6 +216,59 @@ public class DetailPostFragment extends Fragment {
         }
 
         return myFragmentView;
+    }
+
+    public class getComment extends AsyncTask<String, String, String> {
+        SessionManager session;
+        HashMap<String, String> user;
+        String token;
+        Config cfg = new Config();
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+            session = new SessionManager(myContext);
+            user = session.getUserDetails();
+            token = user.get(SessionManager.KEY_TOKEN);
+        }
+
+        @Override
+        protected String doInBackground(String... arg0) {
+            String url = cfg.HOSTNAME + "/activity/" + act_id;
+            List<NameValuePair> nvp = new ArrayList<NameValuePair>();
+            nvp.add(new BasicNameValuePair("access_token", token));
+
+            Log.e("url", url);
+            Log.e("token", token);
+
+            /*JSONParser jParser = new JSONParser();
+            JSONObject json = jParser.makeHttpRequestToObject(url, "GET", nvp);      //get data from server
+            if (json != null) {
+                isSuccess = true;
+                try {
+                    avatar_url = json.getString("user_pic");
+                    content = json.getString("act_content");
+                    time = json.getString("created_at");
+                    switch (postType){
+                        case 0:
+                            Log.e("ok", " ambil data");
+                            break;
+                        case 1:
+                            photo_url = json.getString("act_url");
+                            Log.e("ok", " ambil data");
+                            break;
+                    }
+                } catch (Exception e) {
+                    Log.e("error", "tidak bisa ambil data 1");
+                    e.printStackTrace();
+                }
+            }*/
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+        }
     }
 
     public class getDetailPost extends AsyncTask<String, String, String> {

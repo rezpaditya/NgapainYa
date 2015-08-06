@@ -292,19 +292,17 @@ public class ContainerActivity extends ActionBarActivity {
 
             create_bar.startAnimation(slideUp);
             slideUp.setAnimationListener(new Animation.AnimationListener() {
-                ToggleButton toggle = createStatusBtn;
-                int h = height;
                 @Override
                 public void onAnimationStart(Animation animation) {
-                    toggle.setClickable(false);
+                    createStatusBtn.setClickable(false);
                 }
 
                 @Override
                 public void onAnimationEnd(Animation arg0) {
                     RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) create_bar.getLayoutParams();
-                    lp.bottomMargin = h; // use topmargin for the y-property, left margin for the x-property of your view
+                    lp.bottomMargin = height; // use topmargin for the y-property, left margin for the x-property of your view
                     create_bar.setLayoutParams(lp);
-                    toggle.setClickable(true);
+                    createStatusBtn.setClickable(true);
                 }
 
                 @Override
@@ -317,10 +315,9 @@ public class ContainerActivity extends ActionBarActivity {
             slideDown.setDuration(300);
             create_bar.startAnimation(slideDown);
             slideDown.setAnimationListener(new Animation.AnimationListener() {
-                ToggleButton toggle = createStatusBtn;
                 @Override
                 public void onAnimationStart(Animation animation) {
-                    toggle.setClickable(false);
+                    createStatusBtn.setClickable(false);
                 }
 
                 @Override
@@ -328,7 +325,7 @@ public class ContainerActivity extends ActionBarActivity {
                     RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) create_bar.getLayoutParams();
                     lp.bottomMargin = 0; // use topmargin for the y-property, left margin for the x-property of your view
                     create_bar.setLayoutParams(lp);
-                    toggle.setClickable(true);
+                    createStatusBtn.setClickable(true);
                 }
 
                 @Override

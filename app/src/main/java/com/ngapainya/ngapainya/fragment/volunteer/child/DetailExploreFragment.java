@@ -20,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ngapainya.ngapainya.R;
+import com.ngapainya.ngapainya.activity.owner.ContainerActivity;
+import com.ngapainya.ngapainya.fragment.owner.ListApplicantFragment;
 import com.ngapainya.ngapainya.helper.Config;
 import com.ngapainya.ngapainya.helper.JSONParser;
 import com.ngapainya.ngapainya.helper.SessionManager;
@@ -71,28 +73,28 @@ public class DetailExploreFragment extends Fragment {
 
     @Override
     public void onAttach(Activity activity) {
-        myContext=(FragmentActivity) activity;
+        myContext = (FragmentActivity) activity;
         super.onAttach(activity);
     }
 
-    public void splitDate(Explore tmp){
+    public void splitDate(Explore tmp) {
         String pu_tmp = tmp.getProgram_date_start();
-        String date1 [] = pu_tmp.split("-");
-        String date2 [] = date1[2].split(" ");
+        String date1[] = pu_tmp.split("-");
+        String date2[] = date1[2].split(" ");
         //str_year  = date1[0];
         String str_month, str_day;
-        str_month  = new DateFormatSymbols().getMonths()[Integer.parseInt(date1[1])-1];
-        str_day  = date2[0];
-        startDate = str_day+" "+str_month;
+        str_month = new DateFormatSymbols().getMonths()[Integer.parseInt(date1[1]) - 1];
+        str_day = date2[0];
+        startDate = str_day + " " + str_month;
 
         String do_tmp = tmp.getProgram_date_end();
-        String date3 [] = do_tmp.split("-");
-        String date4 [] = date3[2].split(" ");
+        String date3[] = do_tmp.split("-");
+        String date4[] = date3[2].split(" ");
         //en_year = date3[0];
         String en_month, en_day;
-        en_month = new DateFormatSymbols().getMonths()[Integer.parseInt(date3[1])-1];
+        en_month = new DateFormatSymbols().getMonths()[Integer.parseInt(date3[1]) - 1];
         en_day = date4[0];
-        endDate = en_day+" "+en_month;
+        endDate = en_day + " " + en_month;
     }
 
     @Override
@@ -118,7 +120,7 @@ public class DetailExploreFragment extends Fragment {
         program_accomodation = (TextView) myFragmentView.findViewById(R.id.accmd);
         program_fee = (TextView) myFragmentView.findViewById(R.id.prg_fee);
 
-        if(getArguments() !=null) {
+        if (getArguments() != null) {
             program_id = getArguments().getString("program_id");
             new getDetailExplore().execute();
         }
@@ -130,22 +132,45 @@ public class DetailExploreFragment extends Fragment {
         // TODO Auto-generated method stub
         super.onCreateOptionsMenu(menu, inflater);
         this.menu = menu;
-        myContext.getMenuInflater().inflate(R.menu.menu_detail_explore, menu);
-        final MenuItem item = menu.findItem(R.id.action_done);
-        item.getActionView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doApply();
-            }
-        });
+
+        String param = getArguments().getString("owner");
+        if (param != null) {
+            myContext.getMenuInflater().inflate(R.menu.menu_detail_program, menu);
+        } else {
+            myContext.getMenuInflater().inflate(R.menu.menu_detail_explore, menu);
+            final MenuItem item = menu.findItem(R.id.action_done);
+            item.getActionView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    doApply();
+                }
+            });
+        }
     }
 
-    public void hideMenu(){
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                Log.e("delete", "works");
+                break;
+            case R.id.action_view_applicant:
+                ListApplicantFragment listApplicantFragment = new ListApplicantFragment();
+                Bundle args = new Bundle();
+                args.putString("program_id", program_id);
+                listApplicantFragment.setArguments(args);
+                ((ContainerActivity) getActivity()).changeFragment(listApplicantFragment);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void hideMenu() {
         MenuItem item = menu.findItem(R.id.action_done);
         item.setVisible(false);
     }
 
-    public void doApply(){
+    public void doApply() {
         final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(myContext);
         dlgAlert.setMessage("Are you sure want to apply this program?");
         //dlgAlert.setTitle("Developer Nyewamobil");
@@ -170,17 +195,6 @@ public class DetailExploreFragment extends Fragment {
         dlgAlert.create().show();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_done : {
-                //do something
-                return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     public class getDetailExplore extends AsyncTask<String, String, String> {
         ProgressDialog pDialog;
         SessionManager session;
@@ -203,7 +217,7 @@ public class DetailExploreFragment extends Fragment {
             token = user.get(SessionManager.KEY_TOKEN);
         }
 
-        private void addList(JSONObject result){
+        private void addList(JSONObject result) {
             try {
                 explore.setProgram_id(program_id);
                 explore.setProgram_name(result.getString("program_name"));
@@ -221,7 +235,7 @@ public class DetailExploreFragment extends Fragment {
 
                 Log.e("name", explore.getProgram_name());
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -304,7 +318,7 @@ public class DetailExploreFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... arg0) {
-            String url = cfg.HOSTNAME +"/program/"+input_program_id+"/apply";
+            String url = cfg.HOSTNAME + "/program/" + input_program_id + "/apply";
             List<NameValuePair> nvp = new ArrayList<NameValuePair>();
             nvp.add(new BasicNameValuePair("access_token", token));
 
