@@ -2,7 +2,6 @@ package com.ngapainya.ngapainya.adapter;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ngapainya.ngapainya.R;
@@ -30,12 +30,12 @@ import java.util.List;
 /**
  * Created by Ari Anggraeni on 7/2/2015.
  */
-public class FriendAdapter extends BaseAdapter {
+public class ListApplicantAdapter extends BaseAdapter {
     Context context;
     ArrayList<Friend> list;
     String image_url;
 
-    public FriendAdapter(Context context, ArrayList<Friend> items){
+    public ListApplicantAdapter(Context context, ArrayList<Friend> items){
         this.context = context;
         list = items;
     }
@@ -43,12 +43,18 @@ public class FriendAdapter extends BaseAdapter {
     private class ViewHolder{
         TextView name;
         ImageView avatar;
-        Button invite;
+        Button acpBtn;
+        Button igrBtn;
+        LinearLayout allBtn;
+        TextView status;
 
         ViewHolder(View v){
             name = (TextView) v.findViewById(R.id.name);
-            avatar= (ImageView) v.findViewById(R.id.avatar);
-            invite = (Button) v.findViewById(R.id.inviteBtn);
+            avatar = (ImageView) v.findViewById(R.id.avatar);
+            acpBtn = (Button) v.findViewById(R.id.acpBtn);
+            igrBtn = (Button) v.findViewById(R.id.igrBtn);
+            allBtn = (LinearLayout) v.findViewById(R.id.allBtn);
+            status = (TextView) v.findViewById(R.id.status);
         }
     }
 
@@ -68,44 +74,60 @@ public class FriendAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
 
         View row = convertView;
         ViewHolder holder = null;
         if(row==null){
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = inflater.inflate(R.layout.item_friends, parent, false);
+            row = inflater.inflate(R.layout.item_list_applicant, parent, false);
             holder = new ViewHolder(row);
             row.setTag(holder);
         }else{
             holder = (ViewHolder) row.getTag();
         }
-
         Friend temp = list.get(position);
         final ViewHolder v = holder;
 
         holder.name.setText(temp.getFriend_name());
-        holder.name.setTag(temp);
-
         Picasso.with(context)
-                .load("http://ainufaisal.com/" + temp.getFriend_ava())
+                .load("http://ainufaisal.com/" + list.get(position).getFriend_ava())
                 .placeholder(R.drawable.propic_default)
                 .into(holder.avatar);
-        holder.invite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new doInvite().execute();
-                v.invite.setBackgroundResource(R.drawable.my_button_grey);
-                v.invite.setText("Invited");
-                v.invite.setTextColor(Color.rgb(6, 6, 6));
-            }
-        });
 
+        if(temp.getApply_status() !=null){
+            v.allBtn.setVisibility(View.GONE);
+            v.status.setVisibility(View.VISIBLE);
+            v.status.setText(temp.getApply_status());
+        }else {
+
+            holder.acpBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.e("acpBtn", "works");
+                    v.allBtn.setVisibility(View.GONE);
+                    v.status.setVisibility(View.VISIBLE);
+                    v.status.setText("Accepted");
+                    new postStatus().execute();
+                }
+            });
+
+            holder.igrBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.e("igrBtn", "works");
+                    v.allBtn.setVisibility(View.GONE);
+                    v.status.setVisibility(View.VISIBLE);
+                    v.status.setText("Rejected");
+                    new postStatus().execute();
+                }
+            });
+        }
 
         return row;
     }
 
-    public class doInvite extends AsyncTask<String, String, String> {
+    public class postStatus extends AsyncTask<String, String, String> {
         ProgressDialog pDialog;
         SessionManager session;
         HashMap<String, String> user;

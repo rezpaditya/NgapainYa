@@ -16,12 +16,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ngapainya.ngapainya.R;
 import com.ngapainya.ngapainya.activity.owner.ContainerActivity;
 import com.ngapainya.ngapainya.fragment.owner.ListApplicantFragment;
+import com.ngapainya.ngapainya.fragment.volunteer.InviteFriend;
 import com.ngapainya.ngapainya.helper.Config;
 import com.ngapainya.ngapainya.helper.JSONParser;
 import com.ngapainya.ngapainya.helper.SessionManager;
@@ -65,16 +67,25 @@ public class DetailExploreFragment extends Fragment {
     private TextView program_desc;
     private TextView program_accomodation;
     private TextView program_fee;
+    private Button inviteBtn;
 
     private String startDate;
     private String endDate;
 
     private Menu menu;
 
+    private InviteFriend inviteFriend;
+
     @Override
     public void onAttach(Activity activity) {
         myContext = (FragmentActivity) activity;
         super.onAttach(activity);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        inviteFriend = new InviteFriend();
     }
 
     public void splitDate(Explore tmp) {
@@ -119,11 +130,30 @@ public class DetailExploreFragment extends Fragment {
         program_desc = (TextView) myFragmentView.findViewById(R.id.desc);
         program_accomodation = (TextView) myFragmentView.findViewById(R.id.accmd);
         program_fee = (TextView) myFragmentView.findViewById(R.id.prg_fee);
+        inviteBtn = (Button) myFragmentView.findViewById(R.id.inviteBtn);
 
         if (getArguments() != null) {
             program_id = getArguments().getString("program_id");
             new getDetailExplore().execute();
         }
+
+        String param = getArguments().getString("owner");
+        if (param != null && param.equals("applicant")) {
+            inviteBtn.setVisibility(View.VISIBLE);
+            inviteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Bundle args = new Bundle();
+                    if(program_id != null && explore != null){
+                        args.putString("program_id", program_id);
+                        args.putParcelable("program_detail", explore);
+                    }
+                    inviteFriend.setArguments(args);
+                    ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity) getActivity()).changeFragment(inviteFriend);
+                }
+            });
+        }
+
         return myFragmentView;
     }
 
@@ -134,8 +164,10 @@ public class DetailExploreFragment extends Fragment {
         this.menu = menu;
 
         String param = getArguments().getString("owner");
-        if (param != null) {
+        if (param != null && param.equals("owner")) {
             myContext.getMenuInflater().inflate(R.menu.menu_detail_program, menu);
+        } else if (param != null && param.equals("applicant")) {
+            //set the toolbar here
         } else {
             myContext.getMenuInflater().inflate(R.menu.menu_detail_explore, menu);
             final MenuItem item = menu.findItem(R.id.action_done);

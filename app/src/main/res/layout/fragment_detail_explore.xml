@@ -278,14 +278,15 @@
             android:padding="10dp"/>
 
         <Button
+            android:visibility="gone"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
-            android:id="@+id/button"
+            android:id="@+id/inviteBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/my_button_red"
-            android:text="Share"
+            android:background="@drawable/my_button_green"
+            android:text="Invite friend"
             android:textAllCaps="false"
             android:textColor="#fff" />
 

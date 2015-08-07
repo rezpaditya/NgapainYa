@@ -16,7 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ngapainya.ngapainya.R;
-import com.ngapainya.ngapainya.adapter.FriendAdapter;
+import com.ngapainya.ngapainya.adapter.ListApplicantAdapter;
 import com.ngapainya.ngapainya.helper.Config;
 import com.ngapainya.ngapainya.helper.JSONParser;
 import com.ngapainya.ngapainya.helper.SessionManager;
@@ -48,7 +48,7 @@ public class ListApplicantFragment extends Fragment {
 
     private ListView list_applicant;
     private ArrayList<Friend> filelist;
-    private FriendAdapter adapter;
+    private ListApplicantAdapter adapter;
     private Friend friend;
 
     @Override
@@ -68,7 +68,7 @@ public class ListApplicantFragment extends Fragment {
 
         explore = new Explore();
         filelist = new ArrayList<>();
-        adapter = new FriendAdapter(myContext, filelist);
+        adapter = new ListApplicantAdapter(myContext, filelist);
         list_applicant.setAdapter(adapter);
 
         avatar = (ImageView) myFragmentView.findViewById(R.id.avatar);
@@ -88,7 +88,6 @@ public class ListApplicantFragment extends Fragment {
                 friend.setFriend_ava("dummy_ava"+i);
                 filelist.add(friend);
             }
-
         }
 
         return myFragmentView;

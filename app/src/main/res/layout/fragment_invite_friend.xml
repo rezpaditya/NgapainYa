@@ -2,12 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context="com.ngapainya.ngapainya.fragment.volunteer.InviteFriend">
 
+
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:background="@color/white"
+        android:padding="10dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
@@ -17,10 +20,11 @@
             android:layout_marginRight="5dp">
 
             <ImageView
+                android:id="@+id/avatar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="6dp"
-                android:src="@drawable/logo_1" />
+                android:src="@drawable/propic_default" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -35,12 +39,13 @@
             android:paddingTop="10dp">
 
             <TextView
+                android:id="@+id/user_fullname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Organisation name" />
 
             <TextView
-                android:id="@+id/textView15"
+                android:id="@+id/program_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Program Title"
@@ -50,22 +55,12 @@
     </LinearLayout>
 
     <View
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="1px"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="#ff9c9c9c" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Friends 430"
-        android:id="@+id/textView6" />
+        android:layout_width="fill_parent"
+        android:layout_height="3dip"
+        android:background="@drawable/drop_shadow" />
 
     <ListView
-        android:paddingBottom="10dp"
+        android:paddingBottom="50dp"
         android:paddingTop="10dip"
         android:clipToPadding="false"
         android:dividerHeight="1px"

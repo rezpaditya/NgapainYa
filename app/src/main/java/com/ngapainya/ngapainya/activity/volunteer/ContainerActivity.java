@@ -31,6 +31,7 @@ import com.ngapainya.ngapainya.fragment.volunteer.MyProfileFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.NotificationFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.child.EditProfileFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.child.FindFriendFragment;
+import com.ngapainya.ngapainya.fragment.volunteer.child.post.PostLocationFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.child.post.PostPhotoFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.child.post.PostStatusFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.child.post.PostUrlFragment;
@@ -55,6 +56,7 @@ public class ContainerActivity extends ActionBarActivity {
     private PostStatusFragment postStatusFragment;
     private PostPhotoFragment postPhotoFragment;
     private PostUrlFragment postUrlFragment;
+    private PostLocationFragment postLocationFragment;
 
     //define fragment manager
     private FragmentManager manager;
@@ -115,6 +117,7 @@ public class ContainerActivity extends ActionBarActivity {
         postStatusFragment      = new PostStatusFragment();
         postPhotoFragment       = new PostPhotoFragment();
         postUrlFragment         = new PostUrlFragment();
+        postLocationFragment    = new PostLocationFragment();
 
 
         //use to call starting fragment
@@ -198,8 +201,7 @@ public class ContainerActivity extends ActionBarActivity {
                         r1.setChecked(false);
                         break;
                     case 1:
-                        Toast.makeText(getBaseContext(), "You have Clicked RadioButton 3.2",
-                                Toast.LENGTH_SHORT).show();
+                        changeFragment(postLocationFragment);
                         r2.setChecked(false);
                         break;
                     case 2:

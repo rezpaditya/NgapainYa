@@ -217,11 +217,11 @@
                     android:padding="5dp">
 
                     <TextView
-                        android:id="@+id/txtShwFriend"
+                        android:id="@+id/txtShwProgram"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="Friends" />
+                        android:text="program" />
 
                     <TextView
                         android:id="@+id/sum_friend"
@@ -230,14 +230,18 @@
                         android:background="@drawable/background_date_red"
                         android:paddingLeft="3dp"
                         android:paddingRight="3dp"
-                        android:text="22"
+                        android:text="0"
                         android:textColor="#fff"
                         android:textSize="5pt"
                         android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
 
-
+            <View
+                android:layout_above="@android:id/tabcontent"
+                android:layout_width="wrap_content"
+                android:layout_height="3dip"
+                android:background="@drawable/drop_shadow" />
 
             <FrameLayout
                 android:id="@android:id/tabcontent"

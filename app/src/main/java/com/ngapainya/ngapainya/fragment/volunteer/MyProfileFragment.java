@@ -25,11 +25,11 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.ngapainya.ngapainya.R;
-import com.ngapainya.ngapainya.activity.owner.ContainerActivity;
 import com.ngapainya.ngapainya.activity.SettingsActivity;
+import com.ngapainya.ngapainya.activity.owner.ContainerActivity;
 import com.ngapainya.ngapainya.fragment.volunteer.child.EditProfileFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.child.ShowFeedFragment;
-import com.ngapainya.ngapainya.fragment.volunteer.child.ShowFriendFragment;
+import com.ngapainya.ngapainya.fragment.volunteer.child.ShowProgram;
 import com.ngapainya.ngapainya.helper.Config;
 import com.ngapainya.ngapainya.helper.JSONParser;
 import com.ngapainya.ngapainya.helper.SessionManager;
@@ -66,7 +66,7 @@ public class MyProfileFragment extends Fragment {
     * Variable to retrieve from view
     * */
     private TextView txtShowFeed;
-    private TextView txtShowFriend;
+    private TextView txtShwProgram;
     private TextView ttl_post;
     private TextView ttl_project;
     private TextView ttl_friend;
@@ -117,7 +117,7 @@ public class MyProfileFragment extends Fragment {
         * */
         propic          = (ImageView) myFragmentView.findViewById(R.id.profile_image);
         txtShowFeed     = (TextView) myFragmentView.findViewById(R.id.txtShwFeed);
-        txtShowFriend   = (TextView) myFragmentView.findViewById(R.id.txtShwFriend);
+        txtShwProgram   = (TextView) myFragmentView.findViewById(R.id.txtShwProgram);
         ttl_post        = (TextView) myFragmentView.findViewById(R.id.ttl_post);
         ttl_project     = (TextView) myFragmentView.findViewById(R.id.ttl_project);
         ttl_friend      = (TextView) myFragmentView.findViewById(R.id.ttl_friend);
@@ -128,7 +128,7 @@ public class MyProfileFragment extends Fragment {
         tabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
 
         tabHost.addTab(tabHost.newTabSpec(FOLLOWING_SPEC).setIndicator("Following"), ShowFeedFragment.class, null);
-        tabHost.addTab(tabHost.newTabSpec(YOU_SPEC).setIndicator("You"), ShowFriendFragment.class, null);
+        tabHost.addTab(tabHost.newTabSpec(YOU_SPEC).setIndicator("You"), ShowProgram.class, null);
         tabHost.setCurrentTab(0);
 
         return myFragmentView;
@@ -139,11 +139,11 @@ public class MyProfileFragment extends Fragment {
             case R.id.showFeed:
                 tabHost.setCurrentTab(0);
                 txtShowFeed.setTextColor(getResources().getColor(R.color.Red));
-                txtShowFriend.setTextColor(Color.BLACK);
+                txtShwProgram.setTextColor(Color.BLACK);
                 break;
             case R.id.showFriend:
                 tabHost.setCurrentTab(1);
-                txtShowFriend.setTextColor(getResources().getColor(R.color.Red));
+                txtShwProgram.setTextColor(getResources().getColor(R.color.Red));
                 txtShowFeed.setTextColor(Color.BLACK);
                 break;
             case R.id.editProfileBtn:

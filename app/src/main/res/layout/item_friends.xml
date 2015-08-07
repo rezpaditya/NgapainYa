@@ -11,10 +11,11 @@
         android:layout_width="50dp"
         android:layout_height="50dp">
         <ImageView
+            android:id="@+id/avatar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="6dp"
-            android:src="@drawable/propic_01"/>
+            android:src="@drawable/propic_default"/>
         <ImageView
             android:src="@drawable/rounded_img"
             android:layout_width="match_parent"
@@ -26,14 +27,17 @@
         android:layout_weight="1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="David Louise"
-        android:id="@+id/textView16" />
+        android:text="Name"
+        android:id="@+id/name" />
 
-    <CheckBox
-        android:padding="10dp"
+    <Button
+        android:textAllCaps="false"
+        android:background="@drawable/my_button_green"
+        android:textColor="@color/white"
+        android:text="Invite"
         android:layout_gravity="center_vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/checkBox" />
+        android:layout_height="30dp"
+        android:id="@+id/inviteBtn" />
 
 </LinearLayout>

@@ -9,13 +9,13 @@
     tools:context="com.ngapainya.ngapainya.fragment.volunteer.ExploreFragment">
 
     <ListView
-        android:id="@+id/list_explore"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:divider="#ffe8e8e8"
-        android:dividerHeight="1px"
-        android:paddingBottom="70dp"
-        android:paddingTop="10dip" />
+    android:id="@+id/list_explore"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:divider="#ffe8e8e8"
+    android:dividerHeight="1px"
+    android:paddingBottom="70dp"
+    android:paddingTop="10dip" />
 
 </android.support.v4.widget.SwipeRefreshLayout>
