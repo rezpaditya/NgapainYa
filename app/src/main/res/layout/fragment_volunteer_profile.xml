@@ -27,41 +27,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="POSTS"
+                android:text="FOLLOWING"
                 android:textColor="#FFF"
                 android:textSize="@dimen/profile_text_size" />
 
             <TextView
-                android:id="@+id/ttl_post"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:textColor="#FFF"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="1px"
-            android:layout_height="30dp"
-            android:layout_marginRight="10dp"
-            android:background="#ffe2e2e2" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="PROJECTS"
-                android:textColor="#FFF"
-                android:textSize="@dimen/profile_text_size" />
-
-            <TextView
-                android:id="@+id/ttl_project"
+                android:id="@+id/following"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
@@ -89,7 +60,7 @@
                 android:textSize="@dimen/profile_text_size" />
 
             <TextView
-                android:id="@+id/ttl_friend"
+                android:id="@+id/follower"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
@@ -106,14 +77,13 @@
         android:background="@color/white"
         android:gravity="right"
         android:orientation="vertical"
-        android:paddingRight="20dp">
+        android:padding="20dp">
 
         <LinearLayout
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:orientation="vertical"
-            android:paddingTop="10dp">
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/follow_btn"
@@ -124,6 +94,7 @@
                 android:textColor="@color/ActionbarColor"/>
 
             <TextView
+                android:visibility="gone"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_action_place"
@@ -214,7 +185,7 @@
                         android:padding="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Friends" />
+                        android:text="Feed" />
 
                     <TextView
                         android:textSize="5pt"

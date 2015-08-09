@@ -2,9 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/ColorBase"
     android:orientation="vertical"
-    android:paddingBottom="50dp"
     tools:context="com.ngapainya.ngapainya.fragment.volunteer.child.DetailPostFragment">
 
     <LinearLayout
@@ -24,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_icon_timeline_post_status" />
+                android:src="@drawable/ic_icon_timeline_attachment" />
 
             <ImageView
                 android:id="@+id/postTypeIcon"
@@ -81,7 +80,7 @@
             android:background="@drawable/drop_shadow" />
 
         <LinearLayout
-            android:background="@color/white"
+            android:background="@color/ColorBase"
             android:id="@+id/comment"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -99,7 +98,6 @@
                 android:paddingBottom="10dp"
                 android:paddingTop="10dip" />-->
             <LinearLayout
-                android:background="@color/white"
                 android:layout_marginBottom="5dp"
                 android:id="@+id/list_comment"
                 android:layout_width="match_parent"
@@ -117,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
-                    android:background="@drawable/my_edittext"
+                    android:background="@drawable/background_card"
                     android:hint="Write a comment..."
                     android:padding="10dp" />
 

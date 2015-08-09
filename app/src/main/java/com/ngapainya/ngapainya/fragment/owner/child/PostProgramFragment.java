@@ -1,4 +1,4 @@
-package com.ngapainya.ngapainya.fragment.owner;
+package com.ngapainya.ngapainya.fragment.owner.child;
 
 
 import android.app.Activity;
@@ -30,8 +30,11 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -205,6 +208,19 @@ public class PostProgramFragment extends Fragment implements AdapterView.OnItemS
         String input_quota;
         String input_desc;
 
+        public String formatDate(String s){
+            Date myDate = null;
+            try {
+                myDate = dateFormat.parse(s);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy/MM/dd");
+            return timeFormat.format(myDate);
+        }
+
         protected void onPreExecute() {
             super.onPreExecute();
 
@@ -220,13 +236,12 @@ public class PostProgramFragment extends Fragment implements AdapterView.OnItemS
             input_title = title.getText().toString();
             input_address = address.getText().toString();
             input_fee = fee.getText().toString();
-            input_str_date = pjtStart.getText().toString();
-            input_end_date = pjtEnd.getText().toString();
             input_age_max = age_max.getText().toString();
             input_age_min = age_min.getText().toString();
             input_quota = quota.getText().toString();
             input_desc = desc.getText().toString();
-
+            input_str_date = formatDate(pjtStart.getText().toString());
+            input_end_date = formatDate(pjtEnd.getText().toString());
         }
 
         @Override

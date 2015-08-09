@@ -114,7 +114,7 @@ public class PostUrlFragment extends Fragment {
             String url = cfg.HOSTNAME +"/activity/add/url";
             List<NameValuePair> nvp = new ArrayList<NameValuePair>();
             nvp.add(new BasicNameValuePair("access_token", token));
-            nvp.add(new BasicNameValuePair("text", input));
+            nvp.add(new BasicNameValuePair("url", input));
 
             JSONParser jParser = new JSONParser();
             JSONArray json = jParser.makeHttpRequest(url, "GET", nvp);      //get data from server

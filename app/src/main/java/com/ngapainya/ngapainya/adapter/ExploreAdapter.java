@@ -22,6 +22,7 @@ public class ExploreAdapter extends BaseAdapter {
     Context context;
     ArrayList<Explore> list;
     String image_url;
+    boolean splitted = false;
     String str_month, str_day, en_month, en_day;
 
     public ExploreAdapter(Context context, ArrayList<Explore> items){
@@ -43,6 +44,7 @@ public class ExploreAdapter extends BaseAdapter {
         //en_year = date3[0];
         en_month = new DateFormatSymbols().getMonths()[Integer.parseInt(date3[1])-1];
         en_day = date4[0];
+        splitted = true;
     }
 
     private class ViewHolder{
@@ -91,7 +93,10 @@ public class ExploreAdapter extends BaseAdapter {
         }
 
         Explore temp = list.get(position);
-        splitDate(temp);
+        /*if(temp.getProgram_date_start() != null
+                && temp.getProgram_date_end() != null) {
+            splitDate(temp);
+        }*/
 
         holder.program_title.setText(temp.getProgram_name());
         holder.program_title.setTag(temp);
@@ -99,11 +104,13 @@ public class ExploreAdapter extends BaseAdapter {
         holder.program_dec.setText(temp.getProgram_desc());
         holder.program_dec.setTag(temp);
 
-        holder.start_date.setText(str_day+" "+str_month);
-        holder.start_date.setTag(temp);
+        if(splitted) {
+            holder.start_date.setText(str_day + " " + str_month);
+            holder.start_date.setTag(temp);
 
-        holder.end_date.setText(en_day+" "+en_month);
-        holder.end_date.setTag(temp);
+            holder.end_date.setText(en_day + " " + en_month);
+            holder.end_date.setTag(temp);
+        }
 
         Picasso.with(context)
                 .load("http://ainufaisal.com/"+list.get(position).getUser_pic())

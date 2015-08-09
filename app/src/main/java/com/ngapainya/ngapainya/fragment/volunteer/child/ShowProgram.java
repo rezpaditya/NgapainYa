@@ -127,7 +127,7 @@ public class ShowProgram extends Fragment implements AdapterView.OnItemClickList
 
         @Override
         protected ArrayList<Explore> doInBackground(String... urls) {
-            String url = cfg.HOSTNAME + "/program/apply";
+            String url = cfg.HOSTNAME + "/program/apply/accepted";
             List<NameValuePair> nvp = new ArrayList<NameValuePair>();
             nvp.add(new BasicNameValuePair("access_token", token));
 

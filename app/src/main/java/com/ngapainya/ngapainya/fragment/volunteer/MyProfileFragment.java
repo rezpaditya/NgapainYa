@@ -3,12 +3,14 @@ package com.ngapainya.ngapainya.fragment.volunteer;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
@@ -33,6 +35,11 @@ import com.ngapainya.ngapainya.fragment.volunteer.child.ShowProgram;
 import com.ngapainya.ngapainya.helper.Config;
 import com.ngapainya.ngapainya.helper.JSONParser;
 import com.ngapainya.ngapainya.helper.SessionManager;
+import com.squareup.okhttp.MultipartBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.NameValuePair;
@@ -42,6 +49,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +61,8 @@ import java.util.List;
 public class MyProfileFragment extends Fragment {
     private FragmentActivity myContext;
     private View myFragmentView;
+
+    private final String PACKAGE_NAME = "com.ngapainya.ngapainya.activity.";
 
     // Camera activity request codes
     private static final int CAMERA_REQUEST = 1888;
@@ -67,20 +77,23 @@ public class MyProfileFragment extends Fragment {
     * */
     private TextView txtShowFeed;
     private TextView txtShwProgram;
+    private TextView follower;
+    private TextView following;
     private TextView ttl_post;
-    private TextView ttl_project;
-    private TextView ttl_friend;
     private TextView sum_post;
-    private TextView sum_friend;
+    private TextView sum_acc_program;
     private ImageView propic;
+    private TextView location;
 
     /*
     * variable to retrieve data from server
     * */
     private String pic_url;
     private String total_post;
-    private String total_project;
     private String total_friend;
+    private String total_following;
+    private String user_location;
+    private String apply_accepted;
 
     public void switchMode() {
         Intent intent = new Intent(myContext, ContainerActivity.class);
@@ -107,7 +120,13 @@ public class MyProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         myFragmentView = inflater.inflate(R.layout.fragment_profile, container, false);
+        Log.e("onCreateMyProfile", "works");
 
+        if(myContext.getClass().getName().equals(PACKAGE_NAME+"volunteer.ContainerActivity")) {
+        /*Customize actionbar*/
+            ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity) getActivity()).changeActionbarStyle(true);
+        }
         setHasOptionsMenu(true);
 
         new getMyProfile().execute();
@@ -115,14 +134,15 @@ public class MyProfileFragment extends Fragment {
         /*
         * Initialize the variables
         * */
-        propic          = (ImageView) myFragmentView.findViewById(R.id.profile_image);
-        txtShowFeed     = (TextView) myFragmentView.findViewById(R.id.txtShwFeed);
-        txtShwProgram   = (TextView) myFragmentView.findViewById(R.id.txtShwProgram);
-        ttl_post        = (TextView) myFragmentView.findViewById(R.id.ttl_post);
-        ttl_project     = (TextView) myFragmentView.findViewById(R.id.ttl_project);
-        ttl_friend      = (TextView) myFragmentView.findViewById(R.id.ttl_friend);
-        sum_post        = (TextView) myFragmentView.findViewById(R.id.sum_post);
-        sum_friend      = (TextView) myFragmentView.findViewById(R.id.sum_friend);
+        propic = (ImageView) myFragmentView.findViewById(R.id.profile_image);
+        txtShowFeed = (TextView) myFragmentView.findViewById(R.id.txtShwFeed);
+        txtShwProgram = (TextView) myFragmentView.findViewById(R.id.txtShwProgram);
+        follower = (TextView) myFragmentView.findViewById(R.id.follower);
+        following = (TextView) myFragmentView.findViewById(R.id.following);
+        ttl_post = (TextView) myFragmentView.findViewById(R.id.ttl_post);
+        sum_post = (TextView) myFragmentView.findViewById(R.id.sum_post);
+        sum_acc_program = (TextView) myFragmentView.findViewById(R.id.sum_acc_program);
+        location = (TextView) myFragmentView.findViewById(R.id.location);
 
         tabHost = (FragmentTabHost) myFragmentView.findViewById(android.R.id.tabhost);  // The activity TabHost
         tabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
@@ -141,15 +161,15 @@ public class MyProfileFragment extends Fragment {
                 txtShowFeed.setTextColor(getResources().getColor(R.color.Red));
                 txtShwProgram.setTextColor(Color.BLACK);
                 break;
-            case R.id.showFriend:
+            case R.id.showProgram:
                 tabHost.setCurrentTab(1);
                 txtShwProgram.setTextColor(getResources().getColor(R.color.Red));
                 txtShowFeed.setTextColor(Color.BLACK);
                 break;
             case R.id.editProfileBtn:
                 EditProfileFragment editProfile = new EditProfileFragment();
-                        ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
-                                getActivity()).changeFragment(editProfile);
+                ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
+                        getActivity()).changeFragment(editProfile);
                 ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
                         getActivity()).standardTitleBar("Edi_t Profile");
                 break;
@@ -180,7 +200,7 @@ public class MyProfileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Bitmap photo = null;
-        switch(requestCode) {
+        switch (requestCode) {
             case CAMERA_REQUEST:
                 if (requestCode == CAMERA_REQUEST && resultCode == myContext.RESULT_OK) {
                     photo = (Bitmap) data.getExtras().get("data");
@@ -188,7 +208,7 @@ public class MyProfileFragment extends Fragment {
                 }
                 break;
             case SELECT_PHOTO:
-                if(resultCode == myContext.RESULT_OK){
+                if (resultCode == myContext.RESULT_OK) {
                     Uri selectedImage = data.getData();
                     InputStream imageStream = null;
                     try {
@@ -198,23 +218,64 @@ public class MyProfileFragment extends Fragment {
                     }
                     photo = BitmapFactory.decodeStream(imageStream);
                     propic.setImageBitmap(photo);
+
+                    try {
+                        run(getRealPathFromURI(selectedImage));
+                        Log.e("Path", getRealPathFromURI(selectedImage));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    //Log.e("URL", selectedImage.toString());
                 }
         }
-        if(photo != null) {
+        /*if (photo != null) {
             //base64 encoding
             encodeImage(photo);
             new updateProfilePicture().execute();
-        }
+        }*/
+    }
+
+    public String getRealPathFromURI(Uri uri) {
+        Cursor cursor = myContext.getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
     }
 
     /*
     * This method used to encode image to String
     * */
-    public void encodeImage(Bitmap photo){
+    public void encodeImage(Bitmap photo) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         photo.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
         byte[] byteArrayImage = baos.toByteArray();
         encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
+    }
+
+    /*
+    * OKHTTP library to upload image
+    * */
+
+    public void run(String image_path) throws Exception {
+        Config cfg = new Config();
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody requestBody = new MultipartBuilder()
+                .type(MultipartBuilder.FORM)
+                .addFormDataPart("text", "ini Ok Http")
+                .addFormDataPart("access_token", "respa")
+                /*.addFormDataPart("avatar", "file.png",
+                        RequestBody.create(MediaType.parse("image/png"), new File(image_path)))*/
+                .build();
+
+        Request request = new Request.Builder()
+                .url(cfg.HOSTNAME + "/activity/add/text")
+                .post(requestBody)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+        System.out.println(response.body().string());
     }
 
     @Override
@@ -258,7 +319,7 @@ public class MyProfileFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... arg0) {
-            String url = cfg.HOSTNAME +"/profile";
+            String url = cfg.HOSTNAME + "/profile";
             List<NameValuePair> nvp = new ArrayList<NameValuePair>();
             nvp.add(new BasicNameValuePair("access_token", token));
 
@@ -266,12 +327,14 @@ public class MyProfileFragment extends Fragment {
             JSONArray json = jParser.makeHttpRequest(url, "GET", nvp);      //get data from server
 
             try {
-                for(int i=0;i<json.length();i++) {
+                for (int i = 0; i < json.length(); i++) {
                     JSONObject result = json.getJSONObject(i);
-                    pic_url         = result.getString("user_pic");
-                    total_post      = result.getString("count_activity");
-                    total_project   = result.getString("count_program");
-                    total_friend    = result.getString("follower");
+                    pic_url = result.getString("user_pic");
+                    total_post = result.getString("count_activity");
+                    total_friend = result.getString("follower");
+                    total_following = result.getString("following");
+                    user_location = result.getString("user_location");
+                    apply_accepted = result.getString("apply_accepted");
                 }
 
                 Log.e("ok", " ambil data");
@@ -289,11 +352,16 @@ public class MyProfileFragment extends Fragment {
                     .load("http://ainufaisal.com/" + pic_url)
                     .placeholder(R.drawable.propic_default)
                     .into(propic);
+            follower.setText(total_friend);
+            following.setText(total_following);
             ttl_post.setText(total_post);
-            ttl_project.setText(total_project);
-            ttl_friend.setText(total_friend);
             sum_post.setText(total_post);
-            sum_friend.setText(total_friend);
+            sum_acc_program.setText(apply_accepted);
+            if(user_location != null) {
+                location.setText(user_location + " city");
+            }else{
+                location.setText("Nowhere");
+            }
         }
     }
 
@@ -313,7 +381,7 @@ public class MyProfileFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... arg0) {
-            String url = cfg.HOSTNAME +"/profile/update/pp";
+            String url = cfg.HOSTNAME + "/profile/update/pp";
             List<NameValuePair> nvp = new ArrayList<NameValuePair>();
             nvp.add(new BasicNameValuePair("access_token", token));
             nvp.add(new BasicNameValuePair("avatar", encodedImage));

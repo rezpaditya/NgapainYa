@@ -12,6 +12,15 @@ public class Comment implements Parcelable {
     private String user_name;
     private String user_ava;
     private String user_comment;
+    private String time;
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 
     public String getComment_id() {
         return comment_id;

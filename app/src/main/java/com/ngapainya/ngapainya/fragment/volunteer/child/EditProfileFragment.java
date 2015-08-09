@@ -27,6 +27,7 @@ import com.ngapainya.ngapainya.helper.SessionManager;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -53,6 +54,9 @@ public class EditProfileFragment extends Fragment implements DatePickerDialog.On
     EditText birthdate;
     EditText name;
     EditText email;
+    EditText location;
+    EditText oldPassword;
+    EditText newPassword;
 
     @Override
     public void onAttach(Activity activity) {
@@ -87,6 +91,9 @@ public class EditProfileFragment extends Fragment implements DatePickerDialog.On
         setHasOptionsMenu(true);
 
         /*Initialize the variable*/
+        location    = (EditText) myFragmentView.findViewById(R.id.location);
+        oldPassword = (EditText) myFragmentView.findViewById(R.id.old_pwd);
+        newPassword = (EditText) myFragmentView.findViewById(R.id.new_pwd);
         name        = (EditText) myFragmentView.findViewById(R.id.name);
         email       = (EditText) myFragmentView.findViewById(R.id.email);
         birthdate   = (EditText) myFragmentView.findViewById(R.id.birthdate);
@@ -164,10 +171,14 @@ public class EditProfileFragment extends Fragment implements DatePickerDialog.On
         SessionManager session;
         HashMap<String, String> user;
         String token;
+        Config cfg = new Config();
+        //input
         String input_name;
         String input_email;
         String input_birthdate;
-        Config cfg = new Config();
+        String input_location;
+        String input_oldPassword;
+        String input_newPassword;
 
         protected void onPreExecute() {
             super.onPreExecute();
@@ -181,9 +192,12 @@ public class EditProfileFragment extends Fragment implements DatePickerDialog.On
             session = new SessionManager(myContext);
             user = session.getUserDetails();
             token = user.get(SessionManager.KEY_TOKEN);
+            //input
+            input_location = location.getText().toString();
+            input_oldPassword = oldPassword.getText().toString();
+            input_newPassword = newPassword.getText().toString();
             input_name = name.getText().toString();
             input_email = email.getText().toString();
-
             Date myDate = null;
             try {
                 myDate = dateFormat.parse(birthdate.getText().toString());
@@ -204,10 +218,18 @@ public class EditProfileFragment extends Fragment implements DatePickerDialog.On
             nvp.add(new BasicNameValuePair("fullname", input_name));
             nvp.add(new BasicNameValuePair("email", input_email));
             nvp.add(new BasicNameValuePair("birthdate", input_birthdate));
+            nvp.add(new BasicNameValuePair("location", input_location));
+            nvp.add(new BasicNameValuePair("password_old", input_oldPassword));
+            nvp.add(new BasicNameValuePair("password_new", input_newPassword));
 
             JSONParser jParser = new JSONParser();
-            jParser.makeHttpRequest(url, "GET", nvp);      //get data from server
-            Log.e("error", input_birthdate);
+            JSONObject json = jParser.makeHttpRequestToObject(url, "GET", nvp);      //get data from server
+            Log.e("fullname", input_birthdate);
+            Log.e("email", input_email);
+            Log.e("birthdate", input_birthdate);
+            Log.e("location", input_birthdate);
+            Log.e("password_old", input_birthdate);
+            Log.e("password_new", input_birthdate);
             try {
                 Log.e("error", "tidak bisa ambil data 0");
             } catch (Exception e) {

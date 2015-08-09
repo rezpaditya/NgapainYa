@@ -35,6 +35,7 @@ import com.squareup.picasso.Picasso;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -95,7 +96,9 @@ public class DetailPostFragment extends Fragment {
         post_comment_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new postComment().execute();
+                if(comment.getText().length() > 0) {
+                    new postComment().execute();
+                }
             }
         });
     }
@@ -131,7 +134,7 @@ public class DetailPostFragment extends Fragment {
         HashMap<String, String> user = session.getUserDetails();
         String usr = user.get(SessionManager.KEY_NAME);
         String username = getArguments().getString("username");
-        if(username != null && username.equals(usr)){
+        if (username != null && username.equals(usr)) {
             myContext.getMenuInflater().inflate(R.menu.menu_detail_post, menu);
         }
     }
@@ -149,8 +152,8 @@ public class DetailPostFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        filelist    = new ArrayList<>();
-        adapter     = new CommentAdapter(myContext, filelist);
+        filelist = new ArrayList<>();
+        adapter = new CommentAdapter(myContext, filelist);
 
     }
 
@@ -176,37 +179,31 @@ public class DetailPostFragment extends Fragment {
 
                 layout_list = (LinearLayout) myFragmentView.findViewById(R.id.list_comment);
 
-                //new getComment().execute();
+                new getComment().execute();
                 //use dummy data
-                for (int i=0;i<20;i++) {
+                /*for (int i = 0; i < 1; i++) {
                     Comment tmp = new Comment();
-                    tmp.setUser_comment("hahaha "+i);
+                    tmp.setUser_comment("hahaha " + i);
                     filelist.add(tmp);
-                }
+                }*/
 
-                if(filelist.size() > 0){
-                    //myList.setVisibility(View.VISIBLE);
-                    final int adapterCount = adapter.getCount();
 
-                    for (int i = 0; i < adapterCount; i++) {
-                        View item = adapter.getView(i, null, null);
-                        layout_list.addView(item);
-                    }
-                }
 
                 break;
             case 1:
                 myFragmentView = inflater.inflate(R.layout.fragment_detail_image_post, container, false);
                 initializeVariable(); //must be called
-                    photo = (ImageView) myFragmentView.findViewById(R.id.photo);
+                photo = (ImageView) myFragmentView.findViewById(R.id.photo);
                 new getDetailPost().execute();
                 break;
             case 2:
-                Toast.makeText(myContext, "here is post type " + postType, Toast.LENGTH_SHORT).show();
+                myFragmentView = inflater.inflate(R.layout.fragment_detail_post_location, container, false);
+                initializeVariable(); //must be called
                 //do something here
                 break;
             case 3:
-                Toast.makeText(myContext, "here is post type " + postType, Toast.LENGTH_SHORT).show();
+                myFragmentView = inflater.inflate(R.layout.fragment_detail_post_url, container, false);
+                initializeVariable(); //must be called
                 //do something here
                 break;
             case 4:
@@ -229,50 +226,69 @@ public class DetailPostFragment extends Fragment {
             session = new SessionManager(myContext);
             user = session.getUserDetails();
             token = user.get(SessionManager.KEY_TOKEN);
+            //clear the filelit and the views
+            filelist.clear();
+            layout_list.removeAllViews();
+        }
+
+        private void addList(JSONObject result) {
+            try {
+                Comment tmp = new Comment();
+                tmp.setComment_id(result.getString("comment_id"));
+                tmp.setUser_comment(result.getString("comment_text"));
+                tmp.setUser_ava(result.getString("user_pic"));
+                tmp.setUser_name(result.getString("username"));
+                tmp.setUser_id(result.getString("user_id"));
+                tmp.setTime(result.getString("created_at"));
+                filelist.add(tmp);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         protected String doInBackground(String... arg0) {
-            String url = cfg.HOSTNAME + "/activity/" + act_id;
+            String url = cfg.HOSTNAME + "/comment/activity/" + act_id +"/0/1000";
             List<NameValuePair> nvp = new ArrayList<NameValuePair>();
             nvp.add(new BasicNameValuePair("access_token", token));
 
             Log.e("url", url);
             Log.e("token", token);
 
-            /*JSONParser jParser = new JSONParser();
-            JSONObject json = jParser.makeHttpRequestToObject(url, "GET", nvp);      //get data from server
+            JSONParser jParser = new JSONParser();
+            JSONArray json = jParser.makeHttpRequest(url, "GET", nvp);      //get data from server
             if (json != null) {
                 isSuccess = true;
                 try {
-                    avatar_url = json.getString("user_pic");
-                    content = json.getString("act_content");
-                    time = json.getString("created_at");
-                    switch (postType){
-                        case 0:
-                            Log.e("ok", " ambil data");
-                            break;
-                        case 1:
-                            photo_url = json.getString("act_url");
-                            Log.e("ok", " ambil data");
-                            break;
+                    for (int i = 0; i < json.length(); i++) {
+                        JSONObject result = json.getJSONObject(i);
+                        addList(result);
+                        Log.e("ok", " ambil comment");
                     }
                 } catch (Exception e) {
                     Log.e("error", "tidak bisa ambil data 1");
                     e.printStackTrace();
                 }
-            }*/
+            }
             return null;
         }
 
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+            adapter.notifyDataSetChanged();
+            if (filelist.size() > 0) {
+                //myList.setVisibility(View.VISIBLE);
+                final int adapterCount = adapter.getCount();
+                for (int i = adapterCount-1; i >=0; i--) {
+                    View item = adapter.getView(i, null, null);
+                    layout_list.addView(item);
+                }
+            }
         }
     }
 
     public class getDetailPost extends AsyncTask<String, String, String> {
-        ProgressDialog pDialog;
         SessionManager session;
         HashMap<String, String> user;
         String token;
@@ -280,11 +296,6 @@ public class DetailPostFragment extends Fragment {
 
         protected void onPreExecute() {
             super.onPreExecute();
-
-            pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Please wait...");
-            pDialog.setIndeterminate(false);
-            pDialog.show();
 
             session = new SessionManager(myContext);
             user = session.getUserDetails();
@@ -308,7 +319,7 @@ public class DetailPostFragment extends Fragment {
                     avatar_url = json.getString("user_pic");
                     content = json.getString("act_content");
                     time = json.getString("created_at");
-                    switch (postType){
+                    switch (postType) {
                         case 0:
                             Log.e("ok", " ambil data");
                             break;
@@ -328,8 +339,7 @@ public class DetailPostFragment extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            pDialog.dismiss();
-            switch (postType){
+            switch (postType) {
                 case 0:
                     initializePostStatus();
                     break;
@@ -364,7 +374,7 @@ public class DetailPostFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... arg0) {
-            String url = cfg.HOSTNAME +"/comment/add/activity/"+act_id;
+            String url = cfg.HOSTNAME + "/comment/add/activity/" + act_id;
             List<NameValuePair> nvp = new ArrayList<NameValuePair>();
             nvp.add(new BasicNameValuePair("access_token", token));
             nvp.add(new BasicNameValuePair("comment", input_comment));
@@ -373,7 +383,7 @@ public class DetailPostFragment extends Fragment {
             JSONObject json = jParser.makeHttpRequestToObject(url, "GET", nvp);      //get data from server
 
             try {
-                if(json != null){
+                if (json != null) {
                     Log.e("comment", "sent");
                 }
             } catch (Exception e) {
@@ -389,6 +399,7 @@ public class DetailPostFragment extends Fragment {
             pDialog.dismiss();
             comment.setText("");
             new getDetailPost().execute();
+            new getComment().execute();
             Toast.makeText(myContext, "comment sent",
                     Toast.LENGTH_SHORT).show();
         }
@@ -416,7 +427,7 @@ public class DetailPostFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... arg0) {
-            String url = cfg.HOSTNAME +"/activity/delete/"+act_id;
+            String url = cfg.HOSTNAME + "/activity/delete/" + act_id;
             List<NameValuePair> nvp = new ArrayList<NameValuePair>();
             nvp.add(new BasicNameValuePair("access_token", token));
 
@@ -424,7 +435,7 @@ public class DetailPostFragment extends Fragment {
             JSONObject json = jParser.makeHttpRequestToObject(url, "GET", nvp);      //get data from server
 
             try {
-                if(json != null){
+                if (json != null) {
                     Log.e("post", "deleted");
                 }
             } catch (Exception e) {
@@ -441,7 +452,7 @@ public class DetailPostFragment extends Fragment {
             Toast.makeText(myContext, "post deleted",
                     Toast.LENGTH_SHORT).show();
             HomeFragment homeFragment = new HomeFragment();
-                    ((ContainerActivity) getActivity()).changeFragment(homeFragment);
+            ((ContainerActivity) getActivity()).changeFragment(homeFragment);
         }
     }
 

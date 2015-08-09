@@ -61,6 +61,9 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     final int threshold = 10;
     int iterator = 0;
 
+    int start = 0;
+    int end = 5;
+
     /*
     * these variables used to restore the listview
     * when calling the fragment from backstack
@@ -68,6 +71,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     private boolean fromBackStack = false;
     private HomeAdapter savedAdapter;
     private ArrayList<Home> savedFilelist;
+
+    private final String PACKAGE_NAME = "com.ngapainya.ngapainya.activity.";
 
     /*@Override
     public void onDestroyView() {
@@ -93,10 +98,10 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         adapter = new HomeAdapter(myContext, speedScrollListener, filelist);
 
         if (savedInstanceState != null) {
-            filelist= savedInstanceState.getParcelableArrayList("adapter_content");
+            filelist = savedInstanceState.getParcelableArrayList("adapter_content");
             adapter = new HomeAdapter(myContext, speedScrollListener, filelist);
             Log.e("savedInstanceState", "works");
-        }else{
+        } else {
             new RemoteDataTask().execute();
         }
     }
@@ -106,7 +111,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         super.onSaveInstanceState(outState);
         ArrayList<Home> temp = new ArrayList<Home>();
         temp = filelist;
-        outState.putParcelableArrayList("adapter_content",temp);
+        outState.putParcelableArrayList("adapter_content", temp);
         Log.e("onSaveInstanceState", "works");
     }
 
@@ -121,6 +126,13 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         myFragmentView = inflater.inflate(R.layout.fragment_home, container, false);
+
+        if(myContext.getClass().getName().equals(PACKAGE_NAME+"volunteer.ContainerActivity")) {
+        /*Customize actionbar*/
+            ((ContainerActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            ((ContainerActivity) getActivity()).homeTitleBar("Ngapain");
+            ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity) getActivity()).changeActionbarStyle(false);
+        }
 
         Log.e("onCreateView", "onCreateView");
 
@@ -140,13 +152,13 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                                 }
         );*/
 
-        layout_find_friend  = (LinearLayout) myFragmentView.findViewById(R.id.layout_find_friend);
-        find_btn            = (Button) myFragmentView.findViewById(R.id.find_btn);
+        layout_find_friend = (LinearLayout) myFragmentView.findViewById(R.id.layout_find_friend);
+        find_btn = (Button) myFragmentView.findViewById(R.id.find_btn);
         find_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FindFriendFragment findFriendFragment = new FindFriendFragment();
-                        ((ContainerActivity) getActivity()).changeFragment(findFriendFragment);
+                ((ContainerActivity) getActivity()).changeFragment(findFriendFragment);
             }
         });
 
@@ -180,6 +192,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onRefresh() {
         filelist.clear();
+        start = 0;
+        end = 5;
         new RemoteDataTask().execute();
         swipeRefreshLayout.setRefreshing(false);
         Log.e("onRefresh", "onRefresh");
@@ -213,7 +227,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                 detailPostFragment.setArguments(args);
                 ((ContainerActivity) getActivity()).changeFragment(detailPostFragment);
                 break;
-            /*case "Location":
+            case "Location":
                 args.putInt("postType", 2);
                 detailPostFragment.setArguments(args);
                 ((ContainerActivity) getActivity()).changeFragment(detailPostFragment);
@@ -222,7 +236,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                 args.putInt("postType", 3);
                 detailPostFragment.setArguments(args);
                 ((ContainerActivity) getActivity()).changeFragment(detailPostFragment);
-                break;*/
+                break;
         }
     }
 
@@ -251,7 +265,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
             token = user.get(SessionManager.KEY_TOKEN);
         }
 
-        private void addList(JSONObject result){
+        private void addList(JSONObject result) {
             try {
                 Home temp_home = new Home();
                 temp_home.setAct_id(result.getString("act_id"));
@@ -266,37 +280,26 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                 temp_home.setCreated_at(result.getString("created_at"));
 
                 filelist.add(temp_home);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
         @Override
         protected ArrayList<Home> doInBackground(String... urls) {
-            String url = cfg.HOSTNAME +"/activity/followed";
+            String url = cfg.HOSTNAME + "/activity/followed/limit/" + start + "/" + end;
             List<NameValuePair> nvp = new ArrayList<NameValuePair>();
             nvp.add(new BasicNameValuePair("access_token", token));
 
             JSONParser jParser = new JSONParser();
             json = jParser.makeHttpRequest(url, "GET", nvp);      //get data from server
-            if(json.length() > 0) {  //check the result
+            if (json.length() > 0) {  //check the result
                 isSuccess = true;
                 try {
-                /*if data less than threshold, load them all
-                * or if not, load data as much as threshold, repeat it in loadmore class
-                * */
-                    if (json.length() < threshold) {
-                        for (int i = 0; i < json.length(); i++) {
-                            JSONObject result = json.getJSONObject(i);
-                            addList(result);
-                            Log.e("ok", " ambil data");
-                        }
-                    } else {
-                        for (int i = 0; i < threshold; i++) {
-                            JSONObject result = json.getJSONObject(i);
-                            addList(result);
-                            Log.e("ok", " ambil data");
-                        }
+                    for (int i = 0; i < json.length(); i++) {
+                        JSONObject result = json.getJSONObject(i);
+                        addList(result);
+                        Log.e("ok", " ambil data");
                     }
                 } catch (Exception e) {
                     Log.e("error", "tidak bisa ambil data 1");
@@ -337,7 +340,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                     }
 
                 });
-            }else{
+            } else {
                 swipeRefreshLayout.setVisibility(View.GONE);
                 layout_find_friend.setVisibility(View.VISIBLE);
             }
@@ -350,37 +353,67 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     * */
 
     public class LoadMoreDataTask extends AsyncTask<String, Void, ArrayList<Home>> {
+        SessionManager session;
+        HashMap<String, String> user;
+        String token;
+        boolean isSuccess;
+        Config cfg = new Config();
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            /*
+            * Get user information
+            * */
+            isSuccess = false;
+            session = new SessionManager(myContext);
+            user    = session.getUserDetails();
+            token   = user.get(SessionManager.KEY_TOKEN);
+            start   = end - 1;
+            end     = start + 5;
+
+        }
+
+        private void addList(JSONObject result) {
+            try {
+                Home temp_home = new Home();
+                temp_home.setAct_id(result.getString("act_id"));
+                temp_home.setAct_content(result.getString("act_content"));
+                temp_home.setAct_type(result.getString("act_type"));
+                temp_home.setAct_url(result.getString("act_url"));
+                temp_home.setAct_lat(result.getString("act_lat"));
+                temp_home.setAct_lng(result.getString("act_lng"));
+                temp_home.setAct_address(result.getString("act_address"));
+                temp_home.setUsername(result.getString("username"));
+                temp_home.setUser_pic(result.getString("user_pic"));
+                temp_home.setCreated_at(result.getString("created_at"));
+
+                filelist.add(temp_home);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         protected ArrayList<Home> doInBackground(String... urls) {
-            try {
-                // web service request
-                if (iterator != json.length()) {
-                    JSONObject result = json.getJSONObject(iterator);
+            String url = cfg.HOSTNAME + "/activity/followed/limit/" + start + "/" + end;
+            List<NameValuePair> nvp = new ArrayList<NameValuePair>();
+            nvp.add(new BasicNameValuePair("access_token", token));
 
-                    Home temp_home = new Home();
-                    temp_home.setAct_id(result.getString("act_id"));
-                    temp_home.setAct_content(result.getString("act_content"));
-                    temp_home.setAct_type(result.getString("act_type"));
-                    temp_home.setAct_url(result.getString("act_url"));
-                    temp_home.setAct_lat(result.getString("act_lat"));
-                    temp_home.setAct_lng(result.getString("act_lng"));
-                    temp_home.setAct_address(result.getString("act_address"));
-                    temp_home.setUsername(result.getString("username"));
-                    temp_home.setUser_pic(result.getString("user_pic"));
-                    temp_home.setCreated_at(result.getString("created_at"));
-
-                    filelist.add(temp_home);
-                    iterator++;
-                    Log.e("ok", " ambil data");
+            JSONParser jParser = new JSONParser();
+            json = jParser.makeHttpRequest(url, "GET", nvp);      //get data from server
+            if (json.length() > 0) {  //check the result
+                isSuccess = true;
+                try {
+                    for (int i = 0; i < json.length(); i++) {
+                        JSONObject result = json.getJSONObject(i);
+                        addList(result);
+                        Log.e("ok", " ambil data");
+                    }
+                } catch (Exception e) {
+                    Log.e("error", "tidak bisa ambil data 1");
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
             return filelist;
         }

@@ -48,6 +48,8 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
     private ExploreAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    private final String PACKAGE_NAME = "com.ngapainya.ngapainya.activity.";
+
     private String keyword;
 
     /*
@@ -127,6 +129,13 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         myFragmentView = inflater.inflate(R.layout.fragment_explore, container, false);
+
+        if(myContext.getClass().getName().equals(PACKAGE_NAME+"volunteer.ContainerActivity")) {
+        /*Customize actionbar*/
+            ((ContainerActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            ((ContainerActivity) getActivity()).homeTitleBar("Explore");
+            ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity) getActivity()).changeActionbarStyle(false);
+        }
 
         swipeRefreshLayout = (SwipeRefreshLayout) myFragmentView.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.ngapainya.ngapainya.R;
+import com.ngapainya.ngapainya.activity.volunteer.ContainerActivity;
 import com.ngapainya.ngapainya.adapter.NotifAdapter;
 import com.ngapainya.ngapainya.model.Notification;
 
@@ -25,6 +26,8 @@ public class NotificationFragment extends Fragment {
     private ArrayList<Notification> filelist;
     private ListView myList;
 
+    private final String PACKAGE_NAME = "com.ngapainya.ngapainya.activity.";
+
     @Override
     public void onAttach(Activity activity) {
         myContext=(FragmentActivity) activity;
@@ -37,6 +40,12 @@ public class NotificationFragment extends Fragment {
         // Inflate the layout for this fragment
         myFragmentView = inflater.inflate(R.layout.fragment_notification, container, false);
 
+        if(myContext.getClass().getName().equals(PACKAGE_NAME+"volunteer.ContainerActivity")) {
+        /*Customize actionbar*/
+            ((ContainerActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            ((ContainerActivity) getActivity()).homeTitleBar("Notification");
+            ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity) getActivity()).changeActionbarStyle(false);
+        }
         filelist = new ArrayList<Notification>();
 
         //dummy data

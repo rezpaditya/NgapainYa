@@ -40,4 +40,15 @@
         android:layout_height="30dp"
         android:id="@+id/inviteBtn" />
 
+    <Button
+        android:visibility="gone"
+        android:textAllCaps="false"
+        android:background="@drawable/my_button_grey"
+        android:textColor="@color/Grey"
+        android:text="Invited"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:id="@+id/invitedBtn" />
+
 </LinearLayout>

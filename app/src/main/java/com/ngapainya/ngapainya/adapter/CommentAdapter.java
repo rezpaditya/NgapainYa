@@ -32,11 +32,13 @@ public class CommentAdapter extends BaseAdapter {
         TextView comment;
         TextView time;
         ImageView propic;
+        TextView username;
 
         ViewHolder(View v){
             comment   = (TextView) v.findViewById(R.id.comment);
             time     = (TextView) v.findViewById(R.id.time);
             propic          = (ImageView) v.findViewById(R.id.propic);
+            username = (TextView) v.findViewById(R.id.username);
         }
     }
 
@@ -79,6 +81,12 @@ public class CommentAdapter extends BaseAdapter {
                 .placeholder(R.drawable.propic_default)
                 .into(holder.propic);
         holder.propic.setTag(temp);
+
+        holder.time.setText(temp.getTime());
+        holder.time.setTag(temp);
+
+        holder.username.setText(temp.getUser_name());
+        holder.username.setTag(temp);
 
         return row;
     }

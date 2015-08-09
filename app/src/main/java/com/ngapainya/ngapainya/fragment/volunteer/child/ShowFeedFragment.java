@@ -152,8 +152,8 @@ public class ShowFeedFragment extends Fragment implements AdapterView.OnItemClic
                 temp_home.setAct_lat(result.getString("act_lat"));
                 temp_home.setAct_lng(result.getString("act_lng"));
                 temp_home.setAct_address(result.getString("act_address"));
-                //temp_home.setUsername(result.getString("username"));
-                //temp_home.setUser_pic(result.getString("user_pic"));
+                temp_home.setUsername(result.getString("username"));
+                temp_home.setUser_pic(result.getString("user_pic"));
                 temp_home.setCreated_at(result.getString("created_at"));
 
                 filelist.add(temp_home);

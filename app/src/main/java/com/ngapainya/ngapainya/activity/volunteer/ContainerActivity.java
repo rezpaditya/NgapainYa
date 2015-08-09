@@ -66,16 +66,22 @@ public class ContainerActivity extends ActionBarActivity {
     //manage session
     private SessionManager sessionManager;
 
-    public void homeTitleBar() {
+    public void homeTitleBar(String t) {
+        String title = t;
         toolbar.setTitleTextAppearance(ContainerActivity.this, R.style.Toolbar_TitleText);
-        SpannableString s = new SpannableString("Ngapain");
+        SpannableString s = new SpannableString(title);
         s.setSpan(new TypefaceSpan(this, "Mission-Script.otf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         getSupportActionBar().setTitle(s);
     }
 
     public void standardTitleBar(String title) {
-        toolbar.setTitleTextAppearance(ContainerActivity.this, R.style.Toolbar_SmallTitleText);
-        getSupportActionBar().setTitle(title);
+       /* toolbar.setTitleTextAppearance(ContainerActivity.this, R.style.Toolbar_SmallTitleText);
+        getSupportActionBar().setTitle(title);*/
+
+        toolbar.setTitleTextAppearance(ContainerActivity.this, R.style.Toolbar_TitleText);
+        SpannableString s = new SpannableString(title);
+        s.setSpan(new TypefaceSpan(this, "Mission-Script.otf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        getSupportActionBar().setTitle(s);
     }
 
     @Override
@@ -140,7 +146,7 @@ public class ContainerActivity extends ActionBarActivity {
                 }
             } else {
                 changeFragment(homeFragment);
-                homeTitleBar(); //use custom font to the title bar
+                homeTitleBar("Ngapain"); //use custom font to the title bar
             }
         }
 
@@ -153,28 +159,16 @@ public class ContainerActivity extends ActionBarActivity {
 
                 switch (pos) {
                     case 0:
-                        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-                        homeTitleBar();
                         changeFragment(homeFragment);
-                        changeActionbarStyle(false);
                         break;
                     case 1:
-                        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-                        standardTitleBar("Explore");
                         changeFragment(exploreFragment);
-                        changeActionbarStyle(false);
                         break;
                     case 3:
-                        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-                        standardTitleBar("Notification");
                         changeFragment(notificationFragment);
-                        changeActionbarStyle(false);
                         break;
                     case 4:
-                        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-                        standardTitleBar("Username");
                         changeFragment(myProfileFragment);
-                        changeActionbarStyle(true);
                         break;
                     default:
                         //The default selection is RadioButton 1
@@ -228,12 +222,14 @@ public class ContainerActivity extends ActionBarActivity {
 
     public void changeActionbarStyle(boolean isProfile) {
         if (isProfile) {
+            Log.e("changeActionBar", "works");
             //This method is used to change the status bar color
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getWindow();
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                 window.setStatusBarColor(getResources().getColor(R.color.ActionbarColorDark));
             }
+
             getSupportActionBar()
                     .setBackgroundDrawable
                             (new ColorDrawable(getResources().getColor(R.color.ActionbarColor)));
@@ -244,8 +240,11 @@ public class ContainerActivity extends ActionBarActivity {
             sessionManager = new SessionManager(this);
             user = sessionManager.getUserDetails();
 
-            getSupportActionBar()
-                    .setTitle(user.get(SessionManager.KEY_NAME));
+            toolbar.setTitleTextAppearance(ContainerActivity.this, R.style.Toolbar_TitleText);
+            SpannableString s = new SpannableString(user.get(SessionManager.KEY_NAME));
+            s.setSpan(new TypefaceSpan(this, "Mission-Script.otf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            getSupportActionBar().setTitle(s);
+
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getWindow();
@@ -268,6 +267,8 @@ public class ContainerActivity extends ActionBarActivity {
 
             String packageName = "com.ngapainya.ngapainya.fragment.volunteer.";
             Fragment fragmentPopped = getSupportFragmentManager().findFragmentByTag(packageName + "MyProfileFragment");
+
+            Log.e("backPress", fragmentPopped.getClass().getName());
 
             if (fragmentPopped != null && fragmentPopped.isVisible()) {
                 changeActionbarStyle(true);
@@ -343,7 +344,7 @@ public class ContainerActivity extends ActionBarActivity {
         //old code
         manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
-        transaction.replace(R.id.content_fragment, fragment);
+        transaction.replace(R.id.content_fragment, fragment, fragment.getClass().getName());
         transaction.addToBackStack(fragment.getClass().getName());
         transaction.commit();
 

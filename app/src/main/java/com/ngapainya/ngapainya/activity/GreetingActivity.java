@@ -177,7 +177,7 @@ public class GreetingActivity extends FragmentActivity implements ViewPager.OnPa
             email = "rezpa.snk@gmail.com";
             password = "blackout";
             name = "respa";
-            token = "respa"; //dummy
+            token = "ainu"; //dummy
         }
 
         @Override

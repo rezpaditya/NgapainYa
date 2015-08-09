@@ -76,8 +76,7 @@ public class PostLocationFragment extends Fragment implements
             public void onClick(View v) {
                 if (longitude != null && latitude != null) {
                     new postLocation().execute();
-                }
-                {
+                } else {
                     Toast.makeText(myContext, "Couldn't get current location, try again!",
                             Toast.LENGTH_SHORT).show();
                 }
@@ -86,10 +85,30 @@ public class PostLocationFragment extends Fragment implements
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_done:
+                //do something
+                break;
+            case android.R.id.home:
+                myContext.onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         myFragmentView = inflater.inflate(R.layout.fragment_post_location, container, false);
+
+        ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
+                getActivity()).getSupportActionBar()
+                .setDisplayHomeAsUpEnabled(true);
+
+        ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
+                getActivity()).standardTitleBar("Post Location");
 
         text = (TextView) myFragmentView.findViewById(R.id.text_input);
 

@@ -1,90 +1,112 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
-    android:orientation="vertical"
     android:background="@color/ColorBase"
+    android:orientation="vertical"
     tools:context="com.ngapainya.ngapainya.fragment.volunteer.child.EditProfileFragment">
 
-
-    <TextView
-        android:textColor="@color/ColorPrimaryDark"
-        android:textStyle="bold"
-        android:layout_marginBottom="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PROFILE"
-        android:id="@+id/textView10" />
-
-    <EditText
-        android:layout_marginBottom="10dp"
-        android:drawablePadding="20dp"
-        android:background="@drawable/my_edittext"
-        android:drawableLeft="@drawable/ic_action_person"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:hint="Username"
-        android:ems="10"
-        android:id="@+id/name" />
-
-    <EditText
-        android:layout_marginBottom="10dp"
-        android:drawablePadding="20dp"
-        android:background="@drawable/my_edittext"
-        android:drawableLeft="@drawable/ic_action_mail"
-        android:hint="Email"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:id="@+id/email" />
-
-    <EditText
-        android:drawablePadding="20dp"
-        android:id="@+id/birthdate"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/my_edittext"
-        android:drawableLeft="@drawable/ic_calendar_icon"
-        android:ems="10"
-        android:focusable="false"
-        android:hint="Your birthday"
-        android:inputType="date"
-        android:clickable="true"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="20dp">
 
-    <TextView
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="30dp"
-        android:textColor="@color/ColorPrimaryDark"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SECURITY"
-        android:id="@+id/textView18" />
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="PROFILE"
+            android:textColor="@color/ColorPrimaryDark"
+            android:textStyle="bold" />
 
-    <EditText
-        android:layout_marginBottom="10dp"
-        android:drawablePadding="20dp"
-        android:background="@drawable/my_edittext"
-        android:drawableLeft="@drawable/ic_action_not_secure"
-        android:hint="Current Password"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/old_pwd" />
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background_card"
+            android:drawableLeft="@drawable/ic_action_person"
+            android:drawablePadding="20dp"
+            android:ems="10"
+            android:hint="Fullname"
+            android:inputType="textPersonName"
+            android:padding="10dp" />
 
-    <EditText
-        android:drawablePadding="20dp"
-        android:background="@drawable/my_edittext"
-        android:drawableLeft="@drawable/ic_action_secure"
-        android:hint="New Password"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/new_pwd" />
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background_card"
+            android:drawableLeft="@drawable/ic_action_mail"
+            android:drawablePadding="20dp"
+            android:ems="10"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:padding="10dp" />
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/birthdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background_card"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_calendar_icon"
+            android:drawablePadding="20dp"
+            android:ems="10"
+            android:focusable="false"
+            android:hint="Your birthday"
+            android:inputType="date"
+            android:padding="10dp" />
+
+        <EditText
+            android:id="@+id/location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_card"
+            android:drawableLeft="@drawable/ic_action_place"
+            android:drawablePadding="20dp"
+            android:ems="10"
+            android:hint="City"
+            android:padding="10dp" />
+
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="30dp"
+            android:text="SECURITY"
+            android:textColor="@color/ColorPrimaryDark"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/old_pwd"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background_card"
+            android:drawableLeft="@drawable/ic_action_not_secure"
+            android:drawablePadding="20dp"
+            android:ems="10"
+            android:hint="Current Password"
+            android:inputType="textPassword"
+            android:padding="10dp" />
+
+        <EditText
+            android:id="@+id/new_pwd"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_card"
+            android:drawableLeft="@drawable/ic_action_secure"
+            android:drawablePadding="20dp"
+            android:ems="10"
+            android:hint="New Password"
+            android:inputType="textPassword"
+            android:padding="10dp" />
+
+    </LinearLayout>
+</ScrollView>

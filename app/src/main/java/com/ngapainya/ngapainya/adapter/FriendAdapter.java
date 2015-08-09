@@ -2,7 +2,6 @@ package com.ngapainya.ngapainya.adapter;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,22 +32,27 @@ import java.util.List;
 public class FriendAdapter extends BaseAdapter {
     Context context;
     ArrayList<Friend> list;
-    String image_url;
+    String program_id;
+    String friend_id;
 
-    public FriendAdapter(Context context, ArrayList<Friend> items){
+    public FriendAdapter(Context context, ArrayList<Friend> items, String program_id){
         this.context = context;
         list = items;
+        this.program_id = program_id;
+        friend_id = "";
     }
 
     private class ViewHolder{
         TextView name;
         ImageView avatar;
         Button invite;
+        Button invited;
 
         ViewHolder(View v){
             name = (TextView) v.findViewById(R.id.name);
             avatar= (ImageView) v.findViewById(R.id.avatar);
             invite = (Button) v.findViewById(R.id.inviteBtn);
+            invited = (Button) v.findViewById(R.id.invitedBtn);
         }
     }
 
@@ -81,7 +85,7 @@ public class FriendAdapter extends BaseAdapter {
             holder = (ViewHolder) row.getTag();
         }
 
-        Friend temp = list.get(position);
+        final Friend temp = list.get(position);
         final ViewHolder v = holder;
 
         holder.name.setText(temp.getFriend_name());
@@ -94,10 +98,10 @@ public class FriendAdapter extends BaseAdapter {
         holder.invite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                friend_id = temp.getFriend_id();
                 new doInvite().execute();
-                v.invite.setBackgroundResource(R.drawable.my_button_grey);
-                v.invite.setText("Invited");
-                v.invite.setTextColor(Color.rgb(6, 6, 6));
+                v.invite.setVisibility(View.GONE);
+                v.invited.setVisibility(View.VISIBLE);
             }
         });
 
@@ -127,13 +131,13 @@ public class FriendAdapter extends BaseAdapter {
 
         @Override
         protected String doInBackground(String... arg0) {
-            String url = cfg.HOSTNAME +"/activity/add/text";
+            String url = cfg.HOSTNAME +"/program/"+program_id+"/invite/"+friend_id;
             List<NameValuePair> nvp = new ArrayList<NameValuePair>();
             nvp.add(new BasicNameValuePair("access_token", token));
 
             JSONParser jParser = new JSONParser();
-            //JSONArray json = jParser.makeHttpRequest(url, "GET", nvp);      //get data from server
-            Log.e("Asynctask", "works");
+            jParser.makeHttpRequest(url, "GET", nvp);      //get data from server
+            Log.e("Asynctask", "program id = "+program_id);
             try {
                 Log.e("error", "tidak bisa ambil data 0");
             } catch (Exception e) {
@@ -147,7 +151,6 @@ public class FriendAdapter extends BaseAdapter {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             pDialog.dismiss();
-
         }
     }
 }

@@ -13,6 +13,7 @@
         android:orientation="horizontal">
 
         <FrameLayout
+            android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_width="50dp"
             android:layout_height="50dp">
@@ -21,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="6dp"
-                android:src="@drawable/propic_01"/>
+                android:src="@drawable/propic_default"/>
             <ImageView
                 android:src="@drawable/rounded_img"
                 android:layout_width="match_parent"
@@ -37,7 +38,6 @@
                 android:id="@+id/textView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Program Title"
                 android:textColor="#000"
                 android:textSize="7pt"
                 android:textStyle="bold" />
@@ -47,8 +47,7 @@
                 android:textColor="#666"
                 android:id="@+id/textView9"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="program category" />
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -59,14 +58,13 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:src="@drawable/img_event" />
+        android:src="@drawable/bg_front" />
 
     <TextView
         android:id="@+id/content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been"
         android:textColor="#333" />
 
     <TextView
@@ -75,6 +73,5 @@
         android:id="@+id/textView11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:text="4h ago" />
+        android:paddingLeft="10dp" />
 </LinearLayout>

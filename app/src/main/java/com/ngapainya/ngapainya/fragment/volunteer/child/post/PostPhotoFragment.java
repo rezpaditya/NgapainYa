@@ -101,6 +101,9 @@ public class PostPhotoFragment extends Fragment {
                 getActivity()).getSupportActionBar()
                 .setDisplayHomeAsUpEnabled(true);
 
+        ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
+                getActivity()).standardTitleBar("Post Photo");
+
         setHasOptionsMenu(true);
 
         return myFragmentView;

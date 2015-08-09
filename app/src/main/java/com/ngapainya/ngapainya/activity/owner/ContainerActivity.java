@@ -23,7 +23,7 @@ import android.widget.ToggleButton;
 
 import com.ngapainya.ngapainya.R;
 import com.ngapainya.ngapainya.fragment.owner.OwnerProfileFragment;
-import com.ngapainya.ngapainya.fragment.owner.PostProgramFragment;
+import com.ngapainya.ngapainya.fragment.owner.child.PostProgramFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.ExploreFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.HomeFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.NotificationFragment;

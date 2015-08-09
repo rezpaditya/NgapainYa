@@ -22,8 +22,7 @@ import android.widget.TextView;
 
 import com.ngapainya.ngapainya.R;
 import com.ngapainya.ngapainya.activity.owner.ContainerActivity;
-import com.ngapainya.ngapainya.fragment.owner.ListApplicantFragment;
-import com.ngapainya.ngapainya.fragment.volunteer.InviteFriend;
+import com.ngapainya.ngapainya.fragment.owner.child.ListApplicantFragment;
 import com.ngapainya.ngapainya.helper.Config;
 import com.ngapainya.ngapainya.helper.JSONParser;
 import com.ngapainya.ngapainya.helper.SessionManager;
@@ -302,7 +301,7 @@ public class DetailExploreFragment extends Fragment {
             pDialog.dismiss();
 
             /*Split the date*/
-            splitDate(explore);
+//            splitDate(explore);
 
             Picasso.with(myContext)
                     .load("http://ainufaisal.com/" + explore.getUser_pic())

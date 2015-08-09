@@ -47,8 +47,8 @@ public class VolunteerProfileFragment extends Fragment {
     /*Variable from get server*/
     private String avatar_url;
     private String total_post;
-    private String total_project;
-    private String total_friend;
+    private String total_following;
+    private String total_follower;
     private String follow_status;
     private String user_type;
 
@@ -57,10 +57,10 @@ public class VolunteerProfileFragment extends Fragment {
     * */
     private TextView txtShowFeed;
     private TextView txtShowFriend;
+    private TextView following;
+    private TextView follower;
     private ImageView avatar;
     private TextView ttl_post;
-    private TextView ttl_project;
-    private TextView ttl_friend;
     private Button follow_btn;
 
     /*
@@ -99,8 +99,8 @@ public class VolunteerProfileFragment extends Fragment {
         /*Initialize variable view*/
         avatar = (ImageView) myFragmentView.findViewById(R.id.profile_image);
         ttl_post = (TextView) myFragmentView.findViewById(R.id.ttl_post);
-        ttl_project = (TextView) myFragmentView.findViewById(R.id.ttl_project);
-        ttl_friend = (TextView) myFragmentView.findViewById(R.id.ttl_friend);
+        follower = (TextView) myFragmentView.findViewById(R.id.follower);
+        following = (TextView) myFragmentView.findViewById(R.id.following);
         follow_btn = (Button) myFragmentView.findViewById(R.id.follow_btn);
 
         Log.e("user_id", user_id);
@@ -151,12 +151,11 @@ public class VolunteerProfileFragment extends Fragment {
                     JSONObject result = json.getJSONObject(i);
                     avatar_url      = result.getString("avatar");
                     total_post      = result.getString("count_activity");
-                    total_project   = result.getString("count_program");
-                    total_friend    = result.getString("follower");
+                    total_follower  = result.getString("follower");
+                    total_following = result.getString("following");
                     follow_status   = result.getString("follow_status");
                     user_type       = result.getString("user_current_status");
                 }
-
                 Log.e("ok", " ambil data");
             } catch (Exception e) {
                 Log.e("error", "tidak bisa ambil data 1");
@@ -174,8 +173,8 @@ public class VolunteerProfileFragment extends Fragment {
                     .placeholder(R.drawable.propic_default)
                     .into(avatar);
             ttl_post.setText(total_post);
-            ttl_project.setText(total_project);
-            ttl_friend.setText(total_friend);
+            following.setText(total_following);
+            follower.setText(total_follower);
             if(follow_status.equals("follow")){
                 follow_btn.setBackground(myContext.getResources().getDrawable(R.drawable.my_button_green)); //work on API 16 or above
                 follow_btn.setText("Followed");

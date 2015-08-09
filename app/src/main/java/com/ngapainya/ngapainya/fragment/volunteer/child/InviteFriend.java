@@ -1,4 +1,4 @@
-package com.ngapainya.ngapainya.fragment.volunteer;
+package com.ngapainya.ngapainya.fragment.volunteer.child;
 
 
 import android.app.Activity;
@@ -26,6 +26,7 @@ import com.squareup.picasso.Picasso;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -63,9 +64,11 @@ public class InviteFriend extends Fragment  {
         super.onCreate(savedInstanceState);
 
         filelist = new ArrayList<>();
-        adapter = new FriendAdapter(myContext, filelist);
-
-        new getFriends();
+        if(getArguments() != null) {
+            program_id = getArguments().getString("program_id");
+            adapter = new FriendAdapter(myContext, filelist, program_id);
+        }
+        new getFriends().execute();
     }
 
     @Override
@@ -92,14 +95,14 @@ public class InviteFriend extends Fragment  {
             user_fullname.setText(explore.getUser_fullname());
             program_name.setText(explore.getProgram_name());
 
-            //dummy data
+            /*//dummy data
             for(int i=0;i<5;i++) {
                 friend = new Friend();
                 friend.setFriend_id(String.valueOf(i));
                 friend.setFriend_name("dummy name"+i);
                 friend.setFriend_ava("dummy_ava"+i);
                 filelist.add(friend);
-            }
+            }*/
         }
 
         return myFragmentView;
@@ -130,10 +133,9 @@ public class InviteFriend extends Fragment  {
         private void addList(JSONObject result) {
             try {
                 friend = new Friend();
-                friend.setFriend_id("1");
-                friend.setFriend_name("dummy name");
-                friend.setFriend_ava("dummy_ava");
-
+                friend.setFriend_id(result.getString("user_id"));
+                friend.setFriend_name(result.getString("username"));
+                friend.setFriend_ava(result.getString("user_pic"));
                 filelist.add(friend);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -142,7 +144,7 @@ public class InviteFriend extends Fragment  {
 
         @Override
         protected String doInBackground(String... arg0) {
-            String url = cfg.HOSTNAME + "/program/"+program_id+"/apply/list";
+            String url = cfg.HOSTNAME + "/follower/volunteer";
             List<NameValuePair> nvp = new ArrayList<NameValuePair>();
             nvp.add(new BasicNameValuePair("access_token", token));
 
@@ -150,11 +152,13 @@ public class InviteFriend extends Fragment  {
             Log.e("token", token);
 
             JSONParser jParser = new JSONParser();
-            JSONObject json = jParser.makeHttpRequestToObject(url, "GET", nvp);      //get data from server
+            JSONArray json = jParser.makeHttpRequest(url, "GET", nvp);      //get data from server
             if (json != null) {
                 isSuccess = true;
                 try {
-                    addList(json);
+                    for(int i=0;i<json.length();i++) {
+                        addList(json.getJSONObject(i));
+                    }
                     Log.e("get", "get data");
                 } catch (Exception e) {
                     Log.e("error", "tidak bisa ambil data 1");
@@ -168,6 +172,7 @@ public class InviteFriend extends Fragment  {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             pDialog.dismiss();
+            adapter.notifyDataSetChanged();
         }
     }
 
