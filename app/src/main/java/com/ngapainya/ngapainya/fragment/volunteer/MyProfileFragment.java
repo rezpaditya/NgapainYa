@@ -2,6 +2,7 @@ package com.ngapainya.ngapainya.fragment.volunteer;
 
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -25,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ngapainya.ngapainya.R;
 import com.ngapainya.ngapainya.activity.SettingsActivity;
@@ -35,21 +37,24 @@ import com.ngapainya.ngapainya.fragment.volunteer.child.ShowProgram;
 import com.ngapainya.ngapainya.helper.Config;
 import com.ngapainya.ngapainya.helper.JSONParser;
 import com.ngapainya.ngapainya.helper.SessionManager;
-import com.squareup.okhttp.MultipartBuilder;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 import com.squareup.picasso.Picasso;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,6 +99,9 @@ public class MyProfileFragment extends Fragment {
     private String total_following;
     private String user_location;
     private String apply_accepted;
+
+    private Bitmap photo = null;
+    private String image_url;
 
     public void switchMode() {
         Intent intent = new Intent(myContext, ContainerActivity.class);
@@ -199,7 +207,7 @@ public class MyProfileFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Bitmap photo = null;
+
         switch (requestCode) {
             case CAMERA_REQUEST:
                 if (requestCode == CAMERA_REQUEST && resultCode == myContext.RESULT_OK) {
@@ -217,16 +225,23 @@ public class MyProfileFragment extends Fragment {
                         e.printStackTrace();
                     }
                     photo = BitmapFactory.decodeStream(imageStream);
+                    image_url = getRealPathFromURI(selectedImage);
                     propic.setImageBitmap(photo);
 
                     try {
-                        run(getRealPathFromURI(selectedImage));
                         Log.e("Path", getRealPathFromURI(selectedImage));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     //Log.e("URL", selectedImage.toString());
                 }
+        }
+        if (photo == null) {
+            Toast.makeText(myContext,
+                    "Please select image", Toast.LENGTH_SHORT).show();
+        } else {
+            new updateProfilePicture().execute();
+            Log.e("Path", "uploading...");
         }
         /*if (photo != null) {
             //base64 encoding
@@ -242,6 +257,35 @@ public class MyProfileFragment extends Fragment {
         return cursor.getString(idx);
     }
 
+    /*public void decodeFile(String filePath) {
+        // Decode image size
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, o);
+
+        // The new size we want to scale to
+        final int REQUIRED_SIZE = 1024;
+
+        // Find the correct scale value. It should be the power of 2.
+        int width_tmp = o.outWidth, height_tmp = o.outHeight;
+        int scale = 1;
+        while (true) {
+            if (width_tmp &lt; REQUIRED_SIZE &amp;&amp; height_tmp &lt; REQUIRED_SIZE)
+            break;
+            width_tmp /= 2;
+            height_tmp /= 2;
+            scale *= 2;
+        }
+
+        // Decode with inSampleSize
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        bitmap = BitmapFactory.decodeFile(filePath, o2);
+
+        imgView.setImageBitmap(bitmap);
+
+    }*/
+
     /*
     * This method used to encode image to String
     * */
@@ -256,27 +300,6 @@ public class MyProfileFragment extends Fragment {
     * OKHTTP library to upload image
     * */
 
-    public void run(String image_path) throws Exception {
-        Config cfg = new Config();
-        OkHttpClient client = new OkHttpClient();
-
-        RequestBody requestBody = new MultipartBuilder()
-                .type(MultipartBuilder.FORM)
-                .addFormDataPart("text", "ini Ok Http")
-                .addFormDataPart("access_token", "respa")
-                /*.addFormDataPart("avatar", "file.png",
-                        RequestBody.create(MediaType.parse("image/png"), new File(image_path)))*/
-                .build();
-
-        Request request = new Request.Builder()
-                .url(cfg.HOSTNAME + "/activity/add/text")
-                .post(requestBody)
-                .build();
-
-        Response response = client.newCall(request).execute();
-        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-        System.out.println(response.body().string());
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -312,6 +335,7 @@ public class MyProfileFragment extends Fragment {
 
         protected void onPreExecute() {
             super.onPreExecute();
+
             session = new SessionManager(myContext);
             user = session.getUserDetails();
             token = user.get(SessionManager.KEY_TOKEN);
@@ -366,6 +390,7 @@ public class MyProfileFragment extends Fragment {
     }
 
     public class updateProfilePicture extends AsyncTask<String, String, String> {
+        ProgressDialog pDialog;
         SessionManager session;
         HashMap<String, String> user;
         String token;
@@ -374,6 +399,11 @@ public class MyProfileFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
 
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Uploading image...");
+            pDialog.setIndeterminate(false);
+            pDialog.show();
+
             session = new SessionManager(myContext);
             user = session.getUserDetails();
             token = user.get(SessionManager.KEY_TOKEN);
@@ -381,25 +411,35 @@ public class MyProfileFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... arg0) {
-            String url = cfg.HOSTNAME + "/profile/update/pp";
-            List<NameValuePair> nvp = new ArrayList<NameValuePair>();
-            nvp.add(new BasicNameValuePair("access_token", token));
-            nvp.add(new BasicNameValuePair("avatar", encodedImage));
-
-            JSONParser jParser = new JSONParser();
-            jParser.makeHttpRequest(url, "GET", nvp);      //get data from server
             try {
-                Log.e("error", "tidak bisa ambil data 0");
+                //Image path /storage/emulated/0/DCIM/photo.png
+                File image = new File(image_url);
+
+                HttpClient client = new DefaultHttpClient();
+                HttpPost post = new HttpPost(cfg.HOSTNAME+"/profile/update/pp");
+
+                MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
+                multipartEntity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+                multipartEntity.addTextBody("access_token", token);
+                multipartEntity.addPart("avatar", new FileBody(image));
+                post.setEntity(multipartEntity.build());
+
+                HttpResponse response = client.execute(post);
+                String responseBody = EntityUtils.toString(response.getEntity());
+
+                Log.e("multiPartPost", responseBody);
+                return responseBody;
+
             } catch (Exception e) {
-                Log.e("error", "tidak bisa ambil data 1");
-                e.printStackTrace();
+                Log.e(e.getClass().getName(), e.getMessage(), e);
+                return null;
             }
-            return null;
         }
 
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+            pDialog.dismiss();
         }
     }
 }

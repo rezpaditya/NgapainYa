@@ -119,16 +119,16 @@ public class PostLocationFragment extends Fragment implements
                 .addApi(LocationServices.API)
                 .build();
         mGoogleApiClient.connect();
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         //call this to get current location
-        shareLocation();
+        shareLocation(location);
 
         setHasOptionsMenu(true);
 
         return myFragmentView;
     }
 
-    public void shareLocation() {
-        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+    public void shareLocation(Location location) {
         if (location != null) {
             latitude = Double.toString(location.getLatitude());
             longitude = Double.toString(location.getLongitude());
@@ -176,7 +176,7 @@ public class PostLocationFragment extends Fragment implements
 
     @Override
     public void onLocationChanged(Location location) {
-
+        shareLocation(location);
     }
 
     @Override

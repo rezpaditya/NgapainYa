@@ -65,6 +65,7 @@ public class ContainerActivity extends ActionBarActivity {
 
     //manage session
     private SessionManager sessionManager;
+    HashMap<String, String> user;
 
     public void homeTitleBar(String t) {
         String title = t;
@@ -96,9 +97,18 @@ public class ContainerActivity extends ActionBarActivity {
 
         //check the login session
         sessionManager = new SessionManager(this);
+        user = sessionManager.getUserDetails();
+
         if (!sessionManager.checkLogin()) {
             Intent intent = new Intent(this, GreetingActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }
+
+        if(!user.get(sessionManager.KEY_STATUS).equals("volunteer")){
+            Intent intent = new Intent(this, com.ngapainya.ngapainya.activity.owner.ContainerActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
         }
@@ -241,7 +251,7 @@ public class ContainerActivity extends ActionBarActivity {
             user = sessionManager.getUserDetails();
 
             toolbar.setTitleTextAppearance(ContainerActivity.this, R.style.Toolbar_TitleText);
-            SpannableString s = new SpannableString(user.get(SessionManager.KEY_NAME));
+            SpannableString s = new SpannableString(user.get(SessionManager.KEY_FULLNAME));
             s.setSpan(new TypefaceSpan(this, "Mission-Script.otf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             getSupportActionBar().setTitle(s);
 
@@ -268,7 +278,7 @@ public class ContainerActivity extends ActionBarActivity {
             String packageName = "com.ngapainya.ngapainya.fragment.volunteer.";
             Fragment fragmentPopped = getSupportFragmentManager().findFragmentByTag(packageName + "MyProfileFragment");
 
-            Log.e("backPress", fragmentPopped.getClass().getName());
+//            Log.e("backPress", fragmentPopped.getClass().getName());
 
             if (fragmentPopped != null && fragmentPopped.isVisible()) {
                 changeActionbarStyle(true);

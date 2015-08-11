@@ -23,10 +23,10 @@ import com.ngapainya.ngapainya.helper.SessionManager;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -41,6 +41,13 @@ public class LoginFragment extends Fragment {
     private EditText email;
     private EditText password;
     private Button btn_login;
+
+    /*Variable to store data after login*/
+    private String username;
+    private String user_fullname;
+    private String current_status;
+    private String user_email;
+    private String token;
 
     @Override
     public void onAttach(Activity activity) {
@@ -74,9 +81,6 @@ public class LoginFragment extends Fragment {
 
     public class doLogin extends AsyncTask<String, String, String> {
         ProgressDialog pDialog;
-        SessionManager session;
-        HashMap<String, String> user;
-        String token;
         String input_email;
         String input_password;
         boolean isSuccess;
@@ -92,9 +96,6 @@ public class LoginFragment extends Fragment {
             pDialog.show();
 
             isSuccess = false;
-            session = new SessionManager(myContext);
-            user    = session.getUserDetails();
-            token   = user.get(SessionManager.KEY_TOKEN);
 
             input_email     = email.getText().toString();
             input_password  = password.getText().toString();
@@ -104,7 +105,6 @@ public class LoginFragment extends Fragment {
         protected String doInBackground(String... arg0) {
             String url = cfg.HOSTNAME +"/login";
             List<NameValuePair> nvp = new ArrayList<NameValuePair>();
-            nvp.add(new BasicNameValuePair("access_token", token));
             nvp.add(new BasicNameValuePair("email", input_email));
             nvp.add(new BasicNameValuePair("password", input_password));
 
@@ -114,6 +114,7 @@ public class LoginFragment extends Fragment {
             try {
                 if (json.getString("access_token") != null) {
                     token   = json.getString("access_token");
+                    current_status = json.getString("current_status");
                     isSuccess = true;
                 } else {
                     Log.e("error", "unable to get data 0");
@@ -131,12 +132,66 @@ public class LoginFragment extends Fragment {
             pDialog.dismiss();
 
             if(isSuccess) {
-                //make login session here
-                session.createLoginSession("username", input_email, token);
-                Intent intent = new Intent(myContext, ContainerActivity.class);
-                startActivity(intent);
-                myContext.finish();
+               new getMyProfile().execute();
             }
+        }
+    }
+
+    public class getMyProfile extends AsyncTask<String, String, String> {
+        boolean isSuccess;
+        ProgressDialog pDialog;
+        SessionManager session;
+        JSONArray json;
+        Config cfg = new Config();
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Please wait...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+
+            isSuccess = false;
+            session = new SessionManager(myContext);
+        }
+
+        @Override
+        protected String doInBackground(String... arg0) {
+            String url = cfg.HOSTNAME + "/profile";
+            List<NameValuePair> nvp = new ArrayList<NameValuePair>();
+            nvp.add(new BasicNameValuePair("access_token", token));
+
+            JSONParser jParser = new JSONParser();
+            json = jParser.makeHttpRequest(url, "GET", nvp);      //get data from server
+
+            try {
+                if(json.length() > 0) {
+                    for (int i = 0; i < json.length(); i++) {
+                        JSONObject result = json.getJSONObject(i);
+                        username = result.getString("username");
+                        user_fullname = result.getString("user_fullname");
+                        user_email = result.getString("email");
+                        Log.e("ok", " ambil data");
+                    }
+                }
+            } catch (Exception e) {
+                Log.e("error", "tidak bisa ambil data 1");
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            pDialog.dismiss();
+            //make login session here
+            session.createLoginSession(username, user_fullname, user_email, current_status, token);
+            Intent intent = new Intent(myContext, ContainerActivity.class);
+            startActivity(intent);
+            myContext.finish();
         }
     }
 }

@@ -139,7 +139,7 @@ public class RegisterFragment extends Fragment {
             pDialog.dismiss();
 
             if(isSuccess) {
-                session.createLoginSession("username", input_email, token);
+                session.createLoginSession(input_username, "",input_email, "volunteer", token);
                 Intent intent = new Intent(myContext, ContainerActivity.class);
                 startActivity(intent);
                 myContext.finish();

@@ -1,12 +1,14 @@
 package com.ngapainya.ngapainya.activity;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -19,8 +21,15 @@ import android.preference.RingtonePreference;
 import android.text.TextUtils;
 
 import com.ngapainya.ngapainya.R;
+import com.ngapainya.ngapainya.helper.Config;
+import com.ngapainya.ngapainya.helper.JSONParser;
 import com.ngapainya.ngapainya.helper.SessionManager;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -85,15 +94,68 @@ public class SettingsActivity extends PreferenceActivity {
 
         PreferenceScreen switchM = (PreferenceScreen) getPreferenceScreen().findPreference("switch");
         switchM.setSummary("This is email");
-
         switchM.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(SettingsActivity.this, com.ngapainya.ngapainya.activity.owner.ContainerActivity.class);
-                startActivity(intent);
+                new doSwitch().execute();
                 return true;
             }
         });
+    }
+
+    private class doSwitch extends AsyncTask<Void, Void, Void>{
+        ProgressDialog pDialog;
+        SessionManager sessionManager;
+        HashMap<String, String> user;
+        Config cfg;
+        String current_status;
+        String token;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(SettingsActivity.this);
+            pDialog.setMessage("Please wait...");
+            pDialog.setCancelable(true);
+            pDialog.setIndeterminate(false);
+            pDialog.show();
+
+            sessionManager = new SessionManager(SettingsActivity.this);
+            user = sessionManager.getUserDetails();
+            cfg = new Config();
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            current_status = user.get(sessionManager.KEY_STATUS);
+            token = user.get(sessionManager.KEY_TOKEN);
+            if(current_status.equals("volunteer")){
+                current_status = "owner";
+            }else{
+                current_status = "volunteer";
+            }
+
+            String url = cfg.HOSTNAME +"/switch/"+current_status;
+            List<NameValuePair> nvp = new ArrayList<NameValuePair>();
+            nvp.add(new BasicNameValuePair("access_token", token));
+
+            JSONParser jParser = new JSONParser();
+            jParser.makeHttpRequest(url, "GET", nvp);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            pDialog.dismiss();
+
+            sessionManager.changeStatus(current_status);
+            Intent intent = new Intent(SettingsActivity.this, com.ngapainya.ngapainya.activity.owner.ContainerActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }
     }
 
     /**

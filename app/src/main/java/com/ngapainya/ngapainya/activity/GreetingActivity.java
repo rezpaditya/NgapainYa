@@ -53,6 +53,12 @@ public class GreetingActivity extends FragmentActivity implements ViewPager.OnPa
 
         sessionManager = new SessionManager(this);
 
+        if(sessionManager.checkLogin()){
+            Intent intent = new Intent(this, ContainerActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
@@ -206,7 +212,7 @@ public class GreetingActivity extends FragmentActivity implements ViewPager.OnPa
         protected void onPostExecute(String organization) {
             super.onPostExecute(organization);
             pDialog.dismiss();
-            sessionManager.createLoginSession(name, email, token);
+            sessionManager.createLoginSession("rezpa", "Rezpa Aditya", "a@a.com", "volunteer", "respa");
             Intent intent = new Intent(GreetingActivity.this, ContainerActivity.class);
             startActivity(intent);
             finish();

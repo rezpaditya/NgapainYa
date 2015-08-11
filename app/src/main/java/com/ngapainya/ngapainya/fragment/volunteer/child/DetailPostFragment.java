@@ -132,7 +132,7 @@ public class DetailPostFragment extends Fragment {
 
         SessionManager session = new SessionManager(myContext);
         HashMap<String, String> user = session.getUserDetails();
-        String usr = user.get(SessionManager.KEY_NAME);
+        String usr = user.get(SessionManager.KEY_USERNAME);
         String username = getArguments().getString("username");
         if (username != null && username.equals(usr)) {
             myContext.getMenuInflater().inflate(R.menu.menu_detail_post, menu);

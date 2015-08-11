@@ -1,5 +1,6 @@
 package com.ngapainya.ngapainya.activity.owner;
 
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,6 +52,11 @@ public class ContainerActivity extends ActionBarActivity {
 
     private PostProgramFragment postProgramFragment;
 
+    /**/
+
+    private SessionManager sessionManager;
+    private HashMap<String, String> user;
+
     public void onClick(View view){
         ownerProfileFragment.onClick(view);
     }
@@ -79,14 +85,8 @@ public class ContainerActivity extends ActionBarActivity {
                     .setBackgroundDrawable
                             (new ColorDrawable(getResources().getColor(R.color.ActionbarColor)));
 
-            SessionManager sessionManager;
-            HashMap<String, String> user;
-
-            sessionManager = new SessionManager(this);
-            user = sessionManager.getUserDetails();
-
             getSupportActionBar()
-                    .setTitle(user.get(SessionManager.KEY_NAME));
+                    .setTitle(user.get(SessionManager.KEY_FULLNAME));
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getWindow();
@@ -103,6 +103,16 @@ public class ContainerActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container_owner);
+
+        sessionManager = new SessionManager(this);
+        user = sessionManager.getUserDetails();
+
+        if(!user.get(sessionManager.KEY_STATUS).equals("owner")){
+            Intent intent = new Intent(this, com.ngapainya.ngapainya.activity.volunteer.ContainerActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(this.toolbar);
