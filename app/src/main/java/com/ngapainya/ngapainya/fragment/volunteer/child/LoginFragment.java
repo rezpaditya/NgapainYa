@@ -19,6 +19,7 @@ import com.ngapainya.ngapainya.R;
 import com.ngapainya.ngapainya.activity.volunteer.ContainerActivity;
 import com.ngapainya.ngapainya.helper.Config;
 import com.ngapainya.ngapainya.helper.JSONParser;
+import com.ngapainya.ngapainya.helper.RegistrationIntentService;
 import com.ngapainya.ngapainya.helper.SessionManager;
 
 import org.apache.http.NameValuePair;
@@ -63,6 +64,9 @@ public class LoginFragment extends Fragment {
         /*
         * Initialize views variable
         * */
+
+        new getTokenGCM().execute();
+
         email = (EditText) myFragmentView.findViewById(R.id.email);
         password = (EditText) myFragmentView.findViewById(R.id.password);
         btn_login = (Button) myFragmentView.findViewById(R.id.login_btn);
@@ -192,6 +196,25 @@ public class LoginFragment extends Fragment {
             Intent intent = new Intent(myContext, ContainerActivity.class);
             startActivity(intent);
             myContext.finish();
+        }
+    }
+
+    private class getTokenGCM extends AsyncTask<Void, Void, Void>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Intent intent = new Intent(myContext, RegistrationIntentService.class);
+            myContext.startService(intent);
+            return null;
         }
     }
 }

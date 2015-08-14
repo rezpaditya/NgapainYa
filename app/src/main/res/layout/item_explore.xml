@@ -6,13 +6,21 @@
     android:background="#fff"
     android:padding="10dp">
 
-    <ImageView
-        android:layout_marginRight="10dp"
-        android:layout_gravity="center_vertical"
-        android:src="@drawable/logo_1"
+    <FrameLayout
+        android:layout_marginRight="5dp"
         android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:id="@+id/propic" />
+        android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/propic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="6dp"
+            android:src="@drawable/propic_default"/>
+        <ImageView
+            android:src="@drawable/rounded_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
 
     <LinearLayout
         android:layout_weight="2"

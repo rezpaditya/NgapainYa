@@ -75,7 +75,9 @@ public class OwnerProfileFragment extends Fragment {
     private TextView ttl_friend;
     private TextView sum_post;
     private TextView sum_friend;
+    private TextView sum_program;
     private ImageView propic;
+    private TextView location;
 
     /*
     * variable to retrieve data from server
@@ -84,6 +86,7 @@ public class OwnerProfileFragment extends Fragment {
     private String total_post;
     private String total_project;
     private String total_friend;
+    private String user_location;
 
     public void switchMode() {
         Intent intent = new Intent(myContext, ContainerActivity.class);
@@ -111,6 +114,9 @@ public class OwnerProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         myFragmentView = inflater.inflate(R.layout.fragment_profile_owner, container, false);
 
+        ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).changeActionbarStyle(true);
+
         setHasOptionsMenu(true);
 
         new getMyProfile().execute();
@@ -127,6 +133,8 @@ public class OwnerProfileFragment extends Fragment {
         ttl_friend      = (TextView) myFragmentView.findViewById(R.id.ttl_friend);
         sum_post        = (TextView) myFragmentView.findViewById(R.id.sum_post);
         sum_friend      = (TextView) myFragmentView.findViewById(R.id.sum_friend);
+        sum_program     = (TextView) myFragmentView.findViewById(R.id.sum_program);
+        location        = (TextView) myFragmentView.findViewById(R.id.location);
 
         tabHost = (FragmentTabHost) myFragmentView.findViewById(android.R.id.tabhost);  // The activity TabHost
         tabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
@@ -285,6 +293,7 @@ public class OwnerProfileFragment extends Fragment {
                     total_post      = result.getString("count_activity");
                     total_project   = result.getString("count_program");
                     total_friend    = result.getString("follower");
+                    user_location   = result.getString("user_location");
                 }
 
                 Log.e("ok", " ambil data");
@@ -307,6 +316,12 @@ public class OwnerProfileFragment extends Fragment {
             ttl_friend.setText(total_friend);
             sum_post.setText(total_post);
             sum_friend.setText(total_friend);
+            sum_program.setText(total_project);
+            if(user_location != null) {
+                location.setText(user_location + " city");
+            }else{
+                location.setText("Nowhere");
+            }
         }
     }
 

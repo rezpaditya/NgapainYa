@@ -135,6 +135,10 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
             ((ContainerActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             ((ContainerActivity) getActivity()).homeTitleBar("Explore");
             ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity) getActivity()).changeActionbarStyle(false);
+        }else{
+            ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).homeTitleBar("Explore");
+            ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).changeActionbarStyle(false);
         }
 
         swipeRefreshLayout = (SwipeRefreshLayout) myFragmentView.findViewById(R.id.swipe_refresh_layout);
@@ -156,7 +160,12 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         Bundle args = new Bundle();
         args.putString("program_id", tmp.getProgram_id());
         detailExploreFragment.setArguments(args);
-        ((ContainerActivity) getActivity()).changeFragment(detailExploreFragment);
+        if (myContext.getClass().getName().equals("com.ngapainya.ngapainya.activity.volunteer.ContainerActivity")) {
+            ((ContainerActivity) getActivity()).changeFragment(detailExploreFragment);
+        }else{
+            ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).changeFragment(detailExploreFragment);
+        }
+
     }
 
     @Override

@@ -106,7 +106,7 @@ public class ContainerActivity extends ActionBarActivity {
             finish();
         }
 
-        if(!user.get(sessionManager.KEY_STATUS).equals("volunteer")){
+        if(user.get(sessionManager.KEY_STATUS) != null && !user.get(sessionManager.KEY_STATUS).equals("volunteer")){
             Intent intent = new Intent(this, com.ngapainya.ngapainya.activity.owner.ContainerActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -162,11 +162,11 @@ public class ContainerActivity extends ActionBarActivity {
 
         actionBarRadioGroup = (RadioGroup) findViewById(R.id.actionRadioBtn);
         actionBarRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 int pos;
                 pos = actionBarRadioGroup.indexOfChild(findViewById(checkedId));
-
                 switch (pos) {
                     case 0:
                         changeFragment(homeFragment);
@@ -373,6 +373,8 @@ public class ContainerActivity extends ActionBarActivity {
             ft.commit();
         }*/
     }
+
+
 
 }
 

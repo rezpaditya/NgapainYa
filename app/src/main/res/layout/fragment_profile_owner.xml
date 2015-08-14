@@ -107,7 +107,9 @@
         android:background="#FFF"
         android:gravity="right"
         android:orientation="vertical"
-        android:paddingRight="20dp">
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        android:paddingBottom="10dp">
 
         <LinearLayout
             android:layout_width="180dp"
@@ -116,23 +118,26 @@
             android:orientation="vertical"
             android:paddingTop="10dp">
 
+            <TextView
+                android:id="@+id/location"
+                android:drawableLeft="@drawable/ic_action_place"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="Jakarta, Indonesia"/>
+
             <Button
                 android:id="@+id/editProfileBtn"
-                android:onClick="onClick"
                 android:layout_width="fill_parent"
                 android:layout_height="25dp"
-                android:background="@drawable/my_button_red"
+                android:background="@drawable/my_button_grey"
                 android:text="Edit Profile"
                 android:textAllCaps="false"
-                android:textColor="#fff"
+                android:textColor="@color/Grey"
                 android:textSize="@dimen/profile_text_size" />
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_action_place"
-                android:padding="10dp"
-                android:text="Jakarta, Indonesia" />
+
         </LinearLayout>
     </LinearLayout>
 

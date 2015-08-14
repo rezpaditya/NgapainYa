@@ -44,8 +44,10 @@ public class HomeAdapter extends GNowListAdapter {
                 //define the view
                 ImageView propic_0 = (ImageView) row.findViewById(R.id.propic);
                 TextView content_0 = (TextView) row.findViewById(R.id.content);
+                TextView time_0 = (TextView) row.findViewById(R.id.time);
 
                 //set the value to the view
+                time_0.setText(list.get(position).getCreated_at());
                 content_0.setText(list.get(position).getAct_content());
                 Picasso.with(context)
                         .load("http://ainufaisal.com/" + list.get(position).getUser_pic())
@@ -58,8 +60,10 @@ public class HomeAdapter extends GNowListAdapter {
                 //define the view
                 ImageView propic_01 = (ImageView) row.findViewById(R.id.propic);
                 TextView content_01 = (TextView) row.findViewById(R.id.content);
+                TextView time_1 = (TextView) row.findViewById(R.id.time);
 
                 //set the value to the view
+                time_1.setText(list.get(position).getCreated_at());
                 content_01.setText(list.get(position).getAct_content());
                 Picasso.with(context)
                         .load("http://ainufaisal.com/" + list.get(position).getUser_pic())
@@ -71,7 +75,10 @@ public class HomeAdapter extends GNowListAdapter {
                 ImageView propic_02 = (ImageView) row.findViewById(R.id.propic);
                 ImageView img = (ImageView) row.findViewById(R.id.content_img);
                 TextView content_02 = (TextView) row.findViewById(R.id.content);
+                TextView time_2 = (TextView) row.findViewById(R.id.time);
 
+                //set the value to the view
+                time_2.setText(list.get(position).getCreated_at());
                 content_02.setText(list.get(position).getAct_content());
                 Picasso.with(context)
                         .load("http://ainufaisal.com/" + list.get(position).getUser_pic())
@@ -86,7 +93,10 @@ public class HomeAdapter extends GNowListAdapter {
                 row = inflater.inflate(R.layout.item_home_location, parent, false);
                 ImageView propic_03 = (ImageView) row.findViewById(R.id.propic);
                 TextView address = (TextView) row.findViewById(R.id.address);
+                TextView time_3 = (TextView) row.findViewById(R.id.time);
 
+                //set the value to the view
+                time_3.setText(list.get(position).getCreated_at());
                 address.setText(list.get(position).getUsername() + " is at " + list.get(position).getAct_address());
                 Picasso.with(context)
                         .load("http://ainufaisal.com/" + list.get(position).getUser_pic())
@@ -97,7 +107,10 @@ public class HomeAdapter extends GNowListAdapter {
                 row = inflater.inflate(R.layout.item_home_url, parent, false);
                 ImageView propic_04 = (ImageView) row.findViewById(R.id.propic);
                 TextView url_content = (TextView) row.findViewById(R.id.content);
+                TextView time_4 = (TextView) row.findViewById(R.id.time);
 
+                //set the value to the view
+                time_4.setText(list.get(position).getCreated_at());
                 url_content.setText(list.get(position).getAct_url());
                 Picasso.with(context)
                         .load("http://ainufaisal.com/" + list.get(position).getUser_pic())

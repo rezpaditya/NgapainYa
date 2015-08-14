@@ -51,7 +51,11 @@ public class PostStatusFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // TODO Auto-generated method stub
         super.onCreateOptionsMenu(menu, inflater);
-        myContext.getMenuInflater().inflate(R.menu.menu_post_text, menu);
+        if (myContext.getClass().getName().equals("com.ngapainya.ngapainya.activity.volunteer.ContainerActivity")) {
+            myContext.getMenuInflater().inflate(R.menu.menu_post_text, menu);
+        }else{
+            myContext.getMenuInflater().inflate(R.menu.menu_post_program, menu);
+        }
         final MenuItem item = menu.findItem(R.id.action_done);
         item.getActionView().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,12 +83,19 @@ public class PostStatusFragment extends Fragment {
                              Bundle savedInstanceState) {
         myFragmentView = inflater.inflate(R.layout.fragment_post_status, container, false);
 
-        ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
-                getActivity()).getSupportActionBar()
-                .setDisplayHomeAsUpEnabled(true);
-
-        ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
-                getActivity()).standardTitleBar("Post Status");
+        if(myContext.getClass().getName().equals("com.ngapainya.ngapainya.activity.volunteer.ContainerActivity")) {
+            ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
+                    getActivity()).getSupportActionBar()
+                    .setDisplayHomeAsUpEnabled(true);
+            ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
+                    getActivity()).standardTitleBar("Post Status");
+        }else{
+            ((com.ngapainya.ngapainya.activity.owner.ContainerActivity)
+                    getActivity()).getSupportActionBar()
+                    .setDisplayHomeAsUpEnabled(true);
+            ((com.ngapainya.ngapainya.activity.owner.ContainerActivity)
+                    getActivity()).standardTitleBar("Post Status");
+        }
 
         setHasOptionsMenu(true);
 
@@ -147,7 +158,11 @@ public class PostStatusFragment extends Fragment {
             super.onPostExecute(result);
             pDialog.dismiss();
             HomeFragment homeFragment = new HomeFragment();
-            ((ContainerActivity) getActivity()).changeFragment(homeFragment);
+            if (myContext.getClass().getName().equals("com.ngapainya.ngapainya.activity.volunteer.ContainerActivity")) {
+                ((ContainerActivity) getActivity()).changeFragment(homeFragment);
+            }else{
+                ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).changeFragment(homeFragment);
+            }
         }
     }
 

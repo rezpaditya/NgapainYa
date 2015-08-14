@@ -33,11 +33,14 @@ import java.util.List;
 public class ListApplicantAdapter extends BaseAdapter {
     Context context;
     ArrayList<Friend> list;
-    String image_url;
+    String status;
+    String program_id;
+    String user_id;
 
-    public ListApplicantAdapter(Context context, ArrayList<Friend> items){
+    public ListApplicantAdapter(Context context, ArrayList<Friend> items, String program_id){
         this.context = context;
         list = items;
+        this.program_id = program_id;
     }
 
     private class ViewHolder{
@@ -86,7 +89,7 @@ public class ListApplicantAdapter extends BaseAdapter {
         }else{
             holder = (ViewHolder) row.getTag();
         }
-        Friend temp = list.get(position);
+        final Friend temp = list.get(position);
         final ViewHolder v = holder;
 
         holder.name.setText(temp.getFriend_name());
@@ -95,12 +98,11 @@ public class ListApplicantAdapter extends BaseAdapter {
                 .placeholder(R.drawable.propic_default)
                 .into(holder.avatar);
 
-        if(temp.getApply_status() !=null){
+        if(temp.getApply_status() !=null && !temp.getApply_status().equals("pending")){
             v.allBtn.setVisibility(View.GONE);
             v.status.setVisibility(View.VISIBLE);
             v.status.setText(temp.getApply_status());
         }else {
-
             holder.acpBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -108,6 +110,8 @@ public class ListApplicantAdapter extends BaseAdapter {
                     v.allBtn.setVisibility(View.GONE);
                     v.status.setVisibility(View.VISIBLE);
                     v.status.setText("Accepted");
+                    status = "accepted";
+                    user_id = temp.getFriend_id();
                     new postStatus().execute();
                 }
             });
@@ -119,6 +123,8 @@ public class ListApplicantAdapter extends BaseAdapter {
                     v.allBtn.setVisibility(View.GONE);
                     v.status.setVisibility(View.VISIBLE);
                     v.status.setText("Rejected");
+                    status = "rejected";
+                    user_id = temp.getFriend_id();
                     new postStatus().execute();
                 }
             });
@@ -149,12 +155,12 @@ public class ListApplicantAdapter extends BaseAdapter {
 
         @Override
         protected String doInBackground(String... arg0) {
-            String url = cfg.HOSTNAME +"/activity/add/text";
+            String url = cfg.HOSTNAME +"/program/"+program_id+"/apply/"+user_id+"/"+status;
             List<NameValuePair> nvp = new ArrayList<NameValuePair>();
             nvp.add(new BasicNameValuePair("access_token", token));
 
             JSONParser jParser = new JSONParser();
-            //JSONArray json = jParser.makeHttpRequest(url, "GET", nvp);      //get data from server
+            jParser.makeHttpRequest(url, "GET", nvp);      //get data from server
             Log.e("Asynctask", "works");
             try {
                 Log.e("error", "tidak bisa ambil data 0");

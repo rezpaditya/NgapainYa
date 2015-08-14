@@ -92,7 +92,7 @@ public class VolunteerProfileFragment extends Fragment {
         tabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
 
         //tabHost.addTab(tabHost.newTabSpec(FOLLOWING_SPEC).setIndicator("Following"), ShowFeedFragment.class, null);
-        tabHost.addTab(tabHost.newTabSpec(YOU_SPEC).setIndicator("You"), ShowFriendFragment.class, null);
+        tabHost.addTab(tabHost.newTabSpec(YOU_SPEC).setIndicator("You"), LockedFragment.class, null);
         tabHost.setCurrentTab(0);
 
 

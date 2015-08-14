@@ -93,10 +93,10 @@ public class ExploreAdapter extends BaseAdapter {
         }
 
         Explore temp = list.get(position);
-        /*if(temp.getProgram_date_start() != null
+        if(temp.getProgram_date_start() != null
                 && temp.getProgram_date_end() != null) {
             splitDate(temp);
-        }*/
+        }
 
         holder.program_title.setText(temp.getProgram_name());
         holder.program_title.setTag(temp);

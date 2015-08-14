@@ -19,10 +19,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ngapainya.ngapainya.R;
 import com.ngapainya.ngapainya.activity.owner.ContainerActivity;
 import com.ngapainya.ngapainya.fragment.owner.child.ListApplicantFragment;
+import com.ngapainya.ngapainya.fragment.volunteer.HomeFragment;
 import com.ngapainya.ngapainya.helper.Config;
 import com.ngapainya.ngapainya.helper.JSONParser;
 import com.ngapainya.ngapainya.helper.SessionManager;
@@ -168,14 +170,17 @@ public class DetailExploreFragment extends Fragment {
         } else if (param != null && param.equals("applicant")) {
             //set the toolbar here
         } else {
-            myContext.getMenuInflater().inflate(R.menu.menu_detail_explore, menu);
-            final MenuItem item = menu.findItem(R.id.action_done);
-            item.getActionView().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    doApply();
-                }
-            });
+            if(myContext.getClass().getName().equals("com.ngapainya.ngapainya.activity.volunteer.ContainerActivity")) {
+                myContext.getMenuInflater().inflate(R.menu.menu_detail_explore, menu);
+
+                final MenuItem item = menu.findItem(R.id.action_done);
+                item.getActionView().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        doApply();
+                    }
+                });
+            }
         }
     }
 
@@ -183,7 +188,7 @@ public class DetailExploreFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
-                Log.e("delete", "works");
+                new doDelete().execute();
                 break;
             case R.id.action_view_applicant:
                 ListApplicantFragment listApplicantFragment = new ListApplicantFragment();
@@ -372,5 +377,61 @@ public class DetailExploreFragment extends Fragment {
             hideMenu();
             new getDetailExplore().execute();
         }
+    }
+
+    private class doDelete extends AsyncTask<Void, Void, Void>{
+        ProgressDialog pDialog;
+        SessionManager session;
+        HashMap<String, String> user;
+        String token;
+        Config cfg = new Config();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Please wait...");
+            pDialog.setIndeterminate(false);
+            pDialog.show();
+
+            session = new SessionManager(myContext);
+            user = session.getUserDetails();
+            token = user.get(SessionManager.KEY_TOKEN);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            String url = cfg.HOSTNAME + "/program/delete/" + program_id;
+            List<NameValuePair> nvp = new ArrayList<NameValuePair>();
+            nvp.add(new BasicNameValuePair("access_token", token));
+
+            JSONParser jParser = new JSONParser();
+            JSONObject json = jParser.makeHttpRequestToObject(url, "GET", nvp);      //get data from server
+
+            try {
+                if (json != null) {
+                    Log.e("post", "deleted");
+                }
+            } catch (Exception e) {
+
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            pDialog.dismiss();
+            Toast.makeText(myContext, "post deleted",
+                    Toast.LENGTH_SHORT).show();
+            HomeFragment homeFragment = new HomeFragment();
+            ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).changeFragment(homeFragment);
+        }
+
+
     }
 }

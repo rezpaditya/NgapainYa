@@ -26,6 +26,7 @@ import com.squareup.picasso.Picasso;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -66,11 +67,6 @@ public class ListApplicantFragment extends Fragment {
 
         list_applicant = (ListView) myFragmentView.findViewById(R.id.list_applicant);
 
-        explore = new Explore();
-        filelist = new ArrayList<>();
-        adapter = new ListApplicantAdapter(myContext, filelist);
-        list_applicant.setAdapter(adapter);
-
         avatar = (ImageView) myFragmentView.findViewById(R.id.avatar);
         name = (TextView) myFragmentView.findViewById(R.id.name);
         title = (TextView) myFragmentView.findViewById(R.id.title);
@@ -81,14 +77,20 @@ public class ListApplicantFragment extends Fragment {
             //new getApplicant().execute();
 
             //dummy data
-            for(int i=0;i<5;i++) {
+            /*for(int i=0;i<5;i++) {
                 friend = new Friend();
                 friend.setFriend_id(String.valueOf(i));
                 friend.setFriend_name("dummy name"+i);
                 friend.setFriend_ava("dummy_ava"+i);
                 filelist.add(friend);
-            }
+            }*/
+            new getApplicant().execute();
         }
+
+        explore = new Explore();
+        filelist = new ArrayList<>();
+        adapter = new ListApplicantAdapter(myContext, filelist, program_id);
+        list_applicant.setAdapter(adapter);
 
         return myFragmentView;
     }
@@ -119,10 +121,11 @@ public class ListApplicantFragment extends Fragment {
         private void addList(JSONObject result) {
             try {
                 friend = new Friend();
-                friend.setFriend_id("1");
-                friend.setFriend_name("dummy name");
-                friend.setFriend_ava("dummy_ava");
-
+                friend.setFriend_id(result.getString("user_id"));
+                friend.setFriend_name(result.getString("user_fullname"));
+                friend.setFriend_ava(result.getString("user_pic"));
+                friend.setApply_status(result.getString("apply_status"));
+                Log.e("user_id", result.getString("user_id"));
                 filelist.add(friend);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -139,12 +142,14 @@ public class ListApplicantFragment extends Fragment {
             Log.e("token", token);
 
             JSONParser jParser = new JSONParser();
-            JSONObject json = jParser.makeHttpRequestToObject(url, "GET", nvp);      //get data from server
+            JSONArray json = jParser.makeHttpRequest(url, "GET", nvp);      //get data from server
             if (json != null) {
                 isSuccess = true;
                 try {
-                    addList(json);
-                    Log.e("get", "get data");
+                    for(int i=0;i<json.length();i++){
+                        addList(json.getJSONObject(i));
+                        Log.e("get", "get list applicant");
+                    }
                 } catch (Exception e) {
                     Log.e("error", "tidak bisa ambil data 1");
                     e.printStackTrace();
@@ -157,6 +162,7 @@ public class ListApplicantFragment extends Fragment {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             pDialog.dismiss();
+            adapter.notifyDataSetChanged();
         }
     }
 

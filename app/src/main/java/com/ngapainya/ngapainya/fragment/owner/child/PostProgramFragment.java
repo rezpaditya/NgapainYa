@@ -21,6 +21,8 @@ import android.widget.Spinner;
 
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.ngapainya.ngapainya.R;
+import com.ngapainya.ngapainya.activity.volunteer.ContainerActivity;
+import com.ngapainya.ngapainya.fragment.volunteer.ExploreFragment;
 import com.ngapainya.ngapainya.helper.Config;
 import com.ngapainya.ngapainya.helper.JSONParser;
 import com.ngapainya.ngapainya.helper.SessionManager;
@@ -275,7 +277,12 @@ public class PostProgramFragment extends Fragment implements AdapterView.OnItemS
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             pDialog.dismiss();
-
+            ExploreFragment exploreFragment = new ExploreFragment();
+            if (myContext.getClass().getName().equals("com.ngapainya.ngapainya.activity.volunteer.ContainerActivity")) {
+                ((ContainerActivity) getActivity()).changeFragment(exploreFragment);
+            }else{
+                ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).changeFragment(exploreFragment);
+            }
         }
     }
 

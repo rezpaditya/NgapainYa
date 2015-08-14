@@ -132,6 +132,10 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
             ((ContainerActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             ((ContainerActivity) getActivity()).homeTitleBar("Ngapain");
             ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity) getActivity()).changeActionbarStyle(false);
+        }else{
+            ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).homeTitleBar("Ngapain");
+            ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).changeActionbarStyle(false);
         }
 
         Log.e("onCreateView", "onCreateView");
@@ -214,7 +218,11 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                 args.putInt("postType", 0);
                 args.putString("act_id", tmp.getAct_id());
                 detailPostFragment.setArguments(args);
-                ((ContainerActivity) getActivity()).changeFragment(detailPostFragment);
+                if (myContext.getClass().getName().equals("com.ngapainya.ngapainya.activity.volunteer.ContainerActivity")) {
+                    ((ContainerActivity) getActivity()).changeFragment(detailPostFragment);
+                }else{
+                    ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).changeFragment(detailPostFragment);
+                }
                 break;
             /*case "status":
                 args.putInt("postType", 0);
@@ -225,17 +233,29 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                 args.putInt("postType", 1);
                 args.putString("act_id", tmp.getAct_id());
                 detailPostFragment.setArguments(args);
-                ((ContainerActivity) getActivity()).changeFragment(detailPostFragment);
+                if (myContext.getClass().getName().equals("com.ngapainya.ngapainya.activity.volunteer.ContainerActivity")) {
+                    ((ContainerActivity) getActivity()).changeFragment(detailPostFragment);
+                }else{
+                    ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).changeFragment(detailPostFragment);
+                }
                 break;
             case "Location":
                 args.putInt("postType", 2);
                 detailPostFragment.setArguments(args);
-                ((ContainerActivity) getActivity()).changeFragment(detailPostFragment);
+                if (myContext.getClass().getName().equals("com.ngapainya.ngapainya.activity.volunteer.ContainerActivity")) {
+                    ((ContainerActivity) getActivity()).changeFragment(detailPostFragment);
+                }else{
+                    ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).changeFragment(detailPostFragment);
+                }
                 break;
             case "Url":
                 args.putInt("postType", 3);
                 detailPostFragment.setArguments(args);
-                ((ContainerActivity) getActivity()).changeFragment(detailPostFragment);
+                if (myContext.getClass().getName().equals("com.ngapainya.ngapainya.activity.volunteer.ContainerActivity")) {
+                    ((ContainerActivity) getActivity()).changeFragment(detailPostFragment);
+                }else{
+                    ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).changeFragment(detailPostFragment);
+                }
                 break;
         }
     }

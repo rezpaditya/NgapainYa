@@ -2,7 +2,6 @@ package com.ngapainya.ngapainya.fragment.volunteer;
 
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -37,24 +36,25 @@ import com.ngapainya.ngapainya.fragment.volunteer.child.ShowProgram;
 import com.ngapainya.ngapainya.helper.Config;
 import com.ngapainya.ngapainya.helper.JSONParser;
 import com.ngapainya.ngapainya.helper.SessionManager;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.MultipartBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
 import com.squareup.picasso.Picasso;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -134,7 +134,11 @@ public class MyProfileFragment extends Fragment {
         /*Customize actionbar*/
             ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity) getActivity()).changeActionbarStyle(true);
+        }else{
+            ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).changeActionbarStyle(true);
         }
+
         setHasOptionsMenu(true);
 
         new getMyProfile().execute();
@@ -240,7 +244,12 @@ public class MyProfileFragment extends Fragment {
             Toast.makeText(myContext,
                     "Please select image", Toast.LENGTH_SHORT).show();
         } else {
-            new updateProfilePicture().execute();
+            //new updateProfilePicture().execute();
+            try {
+                run();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             Log.e("Path", "uploading...");
         }
         /*if (photo != null) {
@@ -248,6 +257,44 @@ public class MyProfileFragment extends Fragment {
             encodeImage(photo);
             new updateProfilePicture().execute();
         }*/
+    }
+
+    public void run() throws Exception {
+        OkHttpClient client = new OkHttpClient();
+        Config cfg = new Config();
+        SessionManager session = new SessionManager(myContext);
+        HashMap<String, String> user = session.getUserDetails();
+        String token = user.get(SessionManager.KEY_TOKEN);
+
+        RequestBody requestBody = new MultipartBuilder()
+                .type(MultipartBuilder.FORM)
+                .addFormDataPart("avatar", "file.png",
+                        RequestBody.create(MediaType.parse("image/png"), new File(image_url)))
+                .build();
+
+        Request request = new Request.Builder()
+                .header("access_token", token)
+                .url(cfg.HOSTNAME + "/profile/update/pp")
+                .post(requestBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                Headers responseHeaders = response.headers();
+                for (int i = 0; i < responseHeaders.size(); i++) {
+                    System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                }
+                System.out.println(response.body().string());
+            }
+        });
     }
 
     public String getRealPathFromURI(Uri uri) {
@@ -389,7 +436,7 @@ public class MyProfileFragment extends Fragment {
         }
     }
 
-    public class updateProfilePicture extends AsyncTask<String, String, String> {
+    /*public class updateProfilePicture extends AsyncTask<String, String, String> {
         ProgressDialog pDialog;
         SessionManager session;
         HashMap<String, String> user;
@@ -441,5 +488,5 @@ public class MyProfileFragment extends Fragment {
             super.onPostExecute(result);
             pDialog.dismiss();
         }
-    }
+    }*/
 }

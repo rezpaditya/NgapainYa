@@ -96,7 +96,7 @@ public class DetailPostFragment extends Fragment {
         post_comment_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(comment.getText().length() > 0) {
+                if (comment.getText().length() > 0) {
                     new postComment().execute();
                 }
             }
@@ -135,7 +135,9 @@ public class DetailPostFragment extends Fragment {
         String usr = user.get(SessionManager.KEY_USERNAME);
         String username = getArguments().getString("username");
         if (username != null && username.equals(usr)) {
+
             myContext.getMenuInflater().inflate(R.menu.menu_detail_post, menu);
+
         }
     }
 
@@ -161,10 +163,18 @@ public class DetailPostFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
-                getActivity()).getSupportActionBar()
-                .setBackgroundDrawable
-                        (new ColorDrawable(getResources().getColor(R.color.ColorPrimary)));
+        if (myContext.getClass().getName().equals("com.ngapainya.ngapainya.activity.volunteer.ContainerActivity")) {
+            ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
+                    getActivity()).getSupportActionBar()
+                    .setBackgroundDrawable
+                            (new ColorDrawable(getResources().getColor(R.color.ColorPrimary)));
+        } else {
+            ((com.ngapainya.ngapainya.activity.owner.ContainerActivity)
+                    getActivity()).getSupportActionBar()
+                    .setBackgroundDrawable
+                            (new ColorDrawable(getResources().getColor(R.color.ColorOwner)));
+        }
+
 
         setHasOptionsMenu(true);
 
@@ -186,7 +196,6 @@ public class DetailPostFragment extends Fragment {
                     tmp.setUser_comment("hahaha " + i);
                     filelist.add(tmp);
                 }*/
-
 
 
                 break;
@@ -248,7 +257,7 @@ public class DetailPostFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... arg0) {
-            String url = cfg.HOSTNAME + "/comment/activity/" + act_id +"/0/1000";
+            String url = cfg.HOSTNAME + "/comment/activity/" + act_id + "/0/1000";
             List<NameValuePair> nvp = new ArrayList<NameValuePair>();
             nvp.add(new BasicNameValuePair("access_token", token));
 
@@ -280,7 +289,7 @@ public class DetailPostFragment extends Fragment {
             if (filelist.size() > 0) {
                 //myList.setVisibility(View.VISIBLE);
                 final int adapterCount = adapter.getCount();
-                for (int i = adapterCount-1; i >=0; i--) {
+                for (int i = adapterCount - 1; i >= 0; i--) {
                     View item = adapter.getView(i, null, null);
                     layout_list.addView(item);
                 }

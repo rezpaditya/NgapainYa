@@ -69,7 +69,11 @@ public class PostLocationFragment extends Fragment implements
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // TODO Auto-generated method stub
         super.onCreateOptionsMenu(menu, inflater);
-        myContext.getMenuInflater().inflate(R.menu.menu_post_text, menu);
+        if (myContext.getClass().getName().equals("com.ngapainya.ngapainya.activity.volunteer.ContainerActivity")) {
+            myContext.getMenuInflater().inflate(R.menu.menu_post_text, menu);
+        }else{
+            myContext.getMenuInflater().inflate(R.menu.menu_post_program, menu);
+        }
         final MenuItem item = menu.findItem(R.id.action_done);
         item.getActionView().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,12 +107,19 @@ public class PostLocationFragment extends Fragment implements
         // Inflate the layout for this fragment
         myFragmentView = inflater.inflate(R.layout.fragment_post_location, container, false);
 
-        ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
-                getActivity()).getSupportActionBar()
-                .setDisplayHomeAsUpEnabled(true);
-
-        ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
-                getActivity()).standardTitleBar("Post Location");
+        if (myContext.getClass().getName().equals("com.ngapainya.ngapainya.activity.volunteer.ContainerActivity")) {
+            ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
+                    getActivity()).getSupportActionBar()
+                    .setDisplayHomeAsUpEnabled(true);
+            ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
+                    getActivity()).standardTitleBar("Post Location");
+        } else {
+            ((com.ngapainya.ngapainya.activity.owner.ContainerActivity)
+                    getActivity()).getSupportActionBar()
+                    .setDisplayHomeAsUpEnabled(true);
+            ((com.ngapainya.ngapainya.activity.owner.ContainerActivity)
+                    getActivity()).standardTitleBar("Post Location");
+        }
 
         text = (TextView) myFragmentView.findViewById(R.id.text_input);
 
@@ -236,7 +247,11 @@ public class PostLocationFragment extends Fragment implements
             super.onPostExecute(result);
             pDialog.dismiss();
             HomeFragment homeFragment = new HomeFragment();
-            ((ContainerActivity) getActivity()).changeFragment(homeFragment);
+            if (myContext.getClass().getName().equals("com.ngapainya.ngapainya.activity.volunteer.ContainerActivity")) {
+                ((ContainerActivity) getActivity()).changeFragment(homeFragment);
+            }else{
+                ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).changeFragment(homeFragment);
+            }
         }
     }
 }

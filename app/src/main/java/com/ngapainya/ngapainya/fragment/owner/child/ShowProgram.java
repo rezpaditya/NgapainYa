@@ -115,7 +115,7 @@ public class ShowProgram extends Fragment implements AdapterView.OnItemClickList
                 temp_home.setProgram_desc(result.getString("program_desc"));
                 temp_home.setProgram_date_start(result.getString("program_date_start"));
                 temp_home.setProgram_date_end(result.getString("program_date_end"));
-                temp_home.setUser_pic(result.getString("user_pic"));
+                //temp_home.setUser_pic(result.getString("user_pic"));
 
                 filelist.add(temp_home);
             } catch (Exception e) {
@@ -125,7 +125,7 @@ public class ShowProgram extends Fragment implements AdapterView.OnItemClickList
 
         @Override
         protected ArrayList<Explore> doInBackground(String... urls) {
-            String url = cfg.HOSTNAME + "/program/all";
+            String url = cfg.HOSTNAME + "/program/created";
             List<NameValuePair> nvp = new ArrayList<NameValuePair>();
             nvp.add(new BasicNameValuePair("access_token", token));
 
