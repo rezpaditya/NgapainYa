@@ -50,7 +50,7 @@ public class HomeAdapter extends GNowListAdapter {
                 time_0.setText(list.get(position).getCreated_at());
                 content_0.setText(list.get(position).getAct_content());
                 Picasso.with(context)
-                        .load("http://ainufaisal.com/" + list.get(position).getUser_pic())
+                        .load(list.get(position).getUser_pic())
                         .placeholder(R.drawable.propic_default)
                         .into(propic_0);
                 break;
@@ -66,7 +66,7 @@ public class HomeAdapter extends GNowListAdapter {
                 time_1.setText(list.get(position).getCreated_at());
                 content_01.setText(list.get(position).getAct_content());
                 Picasso.with(context)
-                        .load("http://ainufaisal.com/" + list.get(position).getUser_pic())
+                        .load(list.get(position).getUser_pic())
                         .placeholder(R.drawable.propic_default)
                         .into(propic_01);
                 break;
@@ -81,11 +81,11 @@ public class HomeAdapter extends GNowListAdapter {
                 time_2.setText(list.get(position).getCreated_at());
                 content_02.setText(list.get(position).getAct_content());
                 Picasso.with(context)
-                        .load("http://ainufaisal.com/" + list.get(position).getUser_pic())
+                        .load(list.get(position).getUser_pic())
                         .placeholder(R.drawable.propic_default)
                         .into(propic_02);
                 Picasso.with(context)
-                        .load("http://ainufaisal.com/" + list.get(position).getAct_url())
+                        .load(list.get(position).getAct_url())
                                 //.placeholder(R.drawable.bg_front)
                         .into(img);
                 break;
@@ -99,7 +99,7 @@ public class HomeAdapter extends GNowListAdapter {
                 time_3.setText(list.get(position).getCreated_at());
                 address.setText(list.get(position).getUsername() + " is at " + list.get(position).getAct_address());
                 Picasso.with(context)
-                        .load("http://ainufaisal.com/" + list.get(position).getUser_pic())
+                        .load(list.get(position).getUser_pic())
                         .placeholder(R.drawable.propic_default)
                         .into(propic_03);
                 break;
@@ -113,7 +113,7 @@ public class HomeAdapter extends GNowListAdapter {
                 time_4.setText(list.get(position).getCreated_at());
                 url_content.setText(list.get(position).getAct_url());
                 Picasso.with(context)
-                        .load("http://ainufaisal.com/" + list.get(position).getUser_pic())
+                        .load(list.get(position).getUser_pic())
                         .placeholder(R.drawable.propic_default)
                         .into(propic_04);
                 break;

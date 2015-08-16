@@ -37,6 +37,7 @@ import com.ngapainya.ngapainya.helper.Config;
 import com.ngapainya.ngapainya.helper.JSONParser;
 import com.ngapainya.ngapainya.helper.SessionManager;
 import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.OkHttpClient;
@@ -105,6 +106,7 @@ public class MyProfileFragment extends Fragment {
 
     private Bitmap photo = null;
     private String image_url;
+    private String uploaded_img;
 
     public void switchMode() {
         Intent intent = new Intent(myContext, ContainerActivity.class);
@@ -187,12 +189,17 @@ public class MyProfileFragment extends Fragment {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.capture) {
-                            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                            /*Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(cameraIntent, CAMERA_REQUEST);*/
                         } else if (menuItem.getItemId() == R.id.gallery) {
                             Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                             photoPickerIntent.setType("image/*");
                             startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+                        } else if(menuItem.getItemId() == R.id.remove){
+                            Picasso.with(myContext)
+                                    .load(R.drawable.propic_default)
+                                    .placeholder(R.drawable.propic_default)
+                                    .into(propic);
                         }
                         return true;
                     }
@@ -255,10 +262,7 @@ public class MyProfileFragment extends Fragment {
 
     public void run() throws Exception {
         OkHttpClient client = new OkHttpClient();
-        SessionManager session = new SessionManager(myContext);
-        HashMap<String, String> user = session.getUserDetails();
-        final String[] url_uploaded = new String[1];
-
+        final boolean[] isSuccess = {false};
         File file = new File(image_url);
 
         RequestBody requestBody = new MultipartBuilder()
@@ -292,53 +296,52 @@ public class MyProfileFragment extends Fragment {
                     JSONObject obj = new JSONObject(response.body().string());
                     JSONObject result = obj.getJSONObject("data");
                     String img = result.getString("link");
-                    url_uploaded[0] = img;
+                    uploaded_img = img;
+                    isSuccess[0] = true;
                     Log.e("link", img);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+                try {
+                    sendPhoto();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
+    }
 
-        /*RequestBody sendLink = new MultipartBuilder()
-                .type(MultipartBuilder.FORM)
-                .addFormDataPart("access_token", token)
-                .addFormDataPart("link", url_uploaded[0])
-                .build();*/
+    public void sendPhoto() throws Exception{
+        OkHttpClient client = new OkHttpClient();
+        SessionManager session = new SessionManager(myContext);
+        HashMap<String, String> user = session.getUserDetails();
+        String token = user.get(SessionManager.KEY_TOKEN);
 
-        Request reqSendLink = new Request.Builder()
-                .url("http://ainufaisal.com/activity/add/text?access_token=respa&text=okhttp")
-                //.url(cfg.HOSTNAME + "/profile/update/pp")
-                //.post(sendLink)
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("access_token", token)
+                .add("photo", uploaded_img)
                 .build();
 
-        client.newCall(reqSendLink).enqueue(new Callback() {
+        Request request = new Request.Builder()
+                .url(Config.HOSTNAME + "/profile/update/pp")
+                .post(formBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
                 Toast.makeText(myContext,
-                        "Upload image failed 1", Toast.LENGTH_SHORT).show();
+                        "Upload image failed 0", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-                System.out.println(response.body().string());
+
             }
         });
     }
-
-    //this method used to log the request body
-    /*private static String bodyToString(final Request request){
-
-        try {
-            final Request copy = request.newBuilder().build();
-            final Buffer buffer = new Buffer();
-            copy.body().writeTo(buffer);
-            return buffer.readUtf8();
-        } catch (final IOException e) {
-            return "did not work";
-        }
-    }*/
 
     public String getRealPathFromURI(Uri uri) {
         Cursor cursor = myContext.getContentResolver().query(uri, null, null, null, null);
@@ -347,34 +350,6 @@ public class MyProfileFragment extends Fragment {
         return cursor.getString(idx);
     }
 
-    /*public void decodeFile(String filePath) {
-        // Decode image size
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(filePath, o);
-
-        // The new size we want to scale to
-        final int REQUIRED_SIZE = 1024;
-
-        // Find the correct scale value. It should be the power of 2.
-        int width_tmp = o.outWidth, height_tmp = o.outHeight;
-        int scale = 1;
-        while (true) {
-            if (width_tmp &lt; REQUIRED_SIZE &amp;&amp; height_tmp &lt; REQUIRED_SIZE)
-            break;
-            width_tmp /= 2;
-            height_tmp /= 2;
-            scale *= 2;
-        }
-
-        // Decode with inSampleSize
-        BitmapFactory.Options o2 = new BitmapFactory.Options();
-        o2.inSampleSize = scale;
-        bitmap = BitmapFactory.decodeFile(filePath, o2);
-
-        imgView.setImageBitmap(bitmap);
-
-    }*/
 
     /*
     * This method used to encode image to String
@@ -389,7 +364,6 @@ public class MyProfileFragment extends Fragment {
     /*
     * OKHTTP library to upload image
     * */
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -463,7 +437,7 @@ public class MyProfileFragment extends Fragment {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             Picasso.with(myContext)
-                    .load("http://ainufaisal.com/" + pic_url)
+                    .load(pic_url)
                     .placeholder(R.drawable.propic_default)
                     .into(propic);
             follower.setText(total_friend);
@@ -479,57 +453,4 @@ public class MyProfileFragment extends Fragment {
         }
     }
 
-    /*public class updateProfilePicture extends AsyncTask<String, String, String> {
-        ProgressDialog pDialog;
-        SessionManager session;
-        HashMap<String, String> user;
-        String token;
-        Config cfg = new Config();
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Uploading image...");
-            pDialog.setIndeterminate(false);
-            pDialog.show();
-
-            session = new SessionManager(myContext);
-            user = session.getUserDetails();
-            token = user.get(SessionManager.KEY_TOKEN);
-        }
-
-        @Override
-        protected String doInBackground(String... arg0) {
-            try {
-                //Image path /storage/emulated/0/DCIM/photo.png
-                File image = new File(image_url);
-
-                HttpClient client = new DefaultHttpClient();
-                HttpPost post = new HttpPost(cfg.HOSTNAME+"/profile/update/pp");
-
-                MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
-                multipartEntity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-                multipartEntity.addTextBody("access_token", token);
-                multipartEntity.addPart("avatar", new FileBody(image));
-                post.setEntity(multipartEntity.build());
-
-                HttpResponse response = client.execute(post);
-                String responseBody = EntityUtils.toString(response.getEntity());
-
-                Log.e("multiPartPost", responseBody);
-                return responseBody;
-
-            } catch (Exception e) {
-                Log.e(e.getClass().getName(), e.getMessage(), e);
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            pDialog.dismiss();
-        }
-    }*/
 }

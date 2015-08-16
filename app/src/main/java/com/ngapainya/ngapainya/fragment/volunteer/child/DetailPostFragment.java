@@ -119,7 +119,7 @@ public class DetailPostFragment extends Fragment {
         content_status.setText(content);
         time_post.setText(time);
         Picasso.with(myContext)
-                .load("http://ainufaisal.com/" + photo_url)
+                .load(photo_url)
                 .placeholder(R.drawable.propic_default)
                 .into(photo);
     }
