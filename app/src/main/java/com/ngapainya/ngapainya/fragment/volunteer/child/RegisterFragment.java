@@ -29,6 +29,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -38,10 +41,10 @@ public class RegisterFragment extends Fragment {
     /*
     * Varibale from view
     * */
-    EditText email;
-    EditText username;
-    EditText password;
-    Button btn_regist;
+    @Bind(R.id.email) EditText email;
+    @Bind(R.id.username) EditText username;
+    @Bind(R.id.password) EditText password;
+    @Bind(R.id.regist_btn) Button btn_regist;
 
 
     @Override
@@ -58,10 +61,7 @@ public class RegisterFragment extends Fragment {
 
         /*Initialize the views variable
         * */
-        email       = (EditText) myFragmentView.findViewById(R.id.email);
-        username    = (EditText) myFragmentView.findViewById(R.id.username);
-        password    = (EditText) myFragmentView.findViewById(R.id.password);
-        btn_regist  = (Button) myFragmentView.findViewById(R.id.regist_btn);
+        ButterKnife.bind(this, myFragmentView);
         btn_regist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -35,6 +35,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -45,10 +48,10 @@ public class FindFriendFragment extends Fragment {
     /*
     * Variable from the view
     * */
-    private EditText friend_id;
-    private LinearLayout friend_result;
-    private ImageView propic_result;
-    private TextView name_result;
+    @Bind(R.id.input_search) EditText friend_id;
+    @Bind(R.id.friend_result) LinearLayout friend_result;
+    @Bind(R.id.profile_image) ImageView propic_result;
+    @Bind(R.id.name_result) TextView name_result;
 
     /*
     * Variabel to get data from server
@@ -76,11 +79,8 @@ public class FindFriendFragment extends Fragment {
 
         isFounded = false;
 
-        friend_result = (LinearLayout) myFragmentView.findViewById(R.id.friend_result);
-        propic_result = (ImageView) myFragmentView.findViewById(R.id.profile_image);
-        name_result = (TextView) myFragmentView.findViewById(R.id.name_result);
+        ButterKnife.bind(this, myFragmentView);
 
-        friend_id = (EditText) myFragmentView.findViewById(R.id.input_search);
         friend_id.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

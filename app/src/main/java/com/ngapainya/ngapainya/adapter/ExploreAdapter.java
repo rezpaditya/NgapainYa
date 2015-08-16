@@ -15,6 +15,9 @@ import com.squareup.picasso.Picasso;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by Ari Anggraeni on 7/7/2015.
  */
@@ -47,19 +50,15 @@ public class ExploreAdapter extends BaseAdapter {
         splitted = true;
     }
 
-    private class ViewHolder{
-        TextView program_title;
-        TextView program_dec;
-        TextView start_date;
-        TextView end_date;
-        ImageView propic;
+    static class ViewHolder{
+        @Bind(R.id.program_title) TextView program_title;
+        @Bind(R.id.program_dec) TextView program_dec;
+        @Bind(R.id.start_date) TextView start_date;
+        @Bind(R.id.end_date)  TextView end_date;
+        @Bind(R.id.propic) ImageView propic;
 
         ViewHolder(View v){
-            program_title   = (TextView) v.findViewById(R.id.program_title);
-            program_dec     = (TextView) v.findViewById(R.id.program_dec);
-            start_date      = (TextView) v.findViewById(R.id.start_date);
-            end_date        = (TextView) v.findViewById(R.id.end_date);
-            propic          = (ImageView) v.findViewById(R.id.propic);
+            ButterKnife.bind(this, v);
         }
     }
 

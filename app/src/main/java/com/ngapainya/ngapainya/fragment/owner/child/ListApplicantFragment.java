@@ -33,6 +33,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -43,11 +46,11 @@ public class ListApplicantFragment extends Fragment {
     private Explore explore;
     private String program_id;
 
-    private ImageView avatar;
-    private TextView name;
-    private TextView title;
+    @Bind(R.id.avatar) ImageView avatar;
+    @Bind(R.id.name) TextView name;
+    @Bind(R.id.title) TextView title;
 
-    private ListView list_applicant;
+    @Bind(R.id.list_applicant) ListView list_applicant;
     private ArrayList<Friend> filelist;
     private ListApplicantAdapter adapter;
     private Friend friend;
@@ -64,26 +67,11 @@ public class ListApplicantFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         myFragmentView  = inflater.inflate(R.layout.fragment_list_applicant, container, false);
-
-        list_applicant = (ListView) myFragmentView.findViewById(R.id.list_applicant);
-
-        avatar = (ImageView) myFragmentView.findViewById(R.id.avatar);
-        name = (TextView) myFragmentView.findViewById(R.id.name);
-        title = (TextView) myFragmentView.findViewById(R.id.title);
+        ButterKnife.bind(this, myFragmentView);
 
         if (getArguments() != null) {
             program_id = getArguments().getString("program_id");
             new getDetailExplore().execute();
-            //new getApplicant().execute();
-
-            //dummy data
-            /*for(int i=0;i<5;i++) {
-                friend = new Friend();
-                friend.setFriend_id(String.valueOf(i));
-                friend.setFriend_name("dummy name"+i);
-                friend.setFriend_ava("dummy_ava"+i);
-                filelist.add(friend);
-            }*/
             new getApplicant().execute();
         }
 
@@ -102,7 +90,6 @@ public class ListApplicantFragment extends Fragment {
         HashMap<String, String> user;
         String token;
         boolean isSuccess;
-        Config cfg = new Config();
 
         protected void onPreExecute() {
             super.onPreExecute();
@@ -134,7 +121,7 @@ public class ListApplicantFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... arg0) {
-            String url = cfg.HOSTNAME + "/program/"+program_id+"/apply/list";
+            String url = Config.HOSTNAME + "/program/"+program_id+"/apply/list";
             List<NameValuePair> nvp = new ArrayList<NameValuePair>();
             nvp.add(new BasicNameValuePair("access_token", token));
 
@@ -172,7 +159,6 @@ public class ListApplicantFragment extends Fragment {
         HashMap<String, String> user;
         String token;
         boolean isSuccess;
-        Config cfg = new Config();
 
         protected void onPreExecute() {
             super.onPreExecute();
@@ -213,7 +199,7 @@ public class ListApplicantFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... arg0) {
-            String url = cfg.HOSTNAME + "/program/" + program_id;
+            String url = Config.HOSTNAME + "/program/" + program_id;
             List<NameValuePair> nvp = new ArrayList<NameValuePair>();
             nvp.add(new BasicNameValuePair("access_token", token));
 

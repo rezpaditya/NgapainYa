@@ -143,7 +143,6 @@
 
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:onClick="onClick"
         android:id="@+id/profile_image"
         android:layout_width="85dp"
         android:layout_height="85dp"

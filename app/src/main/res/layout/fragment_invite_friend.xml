@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context="com.ngapainya.ngapainya.fragment.volunteer.child.InviteFriend">
+    tools:context="com.ngapainya.ngapainya.fragment.volunteer.child.InviteFriendFragment">
 
 
     <LinearLayout

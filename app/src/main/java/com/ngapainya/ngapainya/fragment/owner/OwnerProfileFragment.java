@@ -48,6 +48,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -67,17 +70,17 @@ public class OwnerProfileFragment extends Fragment {
     /*
     * Variable to retrieve from view
     * */
-    private TextView txtShowProgram;
-    private TextView txtShowFeed;
-    private TextView txtShowFriend;
-    private TextView ttl_post;
-    private TextView ttl_project;
-    private TextView ttl_friend;
-    private TextView sum_post;
-    private TextView sum_friend;
-    private TextView sum_program;
-    private ImageView propic;
-    private TextView location;
+    @Bind(R.id.txtShwProgram) TextView txtShowProgram;
+    @Bind(R.id.txtShwFeed) TextView txtShowFeed;
+    @Bind(R.id.txtShwFriend) TextView txtShowFriend;
+    @Bind(R.id.ttl_post) TextView ttl_post;
+    @Bind(R.id.ttl_project) TextView ttl_project;
+    @Bind(R.id.ttl_friend) TextView ttl_friend;
+    @Bind(R.id.sum_post) TextView sum_post;
+    @Bind(R.id.sum_friend) TextView sum_friend;
+    @Bind(R.id.sum_program) TextView sum_program;
+    @Bind(R.id.profile_image) ImageView propic;
+    @Bind(R.id.location) TextView location;
 
     /*
     * variable to retrieve data from server
@@ -100,19 +103,13 @@ public class OwnerProfileFragment extends Fragment {
         super.onAttach(activity);
     }
 
-    /*@Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-        new getMyProfile().execute();
-
-    }*/
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         myFragmentView = inflater.inflate(R.layout.fragment_profile_owner, container, false);
+
+        ButterKnife.bind(this, myFragmentView);
 
         ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).changeActionbarStyle(true);
@@ -120,23 +117,7 @@ public class OwnerProfileFragment extends Fragment {
         setHasOptionsMenu(true);
 
         new getMyProfile().execute();
-
-        /*
-        * Initialize the variables
-        * */
-        propic          = (ImageView) myFragmentView.findViewById(R.id.profile_image);
-        txtShowProgram  = (TextView) myFragmentView.findViewById(R.id.txtShwProgram);
-        txtShowFeed     = (TextView) myFragmentView.findViewById(R.id.txtShwFeed);
-        txtShowFriend   = (TextView) myFragmentView.findViewById(R.id.txtShwFriend);
-        ttl_post        = (TextView) myFragmentView.findViewById(R.id.ttl_post);
-        ttl_project     = (TextView) myFragmentView.findViewById(R.id.ttl_project);
-        ttl_friend      = (TextView) myFragmentView.findViewById(R.id.ttl_friend);
-        sum_post        = (TextView) myFragmentView.findViewById(R.id.sum_post);
-        sum_friend      = (TextView) myFragmentView.findViewById(R.id.sum_friend);
-        sum_program     = (TextView) myFragmentView.findViewById(R.id.sum_program);
-        location        = (TextView) myFragmentView.findViewById(R.id.location);
-
-        tabHost = (FragmentTabHost) myFragmentView.findViewById(android.R.id.tabhost);  // The activity TabHost
+        tabHost = (FragmentTabHost) myFragmentView.findViewById(android.R.id.tabhost);
         tabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
 
         tabHost.addTab(tabHost.newTabSpec(FOLLOWING_SPEC).setIndicator("Following"), ShowFeedFragment.class, null);

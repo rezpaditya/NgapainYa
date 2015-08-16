@@ -31,6 +31,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -39,7 +42,7 @@ public class ShowFeedFragment extends Fragment implements AdapterView.OnItemClic
     private View myFragmentView;
 
     private ArrayList<Home> filelist;
-    private ListView myList;
+    @Bind(R.id.list_home) ListView myList;
     private HomeAdapter adapter;
     private SpeedScrollListener speedScrollListener;
 
@@ -72,7 +75,7 @@ public class ShowFeedFragment extends Fragment implements AdapterView.OnItemClic
         // Inflate the layout for this fragment
         myFragmentView = inflater.inflate(R.layout.fragment_show_feed, container, false);
 
-        myList = (ListView) myFragmentView.findViewById(R.id.list_home);
+        ButterKnife.bind(this, myFragmentView);
         myList.setAdapter(adapter);
         myList.setOnScrollListener(speedScrollListener);
         myList.setOnItemClickListener(this);
@@ -93,27 +96,12 @@ public class ShowFeedFragment extends Fragment implements AdapterView.OnItemClic
                 detailPostFragment.setArguments(args);
                 ((ContainerActivity) getActivity()).changeFragment(detailPostFragment);
                 break;
-            /*case "status":
-                args.putInt("postType", 0);
-                detailPostFragment.setArguments(args);
-                ((ContainerActivity) getActivity()).changeFragment(detailPostFragment);
-                break;*/
             case "Photo":
                 args.putInt("postType", 1);
                 args.putString("act_id", tmp.getAct_id());
                 detailPostFragment.setArguments(args);
                 ((ContainerActivity) getActivity()).changeFragment(detailPostFragment);
                 break;
-            /*case "Location":
-                args.putInt("postType", 2);
-                detailPostFragment.setArguments(args);
-                ((ContainerActivity) getActivity()).changeFragment(detailPostFragment);
-                break;
-            case "Url":
-                args.putInt("postType", 3);
-                detailPostFragment.setArguments(args);
-                ((ContainerActivity) getActivity()).changeFragment(detailPostFragment);
-                break;*/
         }
     }
 

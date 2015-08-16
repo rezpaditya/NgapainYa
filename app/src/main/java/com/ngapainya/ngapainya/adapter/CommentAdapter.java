@@ -14,6 +14,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by Ari Anggraeni on 7/7/2015.
  */
@@ -28,17 +31,14 @@ public class CommentAdapter extends BaseAdapter {
         list = items;
     }
 
-    private class ViewHolder{
-        TextView comment;
-        TextView time;
-        ImageView propic;
-        TextView username;
+    static class ViewHolder{
+        @Bind(R.id.comment) TextView comment;
+        @Bind(R.id.time) TextView time;
+        @Bind(R.id.propic) ImageView propic;
+        @Bind(R.id.username) TextView username;
 
         ViewHolder(View v){
-            comment   = (TextView) v.findViewById(R.id.comment);
-            time     = (TextView) v.findViewById(R.id.time);
-            propic          = (ImageView) v.findViewById(R.id.propic);
-            username = (TextView) v.findViewById(R.id.username);
+            ButterKnife.bind(this, v);
         }
     }
 

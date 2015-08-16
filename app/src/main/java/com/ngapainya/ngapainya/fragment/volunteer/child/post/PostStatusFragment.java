@@ -31,6 +31,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -38,7 +41,7 @@ public class PostStatusFragment extends Fragment {
     private FragmentActivity myContext;
     private View myFragmentView;
 
-    private TextView userInput;
+    @Bind(R.id.text_input) TextView userInput;
 
     @Override
     public void onAttach(Activity activity) {
@@ -99,11 +102,10 @@ public class PostStatusFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        userInput = (TextView) myFragmentView.findViewById(R.id.text_input);
+        ButterKnife.bind(this, myFragmentView);
 
         return myFragmentView;
     }
-
 
     public void doPost(View view) {
         //Change the fragment to home fragment here

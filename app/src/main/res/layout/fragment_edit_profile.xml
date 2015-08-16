@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/ColorBase"
     android:orientation="vertical"
+    android:paddingBottom="50dp"
     tools:context="com.ngapainya.ngapainya.fragment.volunteer.child.EditProfileFragment">
 
     <LinearLayout

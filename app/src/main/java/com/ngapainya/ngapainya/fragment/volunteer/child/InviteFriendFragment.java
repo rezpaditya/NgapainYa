@@ -33,18 +33,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class InviteFriend extends Fragment  {
+public class InviteFriendFragment extends Fragment  {
     private FragmentActivity myContext;
     private View myFragmentView;
 
-    private ListView myList;
-    private ImageView avatar;
-    private TextView user_fullname;
-    private TextView program_name;
+    @Bind(R.id.list_friends) ListView myList;
+    @Bind(R.id.avatar) ImageView avatar;
+    @Bind(R.id.user_fullname) TextView user_fullname;
+    @Bind(R.id.program_name) TextView program_name;
 
     private String program_id;
 
@@ -77,10 +80,7 @@ public class InviteFriend extends Fragment  {
         // Inflate the layout for this fragment
         myFragmentView  = inflater.inflate(R.layout.fragment_invite_friend, container, false);
 
-        myList = (ListView) myFragmentView.findViewById(R.id.list_friends);
-        avatar = (ImageView) myFragmentView.findViewById(R.id.avatar);
-        user_fullname = (TextView) myFragmentView.findViewById(R.id.user_fullname);
-        program_name = (TextView) myFragmentView.findViewById(R.id.program_name);
+        ButterKnife.bind(this, myFragmentView);
 
         myList.setAdapter(adapter);
 

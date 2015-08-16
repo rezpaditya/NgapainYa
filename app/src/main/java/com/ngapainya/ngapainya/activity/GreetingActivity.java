@@ -35,11 +35,8 @@ import java.util.List;
 
 public class GreetingActivity extends FragmentActivity implements ViewPager.OnPageChangeListener {
     private static final int NUM_PAGES = 3;
-    private ViewPager mPager;
     private PagerAdapter mPagerAdapter;
 
-    //pager indicator variable
-    private LinearLayout pager_indicator;
     private int dotsCount;
     private ImageView[] dots;
 
@@ -59,7 +56,7 @@ public class GreetingActivity extends FragmentActivity implements ViewPager.OnPa
             finish();
         }
 
-        mPager = (ViewPager) findViewById(R.id.pager);
+        ViewPager mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setOnPageChangeListener(this);
@@ -68,7 +65,7 @@ public class GreetingActivity extends FragmentActivity implements ViewPager.OnPa
     }
 
     private void setUiPageViewController() {
-        pager_indicator = (LinearLayout) findViewById(R.id.viewPagerCountDots);
+        LinearLayout pager_indicator = (LinearLayout) findViewById(R.id.viewPagerCountDots);
         dotsCount = mPagerAdapter.getCount();
         dots = new ImageView[dotsCount];
 

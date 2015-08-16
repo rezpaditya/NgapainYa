@@ -40,6 +40,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -56,26 +59,26 @@ public class DetailExploreFragment extends Fragment {
     /*
     * Variable view
     * */
-    private ImageView avatar;
-    private ImageView program_image;
-    private TextView user_fullname;
-    private TextView program_name;
-    private TextView start_date;
-    private TextView end_date;
-    private TextView min_age;
-    private TextView max_age;
-    private TextView volume;
-    private TextView program_desc;
-    private TextView program_accomodation;
-    private TextView program_fee;
-    private Button inviteBtn;
+    @Bind(R.id.avatar) ImageView avatar;
+    @Bind(R.id.prg_img) ImageView program_image;
+    @Bind(R.id.org_name) TextView user_fullname;
+    @Bind(R.id.prg_name) TextView program_name;
+    @Bind(R.id.strDate) TextView start_date;
+    @Bind(R.id.endDate) TextView end_date;
+    @Bind(R.id.minAge) TextView min_age;
+    @Bind(R.id.maxAge) TextView max_age;
+    @Bind(R.id.vlm) TextView volume;
+    @Bind(R.id.desc) TextView program_desc;
+    @Bind(R.id.accmd) TextView program_accomodation;
+    @Bind(R.id.prg_fee) TextView program_fee;
+    @Bind(R.id.inviteBtn) Button inviteBtn;
 
     private String startDate;
     private String endDate;
 
     private Menu menu;
 
-    private InviteFriend inviteFriend;
+    private InviteFriendFragment inviteFriendFragment;
 
     @Override
     public void onAttach(Activity activity) {
@@ -86,7 +89,7 @@ public class DetailExploreFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        inviteFriend = new InviteFriend();
+        inviteFriendFragment = new InviteFriendFragment();
     }
 
     public void splitDate(Explore tmp) {
@@ -118,20 +121,7 @@ public class DetailExploreFragment extends Fragment {
 
         explore = new Explore();
 
-        /*Initialize variable*/
-        avatar = (ImageView) myFragmentView.findViewById(R.id.avatar);
-        program_image = (ImageView) myFragmentView.findViewById(R.id.prg_img);
-        user_fullname = (TextView) myFragmentView.findViewById(R.id.org_name);
-        program_name = (TextView) myFragmentView.findViewById(R.id.prg_name);
-        start_date = (TextView) myFragmentView.findViewById(R.id.strDate);
-        end_date = (TextView) myFragmentView.findViewById(R.id.endDate);
-        min_age = (TextView) myFragmentView.findViewById(R.id.minAge);
-        max_age = (TextView) myFragmentView.findViewById(R.id.maxAge);
-        volume = (TextView) myFragmentView.findViewById(R.id.vlm);
-        program_desc = (TextView) myFragmentView.findViewById(R.id.desc);
-        program_accomodation = (TextView) myFragmentView.findViewById(R.id.accmd);
-        program_fee = (TextView) myFragmentView.findViewById(R.id.prg_fee);
-        inviteBtn = (Button) myFragmentView.findViewById(R.id.inviteBtn);
+        ButterKnife.bind(this, myFragmentView);
 
         if (getArguments() != null) {
             program_id = getArguments().getString("program_id");
@@ -149,8 +139,8 @@ public class DetailExploreFragment extends Fragment {
                         args.putString("program_id", program_id);
                         args.putParcelable("program_detail", explore);
                     }
-                    inviteFriend.setArguments(args);
-                    ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity) getActivity()).changeFragment(inviteFriend);
+                    inviteFriendFragment.setArguments(args);
+                    ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity) getActivity()).changeFragment(inviteFriendFragment);
                 }
             });
         }
@@ -306,7 +296,7 @@ public class DetailExploreFragment extends Fragment {
             pDialog.dismiss();
 
             /*Split the date*/
-//            splitDate(explore);
+            splitDate(explore);
 
             Picasso.with(myContext)
                     .load("http://ainufaisal.com/" + explore.getUser_pic())

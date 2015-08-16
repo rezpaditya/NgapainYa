@@ -40,6 +40,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -51,8 +54,8 @@ public class PostPhotoFragment extends Fragment {
     /*
     * Variable from the view
     * */
-    ImageView preview;
-    EditText caption;
+    @Bind(R.id.preview) ImageView preview;
+    @Bind(R.id.caption) EditText caption;
 
     private static final int SELECT_PHOTO = 100;
 
@@ -84,11 +87,7 @@ public class PostPhotoFragment extends Fragment {
         // Inflate the layout for this fragment
         myFragmentView = inflater.inflate(R.layout.fragment_post_photo, container, false);
 
-        /*
-        * Initialize the variables
-        * */
-        preview = (ImageView) myFragmentView.findViewById(R.id.preview);
-        caption = (EditText) myFragmentView.findViewById(R.id.caption);
+        ButterKnife.bind(this, myFragmentView);
 
         preview.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -37,7 +37,6 @@ import com.ngapainya.ngapainya.helper.Config;
 import com.ngapainya.ngapainya.helper.JSONParser;
 import com.ngapainya.ngapainya.helper.SessionManager;
 import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.OkHttpClient;
@@ -49,6 +48,7 @@ import com.squareup.picasso.Picasso;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -59,6 +59,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,15 +83,15 @@ public class MyProfileFragment extends Fragment {
     /*
     * Variable to retrieve from view
     * */
-    private TextView txtShowFeed;
-    private TextView txtShwProgram;
-    private TextView follower;
-    private TextView following;
-    private TextView ttl_post;
-    private TextView sum_post;
-    private TextView sum_acc_program;
-    private ImageView propic;
-    private TextView location;
+    @Bind(R.id.txtShwFeed) TextView txtShowFeed;
+    @Bind(R.id.txtShwProgram) TextView txtShwProgram;
+    @Bind(R.id.follower) TextView follower;
+    @Bind(R.id.following) TextView following;
+    @Bind(R.id.ttl_post) TextView ttl_post;
+    @Bind(R.id.sum_post) TextView sum_post;
+    @Bind(R.id.sum_acc_program) TextView sum_acc_program;
+    @Bind(R.id.profile_image) ImageView propic;
+    @Bind(R.id.location) TextView location;
 
     /*
     * variable to retrieve data from server
@@ -130,11 +133,11 @@ public class MyProfileFragment extends Fragment {
         myFragmentView = inflater.inflate(R.layout.fragment_profile, container, false);
         Log.e("onCreateMyProfile", "works");
 
-        if(myContext.getClass().getName().equals(PACKAGE_NAME+"volunteer.ContainerActivity")) {
+        if (myContext.getClass().getName().equals(PACKAGE_NAME + "volunteer.ContainerActivity")) {
         /*Customize actionbar*/
             ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity) getActivity()).changeActionbarStyle(true);
-        }else{
+        } else {
             ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).changeActionbarStyle(true);
         }
@@ -146,16 +149,7 @@ public class MyProfileFragment extends Fragment {
         /*
         * Initialize the variables
         * */
-        propic = (ImageView) myFragmentView.findViewById(R.id.profile_image);
-        txtShowFeed = (TextView) myFragmentView.findViewById(R.id.txtShwFeed);
-        txtShwProgram = (TextView) myFragmentView.findViewById(R.id.txtShwProgram);
-        follower = (TextView) myFragmentView.findViewById(R.id.follower);
-        following = (TextView) myFragmentView.findViewById(R.id.following);
-        ttl_post = (TextView) myFragmentView.findViewById(R.id.ttl_post);
-        sum_post = (TextView) myFragmentView.findViewById(R.id.sum_post);
-        sum_acc_program = (TextView) myFragmentView.findViewById(R.id.sum_acc_program);
-        location = (TextView) myFragmentView.findViewById(R.id.location);
-
+        ButterKnife.bind(this, myFragmentView);
         tabHost = (FragmentTabHost) myFragmentView.findViewById(android.R.id.tabhost);  // The activity TabHost
         tabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
 
@@ -261,41 +255,90 @@ public class MyProfileFragment extends Fragment {
 
     public void run() throws Exception {
         OkHttpClient client = new OkHttpClient();
-        Config cfg = new Config();
         SessionManager session = new SessionManager(myContext);
         HashMap<String, String> user = session.getUserDetails();
-        String token = user.get(SessionManager.KEY_TOKEN);
+        final String[] url_uploaded = new String[1];
+
+        File file = new File(image_url);
 
         RequestBody requestBody = new MultipartBuilder()
                 .type(MultipartBuilder.FORM)
-                .addFormDataPart("avatar", "file.png",
-                        RequestBody.create(MediaType.parse("image/png"), new File(image_url)))
+                .addFormDataPart("title", file.getName())
+                .addFormDataPart("image", file.getName(),
+                        RequestBody.create(MediaType.parse("image/png"), file))
                 .build();
 
         Request request = new Request.Builder()
-                .header("access_token", token)
-                .url(cfg.HOSTNAME + "/profile/update/pp")
+                .header("Authorization", "Client-ID 55bdd6074a641b3") //should be make a variable for client id
+                .url("https://api.imgur.com/3/image")
                 .post(requestBody)
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
-
+                Toast.makeText(myContext,
+                        "Upload image failed 0", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-                Headers responseHeaders = response.headers();
+                /*Headers responseHeaders = response.headers();
                 for (int i = 0; i < responseHeaders.size(); i++) {
                     System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                }*/
+                try {
+                    JSONObject obj = new JSONObject(response.body().string());
+                    JSONObject result = obj.getJSONObject("data");
+                    String img = result.getString("link");
+                    url_uploaded[0] = img;
+                    Log.e("link", img);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+            }
+        });
+
+        /*RequestBody sendLink = new MultipartBuilder()
+                .type(MultipartBuilder.FORM)
+                .addFormDataPart("access_token", token)
+                .addFormDataPart("link", url_uploaded[0])
+                .build();*/
+
+        Request reqSendLink = new Request.Builder()
+                .url("http://ainufaisal.com/activity/add/text?access_token=respa&text=okhttp")
+                //.url(cfg.HOSTNAME + "/profile/update/pp")
+                //.post(sendLink)
+                .build();
+
+        client.newCall(reqSendLink).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Toast.makeText(myContext,
+                        "Upload image failed 1", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
                 System.out.println(response.body().string());
             }
         });
     }
+
+    //this method used to log the request body
+    /*private static String bodyToString(final Request request){
+
+        try {
+            final Request copy = request.newBuilder().build();
+            final Buffer buffer = new Buffer();
+            copy.body().writeTo(buffer);
+            return buffer.readUtf8();
+        } catch (final IOException e) {
+            return "did not work";
+        }
+    }*/
 
     public String getRealPathFromURI(Uri uri) {
         Cursor cursor = myContext.getContentResolver().query(uri, null, null, null, null);
@@ -428,9 +471,9 @@ public class MyProfileFragment extends Fragment {
             ttl_post.setText(total_post);
             sum_post.setText(total_post);
             sum_acc_program.setText(apply_accepted);
-            if(user_location != null) {
+            if (user_location != null) {
                 location.setText(user_location + " city");
-            }else{
+            } else {
                 location.setText("Nowhere");
             }
         }

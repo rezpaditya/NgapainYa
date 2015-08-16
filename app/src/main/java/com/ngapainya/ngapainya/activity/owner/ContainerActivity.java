@@ -40,11 +40,18 @@ import com.ngapainya.ngapainya.helper.TypefaceSpan;
 
 import java.util.HashMap;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class ContainerActivity extends ActionBarActivity {
-    private Toolbar toolbar;
-    private View create_bar;
-    private RadioGroup actionBarRadioGroup;
-    private RadioGroup createPostRadioGroup;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.create_post_bar)
+    View create_bar;
+    @Bind(R.id.actionRadioBtn)
+    RadioGroup actionBarRadioGroup;
+    @Bind(R.id.createPostRadioBtn)
+    RadioGroup createPostRadioGroup;
     //define fragment manager
     private FragmentManager manager;
     private FragmentTransaction transaction;
@@ -67,7 +74,157 @@ public class ContainerActivity extends ActionBarActivity {
     private SessionManager sessionManager;
     private HashMap<String, String> user;
 
-    public void onClick(View view){
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_container_owner);
+        ButterKnife.bind(this);
+
+        sessionManager = new SessionManager(this);
+        user = sessionManager.getUserDetails();
+
+        if (!user.get(SessionManager.KEY_STATUS).equals("owner")) {
+            Intent intent = new Intent(this, com.ngapainya.ngapainya.activity.volunteer.ContainerActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }
+
+        setSupportActionBar(this.toolbar);
+        getSupportActionBar()
+                .setBackgroundDrawable
+                        (new ColorDrawable(getResources().getColor(R.color.ColorOwner)));
+
+        //This method is used to change the status bar color
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.ColorOwnerDark));
+        }
+
+
+        /*Instantiate the Fragment*/
+        homeFragment = new HomeFragment();
+        exploreFragment = new ExploreFragment();
+        notificationFragment = new NotificationFragment();
+        ownerProfileFragment = new OwnerProfileFragment();
+
+        postProgramFragment = new PostProgramFragment();
+        postStatusFragment = new PostStatusFragment();
+        postLocationFragment = new PostLocationFragment();
+        postPhotoFragment = new PostPhotoFragment();
+        postUrlFragment = new PostUrlFragment();
+
+        //set home fragment for default
+        RadioButton r1 = (RadioButton) findViewById(R.id.homeBtn);
+        r1.setChecked(true);
+
+        //use to call starting fragment
+        if (savedInstanceState == null) {
+            Bundle bundle = getIntent().getExtras();
+            String string = "";
+            if (bundle != null) {
+                string = bundle.getString("extra");
+                switch (string) {
+                    case "find_friend":
+                        FindFriendFragment findFriendFragment = new FindFriendFragment();
+                        changeFragment(findFriendFragment);
+                        break;
+                    case "edit_profile":
+                        EditProfileFragment editProfileFragment = new EditProfileFragment();
+                        changeFragment(editProfileFragment);
+                        break;
+                }
+            } else {
+                changeFragment(homeFragment);
+                homeTitleBar("Ngapain");
+            }
+        }
+
+        actionBarRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                int pos;
+                pos = actionBarRadioGroup.indexOfChild(findViewById(checkedId));
+
+                switch (pos) {
+                    case 0:
+                        changeFragment(homeFragment);
+                        break;
+                    case 1:
+                        changeFragment(exploreFragment);
+                        break;
+                    case 3:
+                        changeFragment(notificationFragment);
+                        break;
+                    case 4:
+                        changeFragment(ownerProfileFragment);
+                        break;
+                    default:
+                        //The default selection is RadioButton 1
+                        Toast.makeText(getBaseContext(), "You have Clicked RadioButton 1",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
+
+        createPostRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                int pos;
+                pos = createPostRadioGroup.indexOfChild(findViewById(checkedId));
+                RadioButton r1 = (RadioButton) findViewById(R.id.statusBtn);
+                RadioButton r2 = (RadioButton) findViewById(R.id.locationBtn);
+                RadioButton r3 = (RadioButton) findViewById(R.id.picBtn);
+                RadioButton r4 = (RadioButton) findViewById(R.id.linkBtn);
+                RadioButton r5 = (RadioButton) findViewById(R.id.programBtn);
+                switch (pos) {
+                    case 0:
+                        changeFragment(postStatusFragment);
+                        r1.setChecked(false);
+                        break;
+                    case 1:
+                        changeFragment(postLocationFragment);
+                        r2.setChecked(false);
+                        break;
+                    case 2:
+                        changeFragment(postPhotoFragment);
+                        r3.setChecked(false);
+                        break;
+                    case 3:
+                        changeFragment(postUrlFragment);
+                        r4.setChecked(false);
+                        break;
+                    case 4:
+                        changeFragment(postProgramFragment);
+                        r5.setChecked(false);
+                        break;
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            finish();
+        } else {
+            super.onBackPressed();
+
+            String packageName = "com.ngapainya.ngapainya.fragment.owner.";
+            Fragment fragmentPopped = getSupportFragmentManager().findFragmentByTag(packageName + "MyProfileFragment");
+
+            if (fragmentPopped != null && fragmentPopped.isVisible()) {
+                changeActionbarStyle(true);
+            } else {
+                changeActionbarStyle(false);
+            }
+        }
+    }
+
+    public void onClick(View view) {
         ownerProfileFragment.onClick(view);
     }
 
@@ -123,162 +280,6 @@ public class ContainerActivity extends ActionBarActivity {
             getSupportActionBar()
                     .setBackgroundDrawable
                             (new ColorDrawable(getResources().getColor(R.color.ColorOwner)));
-        }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_container_owner);
-
-        sessionManager = new SessionManager(this);
-        user = sessionManager.getUserDetails();
-
-        if(!user.get(sessionManager.KEY_STATUS).equals("owner")){
-            Intent intent = new Intent(this, com.ngapainya.ngapainya.activity.volunteer.ContainerActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-        }
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(this.toolbar);
-        getSupportActionBar()
-                .setBackgroundDrawable
-                        (new ColorDrawable(getResources().getColor(R.color.ColorOwner)));
-
-        //This method is used to change the status bar color
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.ColorOwnerDark));
-        }
-
-
-        /*Instantiate the Fragment*/
-        homeFragment            = new HomeFragment();
-        exploreFragment         = new ExploreFragment();
-        notificationFragment    = new NotificationFragment();
-        ownerProfileFragment    = new OwnerProfileFragment();
-
-        postProgramFragment = new PostProgramFragment();
-        postStatusFragment  = new PostStatusFragment();
-        postLocationFragment = new PostLocationFragment();
-        postPhotoFragment = new PostPhotoFragment();
-        postUrlFragment = new PostUrlFragment();
-
-        create_bar = findViewById(R.id.create_post_bar); //use for make an animation
-
-        //set home fragment for default
-        RadioButton r1 = (RadioButton) findViewById(R.id.homeBtn);
-        r1.setChecked(true);
-
-        //use to call starting fragment
-        if (savedInstanceState == null) {
-            Bundle bundle = getIntent().getExtras();
-            String string = "";
-            if (bundle != null) {
-                string = bundle.getString("extra");
-                switch (string) {
-                    case "find_friend":
-                        FindFriendFragment findFriendFragment = new FindFriendFragment();
-                        changeFragment(findFriendFragment);
-                        break;
-                    case "edit_profile":
-                        EditProfileFragment editProfileFragment = new EditProfileFragment();
-                        changeFragment(editProfileFragment);
-                        break;
-                }
-            } else {
-                changeFragment(homeFragment);
-                homeTitleBar("Ngapain");
-            }
-        }
-
-        actionBarRadioGroup = (RadioGroup) findViewById(R.id.actionRadioBtn);
-        actionBarRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                int pos;
-                pos = actionBarRadioGroup.indexOfChild(findViewById(checkedId));
-
-                switch (pos) {
-                    case 0:
-                        changeFragment(homeFragment);
-                        break;
-                    case 1:
-                        changeFragment(exploreFragment);
-                        break;
-                    case 3:
-                        changeFragment(notificationFragment);
-                        break;
-                    case 4:
-                        changeFragment(ownerProfileFragment);
-                        break;
-                    default:
-                        //The default selection is RadioButton 1
-                        Toast.makeText(getBaseContext(), "You have Clicked RadioButton 1",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        });
-
-        createPostRadioGroup = (RadioGroup) findViewById(R.id.createPostRadioBtn);
-        createPostRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId)
-            {
-                int pos;
-                pos = createPostRadioGroup.indexOfChild(findViewById(checkedId));
-                RadioButton r1 = (RadioButton) findViewById(R.id.statusBtn);
-                RadioButton r2 = (RadioButton) findViewById(R.id.locationBtn);
-                RadioButton r3 = (RadioButton) findViewById(R.id.picBtn);
-                RadioButton r4 = (RadioButton) findViewById(R.id.linkBtn);
-                RadioButton r5 = (RadioButton) findViewById(R.id.programBtn);
-                switch (pos)
-                {
-                    case 0 :
-                        changeFragment(postStatusFragment);
-                        r1.setChecked(false);
-                        break;
-                    case 1 :
-                        changeFragment(postLocationFragment);
-                        r2.setChecked(false);
-                        break;
-                    case 2 :
-                        changeFragment(postPhotoFragment);
-                        r3.setChecked(false);
-                        break;
-                    case 3 :
-                        changeFragment(postUrlFragment);
-                        r4.setChecked(false);
-                        break;
-                    case 4 :
-                        changeFragment(postProgramFragment);
-                        r5.setChecked(false);
-                        break;
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onBackPressed() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            finish();
-        } else {
-            super.onBackPressed();
-
-            String packageName = "com.ngapainya.ngapainya.fragment.owner.";
-            Fragment fragmentPopped = getSupportFragmentManager().findFragmentByTag(packageName + "MyProfileFragment");
-
-            if (fragmentPopped != null && fragmentPopped.isVisible()) {
-                changeActionbarStyle(true);
-            } else {
-                changeActionbarStyle(false);
-            }
         }
     }
 

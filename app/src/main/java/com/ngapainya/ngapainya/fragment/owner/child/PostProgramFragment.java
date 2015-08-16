@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.ngapainya.ngapainya.R;
@@ -41,26 +40,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class PostProgramFragment extends Fragment implements AdapterView.OnItemSelectedListener, DatePickerDialog.OnDateSetListener{
     private FragmentActivity myContext;
     private View myFragmentView;
-    private Spinner language;
     private Calendar calendar;
     private DateFormat dateFormat;
 
     /*Variable input*/
-    private EditText title;
-    private EditText address;
-    private EditText fee;
-    private EditText age_min;
-    private EditText age_max;
-    private EditText quota;
-    private EditText desc;
-    private EditText pjtStart;
-    private EditText pjtEnd;
+    @Bind(R.id.title) EditText title;
+    @Bind(R.id.address) EditText address;
+    @Bind(R.id.fee) EditText fee;
+    @Bind(R.id.ageMin) EditText age_min;
+    @Bind(R.id.ageMax) EditText age_max;
+    @Bind(R.id.quota) EditText quota;
+    @Bind(R.id.description) EditText desc;
+    @Bind(R.id.pjtStart) EditText pjtStart;
+    @Bind(R.id.pjtEnd) EditText pjtEnd;
 
     @Override
     public void onAttach(Activity activity) {
@@ -95,6 +96,7 @@ public class PostProgramFragment extends Fragment implements AdapterView.OnItemS
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         myFragmentView = inflater.inflate(R.layout.fragment_post_program, container, false);
+        ButterKnife.bind(this, myFragmentView);
 
         setHasOptionsMenu(true);
 
@@ -102,25 +104,8 @@ public class PostProgramFragment extends Fragment implements AdapterView.OnItemS
         ArrayAdapter adapterSpinner = ArrayAdapter.createFromResource(myContext,
                 R.array.language_array, android.R.layout.simple_spinner_item);
         adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        language.setAdapter(adapterSpinner);
-//        language.setOnItemSelectedListener(this);
-
-        /*private EditText title;
-    private EditText address;
-    private EditText fee;
-    private EditText age_min;
-    private EditText age_max;
-    private EditText quota;
-    private EditText desc;*/
-        title = (EditText) myFragmentView.findViewById(R.id.title);
-        address = (EditText) myFragmentView.findViewById(R.id.address);
-        fee = (EditText) myFragmentView.findViewById(R.id.fee);
-        age_min = (EditText) myFragmentView.findViewById(R.id.ageMin);
-        age_max = (EditText) myFragmentView.findViewById(R.id.ageMax);
-        quota = (EditText) myFragmentView.findViewById(R.id.quota);
-        desc = (EditText) myFragmentView.findViewById(R.id.description);
-        pjtStart = (EditText) myFragmentView.findViewById(R.id.pjtStart);
-        pjtEnd = (EditText) myFragmentView.findViewById(R.id.pjtEnd);
+        //language.setAdapter(adapterSpinner);
+        //language.setOnItemSelectedListener(this);
 
         pjtStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,17 +133,6 @@ public class PostProgramFragment extends Fragment implements AdapterView.OnItemS
         DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show(myContext.getSupportFragmentManager(), "pjtEnd");
     }
 
-    /*public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.pjtStart:
-                DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show(myContext.getSupportFragmentManager(), "pjtStart");
-                break;
-            case R.id.pjtEnd:
-                DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show(myContext.getSupportFragmentManager(), "pjtEnd");
-                break;
-        }
-    }*/
-
     @Override
     public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
         calendar.set(year, month, day);
@@ -181,11 +155,7 @@ public class PostProgramFragment extends Fragment implements AdapterView.OnItemS
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        /*switch(adapterView.getId()){
-            case R.id.language:
-                //do something here
-                break;
-        }*/
+
     }
 
     @Override

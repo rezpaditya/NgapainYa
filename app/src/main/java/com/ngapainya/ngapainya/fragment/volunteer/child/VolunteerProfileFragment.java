@@ -33,6 +33,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -55,13 +58,11 @@ public class VolunteerProfileFragment extends Fragment {
     /*
     * Variabel from view
     * */
-    private TextView txtShowFeed;
-    private TextView txtShowFriend;
-    private TextView following;
-    private TextView follower;
-    private ImageView avatar;
-    private TextView ttl_post;
-    private Button follow_btn;
+    @Bind(R.id.following) TextView following;
+    @Bind(R.id.follower) TextView follower;
+    @Bind(R.id.profile_image) ImageView avatar;
+    @Bind(R.id.ttl_post) TextView ttl_post;
+    @Bind(R.id.follow_btn) Button follow_btn;
 
     /*
     * variable from argument
@@ -85,44 +86,19 @@ public class VolunteerProfileFragment extends Fragment {
         ((ContainerActivity)getActivity()).standardTitleBar(user_id);
         ((ContainerActivity)getActivity()).changeActionbarStyle(true);
 
-        txtShowFeed = (TextView) myFragmentView.findViewById(R.id.txtShwFeed);
-        txtShowFriend = (TextView) myFragmentView.findViewById(R.id.txtShwFriend);
+        ButterKnife.bind(this, myFragmentView);
 
         tabHost = (FragmentTabHost) myFragmentView.findViewById(android.R.id.tabhost);  // The activity TabHost
         tabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
 
-        //tabHost.addTab(tabHost.newTabSpec(FOLLOWING_SPEC).setIndicator("Following"), ShowFeedFragment.class, null);
         tabHost.addTab(tabHost.newTabSpec(YOU_SPEC).setIndicator("You"), LockedFragment.class, null);
         tabHost.setCurrentTab(0);
-
-
-        /*Initialize variable view*/
-        avatar = (ImageView) myFragmentView.findViewById(R.id.profile_image);
-        ttl_post = (TextView) myFragmentView.findViewById(R.id.ttl_post);
-        follower = (TextView) myFragmentView.findViewById(R.id.follower);
-        following = (TextView) myFragmentView.findViewById(R.id.following);
-        follow_btn = (Button) myFragmentView.findViewById(R.id.follow_btn);
 
         Log.e("user_id", user_id);
         new getProfile().execute();
 
         return myFragmentView;
     }
-
-    /*public void onClick(View v){
-        switch (v.getId()) {
-            case R.id.showFeed:
-                tabHost.setCurrentTab(0);
-                txtShowFeed.setTextColor(getResources().getColor(R.color.Red));
-                txtShowFriend.setTextColor(Color.BLACK);
-                break;
-            case R.id.showFriend:
-                tabHost.setCurrentTab(1);
-                txtShowFriend.setTextColor(getResources().getColor(R.color.Red));
-                txtShowFeed.setTextColor(Color.BLACK);
-                break;
-        }
-    }*/
 
     public class getProfile extends AsyncTask<String, String, String> {
         SessionManager session;

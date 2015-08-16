@@ -14,6 +14,9 @@ import com.google.android.gms.gcm.GcmListenerService;
 import com.ngapainya.ngapainya.R;
 import com.ngapainya.ngapainya.activity.owner.ContainerActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MyGcmListenerService extends GcmListenerService {
 
     private static final String TAG = "MyGcmListenerService";
@@ -28,9 +31,9 @@ public class MyGcmListenerService extends GcmListenerService {
     // [START receive_message]
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        String message = data.getString("message");
+        String message = data.getString("notification");
         Log.d(TAG, "From: " + from);
-        Log.d(TAG, "Message: " + message);
+        Log.d(TAG, "notification: " + message);
 
         /**
          * Production applications would usually process the message here.
@@ -58,11 +61,19 @@ public class MyGcmListenerService extends GcmListenerService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        String content_notif = "";
+        try {
+            JSONObject json = new JSONObject(message);
+            content_notif = json.getString("content");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_action_person)
-                .setContentTitle("GCM Message")
-                .setContentText(message)
+                .setContentTitle("Ngapain")
+                .setContentText(content_notif)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);

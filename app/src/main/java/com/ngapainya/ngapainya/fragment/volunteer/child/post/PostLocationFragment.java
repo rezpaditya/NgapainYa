@@ -42,6 +42,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -55,9 +58,47 @@ public class PostLocationFragment extends Fragment implements
     private FragmentActivity myContext;
     private View myFragmentView;
 
-    private TextView text;
+    @Bind(R.id.text_input) TextView text;
     private String latitude;
     private String longitude;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        myFragmentView = inflater.inflate(R.layout.fragment_post_location, container, false);
+
+        ButterKnife.bind(this, myFragmentView);
+
+        if (myContext.getClass().getName().equals("com.ngapainya.ngapainya.activity.volunteer.ContainerActivity")) {
+            ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
+                    getActivity()).getSupportActionBar()
+                    .setDisplayHomeAsUpEnabled(true);
+            ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
+                    getActivity()).standardTitleBar("Post Location");
+        } else {
+            ((com.ngapainya.ngapainya.activity.owner.ContainerActivity)
+                    getActivity()).getSupportActionBar()
+                    .setDisplayHomeAsUpEnabled(true);
+            ((com.ngapainya.ngapainya.activity.owner.ContainerActivity)
+                    getActivity()).standardTitleBar("Post Location");
+        }
+
+        locationManager = (LocationManager) myContext.getSystemService(myContext.LOCATION_SERVICE);
+        mGoogleApiClient = new GoogleApiClient.Builder(myContext.getApplicationContext())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        //call this to get current location
+        shareLocation(location);
+
+        setHasOptionsMenu(true);
+
+        return myFragmentView;
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -101,43 +142,7 @@ public class PostLocationFragment extends Fragment implements
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        myFragmentView = inflater.inflate(R.layout.fragment_post_location, container, false);
 
-        if (myContext.getClass().getName().equals("com.ngapainya.ngapainya.activity.volunteer.ContainerActivity")) {
-            ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
-                    getActivity()).getSupportActionBar()
-                    .setDisplayHomeAsUpEnabled(true);
-            ((com.ngapainya.ngapainya.activity.volunteer.ContainerActivity)
-                    getActivity()).standardTitleBar("Post Location");
-        } else {
-            ((com.ngapainya.ngapainya.activity.owner.ContainerActivity)
-                    getActivity()).getSupportActionBar()
-                    .setDisplayHomeAsUpEnabled(true);
-            ((com.ngapainya.ngapainya.activity.owner.ContainerActivity)
-                    getActivity()).standardTitleBar("Post Location");
-        }
-
-        text = (TextView) myFragmentView.findViewById(R.id.text_input);
-
-        locationManager = (LocationManager) myContext.getSystemService(myContext.LOCATION_SERVICE);
-        mGoogleApiClient = new GoogleApiClient.Builder(myContext.getApplicationContext())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        mGoogleApiClient.connect();
-        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        //call this to get current location
-        shareLocation(location);
-
-        setHasOptionsMenu(true);
-
-        return myFragmentView;
-    }
 
     public void shareLocation(Location location) {
         if (location != null) {

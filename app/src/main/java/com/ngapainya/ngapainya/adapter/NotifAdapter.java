@@ -5,10 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ngapainya.ngapainya.R;
 import com.ngapainya.ngapainya.model.Notification;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -27,9 +29,11 @@ public class NotifAdapter extends BaseAdapter {
 
     private class ViewHolder{
         TextView tv_1;
+        ImageView notif_img;
 
         ViewHolder(View v){
             tv_1 = (TextView) v.findViewById(R.id.text_notif);
+            notif_img = (ImageView) v.findViewById(R.id.notif_img);
         }
     }
 
@@ -63,8 +67,14 @@ public class NotifAdapter extends BaseAdapter {
         }
         Notification temp = list.get(position);
 
-        holder.tv_1.setText(temp.text_notif);
+        holder.tv_1.setText(temp.getText_notif());
         holder.tv_1.setTag(temp);
+
+        Picasso.with(context)
+                .load(list.get(position).getPropic())
+                .placeholder(R.drawable.propic_default)
+                .into(holder.notif_img);
+        holder.notif_img.setTag(temp);
 
         return row;
     }

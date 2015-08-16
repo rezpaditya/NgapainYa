@@ -40,11 +40,17 @@ import com.ngapainya.ngapainya.helper.TypefaceSpan;
 
 import java.util.HashMap;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 
 public class ContainerActivity extends ActionBarActivity {
-    private Toolbar toolbar;
-    private RadioGroup actionBarRadioGroup;
-    private RadioGroup createPostRadioGroup;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.actionRadioBtn)
+    RadioGroup actionBarRadioGroup;
+    @Bind(R.id.createPostRadioBtn)
+    RadioGroup createPostRadioGroup;
 
     //variable main fragment
     private MyProfileFragment myProfileFragment;
@@ -58,19 +64,13 @@ public class ContainerActivity extends ActionBarActivity {
     private PostUrlFragment postUrlFragment;
     private PostLocationFragment postLocationFragment;
 
-    //define fragment manager
-    private FragmentManager manager;
-    private FragmentTransaction transaction;
     private View create_bar;
 
-    //manage session
-    private SessionManager sessionManager;
     HashMap<String, String> user;
 
     public void homeTitleBar(String t) {
-        String title = t;
         toolbar.setTitleTextAppearance(ContainerActivity.this, R.style.Toolbar_TitleText);
-        SpannableString s = new SpannableString(title);
+        SpannableString s = new SpannableString(t);
         s.setSpan(new TypefaceSpan(this, "Mission-Script.otf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         getSupportActionBar().setTitle(s);
     }
@@ -94,9 +94,10 @@ public class ContainerActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
+        ButterKnife.bind(this);
 
         //check the login session
-        sessionManager = new SessionManager(this);
+        SessionManager sessionManager = new SessionManager(this);
         user = sessionManager.getUserDetails();
 
         if (!sessionManager.checkLogin()) {
@@ -106,7 +107,7 @@ public class ContainerActivity extends ActionBarActivity {
             finish();
         }
 
-        if(user.get(sessionManager.KEY_STATUS) != null && !user.get(sessionManager.KEY_STATUS).equals("volunteer")){
+        if (user.get(SessionManager.KEY_STATUS) != null && !user.get(SessionManager.KEY_STATUS).equals("volunteer")) {
             Intent intent = new Intent(this, com.ngapainya.ngapainya.activity.owner.ContainerActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -115,9 +116,7 @@ public class ContainerActivity extends ActionBarActivity {
 
         create_bar = findViewById(R.id.create_post_bar); //use for make an animation
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(this.toolbar);
-
 
 
         //set home fragment for default
@@ -125,15 +124,15 @@ public class ContainerActivity extends ActionBarActivity {
         r1.setChecked(true);
 
         /*Instantiate the Fragment*/
-        homeFragment            = new HomeFragment();
-        exploreFragment         = new ExploreFragment();
-        notificationFragment    = new NotificationFragment();
-        myProfileFragment       = new MyProfileFragment();
+        homeFragment = new HomeFragment();
+        exploreFragment = new ExploreFragment();
+        notificationFragment = new NotificationFragment();
+        myProfileFragment = new MyProfileFragment();
 
-        postStatusFragment      = new PostStatusFragment();
-        postPhotoFragment       = new PostPhotoFragment();
-        postUrlFragment         = new PostUrlFragment();
-        postLocationFragment    = new PostLocationFragment();
+        postStatusFragment = new PostStatusFragment();
+        postPhotoFragment = new PostPhotoFragment();
+        postUrlFragment = new PostUrlFragment();
+        postLocationFragment = new PostLocationFragment();
 
 
         //use to call starting fragment
@@ -160,7 +159,6 @@ public class ContainerActivity extends ActionBarActivity {
             }
         }
 
-        actionBarRadioGroup = (RadioGroup) findViewById(R.id.actionRadioBtn);
         actionBarRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
@@ -189,7 +187,6 @@ public class ContainerActivity extends ActionBarActivity {
             }
         });
 
-        createPostRadioGroup = (RadioGroup) findViewById(R.id.createPostRadioBtn);
         createPostRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -352,8 +349,8 @@ public class ContainerActivity extends ActionBarActivity {
     public void changeFragment(Fragment fragment) {
 
         //old code
-        manager = getSupportFragmentManager();
-        transaction = manager.beginTransaction();
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.content_fragment, fragment, fragment.getClass().getName());
         transaction.addToBackStack(fragment.getClass().getName());
         transaction.commit();
@@ -373,7 +370,6 @@ public class ContainerActivity extends ActionBarActivity {
             ft.commit();
         }*/
     }
-
 
 
 }

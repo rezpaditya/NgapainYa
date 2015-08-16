@@ -42,6 +42,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -54,11 +57,11 @@ public class DetailPostFragment extends Fragment {
     /*
     * general variable view
     * */
-    private ImageView avatar;
-    private TextView content_status;
-    private TextView time_post;
-    private EditText comment;
-    private Button post_comment_btn;
+    @Bind(R.id.avatar) ImageView avatar;
+    @Bind(R.id.content) TextView content_status;
+    @Bind(R.id.time) TextView time_post;
+    @Bind(R.id.content_comment) EditText comment;
+    @Bind(R.id.post_comment_btn) Button post_comment_btn;
 
     /*variable post Photo view*/
     private ImageView photo;
@@ -71,12 +74,13 @@ public class DetailPostFragment extends Fragment {
     private String content;
     private String time;
     private String photo_url;
+    private String address;
 
     /*variable for populate comment*/
-    ListView myList;
-    ArrayList<Comment> filelist;
-    CommentAdapter adapter;
-    LinearLayout layout_list;
+    private ListView myList;
+    private ArrayList<Comment> filelist;
+    private CommentAdapter adapter;
+    @Bind(R.id.list_comment) LinearLayout layout_list;
 
     @Override
     public void onAttach(Activity activity) {
@@ -86,12 +90,7 @@ public class DetailPostFragment extends Fragment {
 
     public void initializeVariable() {
         /*Initialize variable view*/
-        avatar = (ImageView) myFragmentView.findViewById(R.id.avatar);
-        content_status = (TextView) myFragmentView.findViewById(R.id.content);
-        time_post = (TextView) myFragmentView.findViewById(R.id.time);
-
-        comment = (EditText) myFragmentView.findViewById(R.id.content_comment);
-        post_comment_btn = (Button) myFragmentView.findViewById(R.id.post_comment_btn);
+        ButterKnife.bind(this, myFragmentView);
 
         post_comment_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +122,15 @@ public class DetailPostFragment extends Fragment {
                 .load("http://ainufaisal.com/" + photo_url)
                 .placeholder(R.drawable.propic_default)
                 .into(photo);
+    }
+
+    public void initializePostLocation(){
+        Picasso.with(myContext)
+                .load("http://ainufaisal.com/" + avatar_url)
+                .placeholder(R.drawable.propic_default)
+                .into(avatar);
+        content_status.setText(address);
+        time_post.setText(time);
     }
 
     @Override
@@ -186,29 +194,20 @@ public class DetailPostFragment extends Fragment {
                 myFragmentView = inflater.inflate(R.layout.fragment_detail_post_status, container, false);
                 initializeVariable(); //must be called
                 new getDetailPost().execute();
-
-                layout_list = (LinearLayout) myFragmentView.findViewById(R.id.list_comment);
-
                 new getComment().execute();
-                //use dummy data
-                /*for (int i = 0; i < 1; i++) {
-                    Comment tmp = new Comment();
-                    tmp.setUser_comment("hahaha " + i);
-                    filelist.add(tmp);
-                }*/
-
-
                 break;
             case 1:
                 myFragmentView = inflater.inflate(R.layout.fragment_detail_image_post, container, false);
                 initializeVariable(); //must be called
                 photo = (ImageView) myFragmentView.findViewById(R.id.photo);
                 new getDetailPost().execute();
+                new getComment().execute();
                 break;
             case 2:
                 myFragmentView = inflater.inflate(R.layout.fragment_detail_post_location, container, false);
                 initializeVariable(); //must be called
-                //do something here
+                new getDetailPost().execute();
+                new getComment().execute();
                 break;
             case 3:
                 myFragmentView = inflater.inflate(R.layout.fragment_detail_post_url, container, false);
@@ -328,6 +327,7 @@ public class DetailPostFragment extends Fragment {
                     avatar_url = json.getString("user_pic");
                     content = json.getString("act_content");
                     time = json.getString("created_at");
+                    address = json.getString("act_address");
                     switch (postType) {
                         case 0:
                             Log.e("ok", " ambil data");
@@ -354,6 +354,9 @@ public class DetailPostFragment extends Fragment {
                     break;
                 case 1:
                     initializePostPhoto();
+                    break;
+                case 2:
+                    initializePostLocation();
                     break;
             }
         }

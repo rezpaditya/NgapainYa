@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     int iterator = 0;
 
     int start = 0;
-    int end = 5;
+    int end = 10;
 
     /*
     * these variables used to restore the listview
@@ -109,7 +109,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        ArrayList<Home> temp = new ArrayList<Home>();
+        ArrayList<Home> temp;
         temp = filelist;
         outState.putParcelableArrayList("adapter_content", temp);
         Log.e("onSaveInstanceState", "works");
@@ -197,7 +197,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     public void onRefresh() {
         filelist.clear();
         start = 0;
-        end = 5;
+        end = 10;
         new RemoteDataTask().execute();
         swipeRefreshLayout.setRefreshing(false);
         Log.e("onRefresh", "onRefresh");
@@ -241,6 +241,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                 break;
             case "Location":
                 args.putInt("postType", 2);
+                args.putString("act_id", tmp.getAct_id());
                 detailPostFragment.setArguments(args);
                 if (myContext.getClass().getName().equals("com.ngapainya.ngapainya.activity.volunteer.ContainerActivity")) {
                     ((ContainerActivity) getActivity()).changeFragment(detailPostFragment);
@@ -250,6 +251,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                 break;
             case "Url":
                 args.putInt("postType", 3);
+                args.putString("act_id", tmp.getAct_id());
                 detailPostFragment.setArguments(args);
                 if (myContext.getClass().getName().equals("com.ngapainya.ngapainya.activity.volunteer.ContainerActivity")) {
                     ((ContainerActivity) getActivity()).changeFragment(detailPostFragment);
@@ -390,7 +392,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
             user    = session.getUserDetails();
             token   = user.get(SessionManager.KEY_TOKEN);
             start   = end - 1;
-            end     = start + 5;
+            end     = start + 10;
 
         }
 

@@ -30,6 +30,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -39,9 +42,12 @@ public class LoginFragment extends Fragment {
     /*
     * Variable from the view
     * */
-    private EditText email;
-    private EditText password;
-    private Button btn_login;
+    @Bind(R.id.email)
+    EditText email;
+    @Bind(R.id.password)
+    EditText password;
+    @Bind(R.id.login_btn)
+    Button btn_login;
 
     /*Variable to store data after login*/
     private String username;
@@ -65,16 +71,12 @@ public class LoginFragment extends Fragment {
         * Initialize views variable
         * */
 
-        new getTokenGCM().execute();
-
-        email = (EditText) myFragmentView.findViewById(R.id.email);
-        password = (EditText) myFragmentView.findViewById(R.id.password);
-        btn_login = (Button) myFragmentView.findViewById(R.id.login_btn);
+        ButterKnife.bind(this, myFragmentView);
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(email.getText().length()>0
-                        && password.getText().length()>=8){
+                if (email.getText().length() > 0
+                        && password.getText().length() >= 8) {
                     new doLogin().execute();
                 }
             }
@@ -101,13 +103,13 @@ public class LoginFragment extends Fragment {
 
             isSuccess = false;
 
-            input_email     = email.getText().toString();
-            input_password  = password.getText().toString();
+            input_email = email.getText().toString();
+            input_password = password.getText().toString();
         }
 
         @Override
         protected String doInBackground(String... arg0) {
-            String url = cfg.HOSTNAME +"/login";
+            String url = cfg.HOSTNAME + "/login";
             List<NameValuePair> nvp = new ArrayList<NameValuePair>();
             nvp.add(new BasicNameValuePair("email", input_email));
             nvp.add(new BasicNameValuePair("password", input_password));
@@ -117,7 +119,7 @@ public class LoginFragment extends Fragment {
 
             try {
                 if (json.getString("access_token") != null) {
-                    token   = json.getString("access_token");
+                    token = json.getString("access_token");
                     current_status = json.getString("current_status");
                     isSuccess = true;
                 } else {
@@ -135,8 +137,9 @@ public class LoginFragment extends Fragment {
             super.onPostExecute(result);
             pDialog.dismiss();
 
-            if(isSuccess) {
-               new getMyProfile().execute();
+            if (isSuccess) {
+                new getMyProfile().execute();
+                new getTokenGCM().execute();
             }
         }
     }
@@ -171,7 +174,7 @@ public class LoginFragment extends Fragment {
             json = jParser.makeHttpRequest(url, "GET", nvp);      //get data from server
 
             try {
-                if(json.length() > 0) {
+                if (json.length() > 0) {
                     for (int i = 0; i < json.length(); i++) {
                         JSONObject result = json.getJSONObject(i);
                         username = result.getString("username");
@@ -199,15 +202,10 @@ public class LoginFragment extends Fragment {
         }
     }
 
-    private class getTokenGCM extends AsyncTask<Void, Void, Void>{
+    private class getTokenGCM extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
         }
 
         @Override
@@ -215,6 +213,11 @@ public class LoginFragment extends Fragment {
             Intent intent = new Intent(myContext, RegistrationIntentService.class);
             myContext.startService(intent);
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
         }
     }
 }

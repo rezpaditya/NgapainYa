@@ -7,6 +7,13 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.ngapainya.ngapainya.R;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 public class RegistrationIntentService extends IntentService {
 
@@ -29,13 +36,13 @@ public class RegistrationIntentService extends IntentService {
                 // are local.
                 // [START get_token]
                 InstanceID instanceID = InstanceID.getInstance(this);
-                String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
+                String GCMtoken = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
                         GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
                 // [END get_token]
-                Log.i(TAG, "GCM Registration Token: " + token);
+                Log.i(TAG, "GCM Registration Token: " + GCMtoken);
 
                 // TODO: Implement this method to send any registration to your app's servers.
-                sendRegistrationToServer(token);
+                sendRegistrationToServer(GCMtoken);
 
                 // [END register_for_gcm]
             }
@@ -50,9 +57,29 @@ public class RegistrationIntentService extends IntentService {
      * Modify this method to associate the user's GCM registration token with any server-side account
      * maintained by your application.
      *
-     * @param token The new token.
+     * @param GCMtoken The new token.
      */
-    private void sendRegistrationToServer(String token) {
+    private void sendRegistrationToServer(String GCMtoken) throws Exception{
+        OkHttpClient client = new OkHttpClient();
+        SessionManager session = new SessionManager(this);
+        HashMap<String, String> user = session.getUserDetails();
+        String token = user.get(SessionManager.KEY_TOKEN);
 
+        Request request = new Request.Builder()
+                .url(Config.HOSTNAME + "/gcm/add?access_token="+token+"&registration_id=" + GCMtoken)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if(!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                Log.e("success", response.body().string());
+            }
+        });
     }
 }

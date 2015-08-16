@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
+    android:paddingBottom="50dp"
     android:background="@color/white"
     tools:context="com.ngapainya.ngapainya.fragment.volunteer.NotificationFragment">
 

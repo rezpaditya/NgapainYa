@@ -39,6 +39,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -51,12 +54,12 @@ public class EditProfileFragment extends Fragment implements DatePickerDialog.On
     /*
     * Variable of the view
     * */
-    EditText birthdate;
-    EditText name;
-    EditText email;
-    EditText location;
-    EditText oldPassword;
-    EditText newPassword;
+    private EditText birthdate;
+    @Bind(R.id.name) EditText name;
+    @Bind(R.id.email) EditText email;
+    @Bind(R.id.location) EditText location;
+    @Bind(R.id.old_pwd) EditText oldPassword;
+    @Bind(R.id.new_pwd) EditText newPassword;
 
     @Override
     public void onAttach(Activity activity) {
@@ -91,11 +94,7 @@ public class EditProfileFragment extends Fragment implements DatePickerDialog.On
         setHasOptionsMenu(true);
 
         /*Initialize the variable*/
-        location    = (EditText) myFragmentView.findViewById(R.id.location);
-        oldPassword = (EditText) myFragmentView.findViewById(R.id.old_pwd);
-        newPassword = (EditText) myFragmentView.findViewById(R.id.new_pwd);
-        name        = (EditText) myFragmentView.findViewById(R.id.name);
-        email       = (EditText) myFragmentView.findViewById(R.id.email);
+        ButterKnife.bind(this, myFragmentView);
         birthdate   = (EditText) myFragmentView.findViewById(R.id.birthdate);
         birthdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,9 +126,6 @@ public class EditProfileFragment extends Fragment implements DatePickerDialog.On
                 doPost(v);
             }
         });
-
-        /*menu.add(0, 0, 0, "History").setTitle("Done")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);*/
     }
 
     @Override
@@ -145,7 +141,6 @@ public class EditProfileFragment extends Fragment implements DatePickerDialog.On
     @Override
     public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
         calendar.set(year, month, day);
-        //Toast.makeText(myContext, "date set "+ day, Toast.LENGTH_LONG).show();
         update();
     }
 
