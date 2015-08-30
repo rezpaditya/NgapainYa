@@ -112,7 +112,7 @@ public class ExploreAdapter extends BaseAdapter {
         }
 
         Picasso.with(context)
-                .load("http://ainufaisal.com/"+list.get(position).getUser_pic())
+                .load(list.get(position).getUser_pic())
                 .placeholder(R.drawable.propic_default)
                 .into(holder.propic);
         holder.propic.setTag(temp);

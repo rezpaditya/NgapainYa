@@ -86,7 +86,9 @@ public class HomeAdapter extends GNowListAdapter {
                         .into(propic_02);
                 Picasso.with(context)
                         .load(list.get(position).getAct_url())
-                                //.placeholder(R.drawable.bg_front)
+                        .placeholder(R.drawable.bg_front)
+                        .fit()
+                        .centerCrop()
                         .into(img);
                 break;
             case "Location":

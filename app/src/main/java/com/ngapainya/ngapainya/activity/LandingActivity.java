@@ -9,7 +9,9 @@ import android.view.MenuItem;
 
 import com.ngapainya.ngapainya.R;
 
-
+/**
+ * Splash activity
+ */
 public class LandingActivity extends ActionBarActivity {
     /** Duration of wait **/
     private final int SPLASH_DISPLAY_LENGTH = 1000;

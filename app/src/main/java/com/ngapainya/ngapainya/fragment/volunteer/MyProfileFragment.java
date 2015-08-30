@@ -14,7 +14,6 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,7 +28,6 @@ import android.widget.Toast;
 
 import com.ngapainya.ngapainya.R;
 import com.ngapainya.ngapainya.activity.SettingsActivity;
-import com.ngapainya.ngapainya.activity.owner.ContainerActivity;
 import com.ngapainya.ngapainya.fragment.volunteer.child.EditProfileFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.child.ShowFeedFragment;
 import com.ngapainya.ngapainya.fragment.volunteer.child.ShowProgram;
@@ -52,7 +50,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -65,6 +62,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
+ * Profile volunteed
  * A simple {@link Fragment} subclass.
  */
 public class MyProfileFragment extends Fragment {
@@ -73,7 +71,9 @@ public class MyProfileFragment extends Fragment {
 
     private final String PACKAGE_NAME = "com.ngapainya.ngapainya.activity.";
 
-    // Camera activity request codes
+    /**
+     * Camera activity request codes
+     */
     private static final int CAMERA_REQUEST = 1888;
     private static final int SELECT_PHOTO = 100;
     String encodedImage = "";
@@ -81,9 +81,10 @@ public class MyProfileFragment extends Fragment {
     private static final String FOLLOWING_SPEC = "following";
     private static final String YOU_SPEC = "you";
     private FragmentTabHost tabHost;
-    /*
-    * Variable to retrieve from view
-    * */
+
+    /**
+     * Variable to retrieve from view
+     */
     @Bind(R.id.txtShwFeed) TextView txtShowFeed;
     @Bind(R.id.txtShwProgram) TextView txtShwProgram;
     @Bind(R.id.follower) TextView follower;
@@ -94,9 +95,9 @@ public class MyProfileFragment extends Fragment {
     @Bind(R.id.profile_image) ImageView propic;
     @Bind(R.id.location) TextView location;
 
-    /*
-    * variable to retrieve data from server
-    * */
+    /**
+     * Variable to retrieve data from server
+     */
     private String pic_url;
     private String total_post;
     private String total_friend;
@@ -108,25 +109,11 @@ public class MyProfileFragment extends Fragment {
     private String image_url;
     private String uploaded_img;
 
-    public void switchMode() {
-        Intent intent = new Intent(myContext, ContainerActivity.class);
-        startActivity(intent);
-        myContext.finish();
-    }
-
     @Override
     public void onAttach(Activity activity) {
         myContext = (FragmentActivity) activity;
         super.onAttach(activity);
     }
-
-    /*@Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-        new getMyProfile().execute();
-
-    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -162,6 +149,10 @@ public class MyProfileFragment extends Fragment {
         return myFragmentView;
     }
 
+    /**
+     * Handle all onClick here
+     * @param v
+     */
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.showFeed:
@@ -209,6 +200,12 @@ public class MyProfileFragment extends Fragment {
         }
     }
 
+    /**
+     * Get the image
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -253,13 +250,12 @@ public class MyProfileFragment extends Fragment {
             }
             Log.e("Path", "uploading...");
         }
-        /*if (photo != null) {
-            //base64 encoding
-            encodeImage(photo);
-            new updateProfilePicture().execute();
-        }*/
     }
 
+    /**
+     * Upload image to imgur
+     * @throws Exception
+     */
     public void run() throws Exception {
         OkHttpClient client = new OkHttpClient();
         final boolean[] isSuccess = {false};
@@ -288,10 +284,6 @@ public class MyProfileFragment extends Fragment {
             @Override
             public void onResponse(Response response) throws IOException {
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-                /*Headers responseHeaders = response.headers();
-                for (int i = 0; i < responseHeaders.size(); i++) {
-                    System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
-                }*/
                 try {
                     JSONObject obj = new JSONObject(response.body().string());
                     JSONObject result = obj.getJSONObject("data");
@@ -312,6 +304,10 @@ public class MyProfileFragment extends Fragment {
         });
     }
 
+    /**
+     * Get direct link from imgur and send to API
+     * @throws Exception
+     */
     public void sendPhoto() throws Exception{
         OkHttpClient client = new OkHttpClient();
         SessionManager session = new SessionManager(myContext);
@@ -343,6 +339,11 @@ public class MyProfileFragment extends Fragment {
         });
     }
 
+    /**
+     * Get image real path
+     * @param uri
+     * @return
+     */
     public String getRealPathFromURI(Uri uri) {
         Cursor cursor = myContext.getContentResolver().query(uri, null, null, null, null);
         cursor.moveToFirst();
@@ -350,33 +351,12 @@ public class MyProfileFragment extends Fragment {
         return cursor.getString(idx);
     }
 
-
-    /*
-    * This method used to encode image to String
-    * */
-    public void encodeImage(Bitmap photo) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        photo.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
-        byte[] byteArrayImage = baos.toByteArray();
-        encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
-    }
-
-    /*
-    * OKHTTP library to upload image
-    * */
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // TODO Auto-generated method stub
         super.onCreateOptionsMenu(menu, inflater);
         myContext.getMenuInflater().inflate(R.menu.menu_profile, menu);
         final MenuItem item = menu.findItem(R.id.action_done);
-        /*item.getActionView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchMode();
-            }
-        });*/
     }
 
     @Override
@@ -391,6 +371,9 @@ public class MyProfileFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Get user data from server
+     */
     public class getMyProfile extends AsyncTask<String, String, String> {
         SessionManager session;
         HashMap<String, String> user;

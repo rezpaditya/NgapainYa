@@ -93,7 +93,7 @@ public class SettingsActivity extends PreferenceActivity {
         });
 
         PreferenceScreen switchM = (PreferenceScreen) getPreferenceScreen().findPreference("switch");
-        switchM.setSummary("This is email");
+        switchM.setSummary("Switch to volunteer/owner mode");
         switchM.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {

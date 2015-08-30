@@ -32,7 +32,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
+/**
+ * This class active in first run app, hold login fragment and register fragment
+ */
 public class GreetingActivity extends FragmentActivity implements ViewPager.OnPageChangeListener {
     private static final int NUM_PAGES = 3;
     private PagerAdapter mPagerAdapter;
@@ -43,6 +45,10 @@ public class GreetingActivity extends FragmentActivity implements ViewPager.OnPa
     //Manage session
     private SessionManager sessionManager;
 
+    /**
+     * Instantiate variable in the onCreate method
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +70,9 @@ public class GreetingActivity extends FragmentActivity implements ViewPager.OnPa
         setUiPageViewController();
     }
 
+    /**
+     * This method use to make sweep fragment indicator
+     */
     private void setUiPageViewController() {
         LinearLayout pager_indicator = (LinearLayout) findViewById(R.id.viewPagerCountDots);
         dotsCount = mPagerAdapter.getCount();
@@ -91,6 +100,10 @@ public class GreetingActivity extends FragmentActivity implements ViewPager.OnPa
 
     }
 
+    /**
+     * Change indicator once the page changed
+     * @param position
+     */
     @Override
     public void onPageSelected(int position) {
         for (int i = 0; i < dotsCount; i++) {
@@ -105,6 +118,9 @@ public class GreetingActivity extends FragmentActivity implements ViewPager.OnPa
 
     }
 
+    /**
+     * Adapter for the fragment
+     */
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
@@ -129,6 +145,10 @@ public class GreetingActivity extends FragmentActivity implements ViewPager.OnPa
         }
     }
 
+    /**
+     * Handle the click for login social
+     * @param view
+     */
     public void loginSocial(View view) {
         switch (view.getId()) {
             case R.id.twitter:
@@ -143,19 +163,17 @@ public class GreetingActivity extends FragmentActivity implements ViewPager.OnPa
         }
     }
 
-    /*
-    * This method use to redirect to the main page (temporary)
-    * */
-
+    /**
+     * This method use to redirect to the main page (temporary)
+     * @param view
+     */
     public void goTo(View view) {
-        //sessionManager.createLoginSession("Rezpa Aditya", "respa@gmail.com", "respa");
-
-        /*
-        * temporary this method call remoteDataTask, it should be in login page
-        * */
         new RemoteDataTask().execute();
     }
 
+    /**
+     * This method use to redirect to the main page (temporary)
+     */
     private class RemoteDataTask extends AsyncTask<String, Void, String> {
         ProgressDialog pDialog;
         SessionManager session;
@@ -193,11 +211,6 @@ public class GreetingActivity extends FragmentActivity implements ViewPager.OnPa
             JSONParser jParser = new JSONParser();
             //JSONObject json = jParser.makeHttpRequestToObject(url, "GET", nvp);      //get data from server
             try {
-                /*if (json.getString("access_token") != null) {
-                    token   = json.getString("access_token");
-                } else {
-                    Log.e("error", "unable to get data 0");
-                }*/
             } catch (Exception e) {
                 Log.e("error", "unable to get data 1");
                 e.printStackTrace();

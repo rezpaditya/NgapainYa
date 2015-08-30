@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     int iterator = 0;
 
     int start = 0;
-    int end = 10;
+    int end = 5;
 
     /*
     * these variables used to restore the listview
@@ -224,11 +224,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                     ((com.ngapainya.ngapainya.activity.owner.ContainerActivity) getActivity()).changeFragment(detailPostFragment);
                 }
                 break;
-            /*case "status":
-                args.putInt("postType", 0);
-                detailPostFragment.setArguments(args);
-                ((ContainerActivity) getActivity()).changeFragment(detailPostFragment);
-                break;*/
             case "Photo":
                 args.putInt("postType", 1);
                 args.putString("act_id", tmp.getAct_id());
@@ -392,7 +387,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
             user    = session.getUserDetails();
             token   = user.get(SessionManager.KEY_TOKEN);
             start   = end - 1;
-            end     = start + 10;
+            end     = start + 5;
 
         }
 

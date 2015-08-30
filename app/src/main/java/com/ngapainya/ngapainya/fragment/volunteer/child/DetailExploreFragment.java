@@ -305,6 +305,8 @@ public class DetailExploreFragment extends Fragment {
             Picasso.with(myContext)
                     .load("http://ainufaisal.com/" + explore.getProgram_url())
                     .placeholder(R.drawable.bg_front)
+                    .fit()
+                    .centerCrop()
                     .into(program_image);
             user_fullname.setText(explore.getUser_fullname());
             program_name.setText(explore.getProgram_name());

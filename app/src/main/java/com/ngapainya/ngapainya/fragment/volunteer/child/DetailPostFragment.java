@@ -120,7 +120,9 @@ public class DetailPostFragment extends Fragment {
         time_post.setText(time);
         Picasso.with(myContext)
                 .load(photo_url)
-                .placeholder(R.drawable.propic_default)
+                .placeholder(R.drawable.bg_front)
+                .fit()
+                .centerCrop()
                 .into(photo);
     }
 

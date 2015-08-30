@@ -43,7 +43,14 @@ import java.util.HashMap;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+/**
+ * ContainerActivity class in owner package use to hold all fragment
+ * that belong to owner
+ */
 public class ContainerActivity extends ActionBarActivity {
+    /**
+     * Inject the view with butterknife
+     */
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.create_post_bar)
@@ -52,36 +59,36 @@ public class ContainerActivity extends ActionBarActivity {
     RadioGroup actionBarRadioGroup;
     @Bind(R.id.createPostRadioBtn)
     RadioGroup createPostRadioGroup;
-    //define fragment manager
-    private FragmentManager manager;
-    private FragmentTransaction transaction;
 
-    //variable fragment
+    /**
+     * Fragment object
+     */
     private OwnerProfileFragment ownerProfileFragment;
     private HomeFragment homeFragment;
     private ExploreFragment exploreFragment;
     private NotificationFragment notificationFragment;
 
-    //variable child fragment
+    /**
+     * Child fragment, fragment inside the fragment
+     */
     private PostStatusFragment postStatusFragment;
     private PostPhotoFragment postPhotoFragment;
     private PostUrlFragment postUrlFragment;
     private PostLocationFragment postLocationFragment;
     private PostProgramFragment postProgramFragment;
 
-    /**/
-
-    private SessionManager sessionManager;
-    private HashMap<String, String> user;
-
+    /**
+     * Create the activity and its views
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container_owner);
         ButterKnife.bind(this);
 
-        sessionManager = new SessionManager(this);
-        user = sessionManager.getUserDetails();
+        SessionManager sessionManager = new SessionManager(this);
+        HashMap<String, String> user = sessionManager.getUserDetails();
 
         if (!user.get(SessionManager.KEY_STATUS).equals("owner")) {
             Intent intent = new Intent(this, com.ngapainya.ngapainya.activity.volunteer.ContainerActivity.class);
@@ -205,6 +212,9 @@ public class ContainerActivity extends ActionBarActivity {
         });
     }
 
+    /**
+     * Do something whenever back button pressed
+     */
     @Override
     public void onBackPressed() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -224,18 +234,30 @@ public class ContainerActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Handle onClick listener from the views with 'onClick' parameter name
+     * @param view
+     */
     public void onClick(View view) {
         ownerProfileFragment.onClick(view);
     }
 
-    public void homeTitleBar(String t) {
-        String title = t;
+    /**
+     * Change the actionbar style with home title bar style
+     * @param ttl String use to change the toolbar label
+     */
+    public void homeTitleBar(String ttl) {
+        String title = ttl;
         toolbar.setTitleTextAppearance(ContainerActivity.this, R.style.Toolbar_TitleText);
         SpannableString s = new SpannableString(title);
         s.setSpan(new TypefaceSpan(this, "Mission-Script.otf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         getSupportActionBar().setTitle(s);
     }
 
+    /**
+     * Change the actionbar style with standard style
+     * @param title
+     */
     public void standardTitleBar(String title) {
        /* toolbar.setTitleTextAppearance(ContainerActivity.this, R.style.Toolbar_SmallTitleText);
         getSupportActionBar().setTitle(title);*/
@@ -246,6 +268,10 @@ public class ContainerActivity extends ActionBarActivity {
         getSupportActionBar().setTitle(s);
     }
 
+    /**
+     * Change actionbar style with profile style and change the ColorPrimaryDark color
+     * @param isProfile
+     */
     public void changeActionbarStyle(boolean isProfile) {
         if (isProfile) {
             Log.e("changeActionBar", "works");
@@ -283,6 +309,10 @@ public class ContainerActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Handle the onClick listener from the view with 'createPost' parameter name
+     * @param view
+     */
     public void createPost(View view) {
         final ToggleButton createStatusBtn = (ToggleButton) findViewById(R.id.createStatusBtn);
 
@@ -344,11 +374,18 @@ public class ContainerActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * When this method called, fragment in the ContainerActivity will change immedietly
+     * @param fragment Work for Fragment v4
+     */
     public void changeFragment(Fragment fragment) {
 
         //old code
-        manager = getSupportFragmentManager();
-        transaction = manager.beginTransaction();
+        /*
+      Define fragment manager
+     */
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.content_fragment, fragment, fragment.getClass().getName());
         transaction.addToBackStack(fragment.getClass().getName());
         transaction.commit();

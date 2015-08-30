@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * All program can be seen here
  * A simple {@link Fragment} subclass.
  */
 public class ExploreFragment extends Fragment implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener {
@@ -52,17 +53,17 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
 
     private String keyword;
 
-    /*
-    * Variable for request data
-    * */
+    /**
+     * Variable for request data
+     */
     JSONArray json;
     final int threshold = 10;
     int iterator = 0;
 
-    /*
-    * these variables used to restore the listview
-    * when calling the fragment from backstack
-    * */
+    /**
+     * these variables used to restore the listview
+     * when calling the fragment from backstack
+     */
     private boolean fromBackStack = false;
     private ExploreAdapter savedAdapter;
     private ArrayList<Explore> savedFilelist;
@@ -75,6 +76,11 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         super.onAttach(activity);
     }
 
+    /**
+     * Infalate action bar menu
+     * @param menu
+     * @param inflater
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // TODO Auto-generated method stub
@@ -89,6 +95,10 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         return false;
     }
 
+    /**
+     * setup the menu
+     * @param searchItem
+     */
     private void setupSearchView(MenuItem searchItem) {
 
         if (isAlwaysExpanded()) {
@@ -168,6 +178,9 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
 
     }
 
+    /**
+     * Recreate th list whenever list refreshed
+     */
     @Override
     public void onRefresh() {
         filelist.clear();
@@ -177,6 +190,11 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         Log.e("onRefresh", "onRefresh");
     }
 
+    /**
+     * Search the program then text submitted
+     * @param s
+     * @return
+     */
     @Override
     public boolean onQueryTextSubmit(String s) {
         keyword = s;
@@ -192,6 +210,9 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         return true;
     }
 
+    /**
+     * Send keyword to API
+     */
     private class doSearch extends AsyncTask<String, Void, ArrayList<Explore>> {
         SessionManager session;
         HashMap<String, String> user;
@@ -245,18 +266,6 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
                 e.printStackTrace();
             }
             return filelist;
-            /*try {
-                ArrayList<Explore> new_filelist = new ArrayList<Explore>();
-                //dummy data
-                for (int i = 0; i < 10; i++) {
-                    filelist.add(new Explore("img " + i, "title " + i, "text " + i, "strDate " + i, "endDate " + i, "image"));
-                }
-                filelist.addAll(new_filelist);
-            } catch (ParseException e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return filelist;*/
         }
 
         @Override
@@ -266,6 +275,9 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         }
     }
 
+    /**
+     * Get data program and populate to listview
+     */
     private class RemoteDataTask extends AsyncTask<String, Void, ArrayList<Explore>> {
         SessionManager session;
         HashMap<String, String> user;
@@ -374,11 +386,10 @@ public class ExploreFragment extends Fragment implements AdapterView.OnItemClick
         }
     }
 
-    /*
-    * This method is called when the listview pulled down
-    * it will trigger this method to load more items from server
-    * */
-
+    /**
+     * This method is called when the listview pulled down
+     * it will trigger this method to load more items from server
+     */
     public class LoadMoreDataTask extends AsyncTask<String, Void, ArrayList<Explore>> {
 
         @Override
